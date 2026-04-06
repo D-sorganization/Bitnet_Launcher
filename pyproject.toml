@@ -11,6 +11,8 @@ dependencies = ["PyQt6>=6.6"]
 
 [project.optional-dependencies]
 dev = ["pytest>=8", "pytest-qt", "ruff>=0.4", "mypy>=1.9", "pre-commit"]
+hub = ["huggingface-hub>=0.20"]
+all = ["bitnet-launcher[dev,hub]"]
 
 [project.scripts]
 bitnet-launcher = "bitnet_launcher.app:main"

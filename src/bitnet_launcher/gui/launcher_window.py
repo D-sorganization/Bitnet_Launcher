@@ -11,6 +11,7 @@ import logging
 from PyQt6.QtCore import QProcess, Qt
 from PyQt6.QtGui import QCloseEvent, QFont
 from PyQt6.QtWidgets import (
+    QFrame,
     QHBoxLayout,
     QLabel,
     QMainWindow,
@@ -24,8 +25,10 @@ from PyQt6.QtWidgets import (
 from bitnet_launcher.chat_session import ChatSession
 from bitnet_launcher.config import BitnetConfig
 from bitnet_launcher.gui.chat_panel import ChatPanel
+from bitnet_launcher.gui.hub_dialog import HubDialog
 from bitnet_launcher.gui.model_panel import ModelPanel
 from bitnet_launcher.gui.settings_panel import SettingsPanel
+from bitnet_launcher.gui.setup_dialog import SetupDialog
 from bitnet_launcher.models import ModelInfo, discover_models
 from bitnet_launcher.terminal import build_command, launch_terminal
 from bitnet_launcher.theme import CatppuccinTheme, build_stylesheet
@@ -126,6 +129,37 @@ class BitNetLauncher(QMainWindow):
         self._btn_stop.clicked.connect(self._stop_chat)
         btn_row.addWidget(self._btn_stop)
 
+        # Vertical separator between action groups
+        sep = QFrame()
+        sep.setFrameShape(QFrame.Shape.VLine)
+        sep.setFrameShadow(QFrame.Shadow.Sunken)
+        sep.setStyleSheet(f"color: {t.OVERLAY};")
+        btn_row.addWidget(sep)
+
+        self._btn_download = QPushButton("\u2b07  Download Models")
+        self._btn_download.setFixedHeight(36)
+        self._btn_download.setToolTip(
+            "Browse and download BitNet models from HuggingFace"
+        )
+        self._btn_download.setStyleSheet(
+            f"QPushButton {{ color: {t.ACCENT}; border-color: {t.ACCENT}; }}"
+            f"QPushButton:hover {{ background: #2e2342; }}"
+        )
+        self._btn_download.clicked.connect(self._open_hub_dialog)
+        btn_row.addWidget(self._btn_download)
+
+        self._btn_setup = QPushButton("\u2699  Setup")
+        self._btn_setup.setFixedHeight(36)
+        self._btn_setup.setToolTip(
+            "Manage BitNet installation (git clone, cmake build)"
+        )
+        self._btn_setup.setStyleSheet(
+            f"QPushButton {{ color: {t.YELLOW}; border-color: {t.YELLOW}; }}"
+            f"QPushButton:hover {{ background: #3a341e; }}"
+        )
+        self._btn_setup.clicked.connect(self._open_setup_dialog)
+        btn_row.addWidget(self._btn_setup)
+
         root.addLayout(btn_row)
 
         self._chat_panel = ChatPanel()
@@ -137,6 +171,26 @@ class BitNetLauncher(QMainWindow):
             f"color: {CatppuccinTheme.SUBTEXT}; font-size: 10px;"
         )
         root.addWidget(self._status)
+
+    # ── Dialog launchers ────────────────────────────────────────────────────
+
+    def _open_hub_dialog(self) -> None:
+        """Open the model download dialog."""
+        dialog = HubDialog(
+            models_dir=self._cfg.models_dir,
+            bitnet_root=self._cfg.bitnet_root,
+            parent=self,
+        )
+        dialog.exec()
+        # Refresh model list in case new models were downloaded
+        self._models = discover_models(self._cfg.models_dir)
+        logger.debug("Hub dialog closed; model list refreshed")
+
+    def _open_setup_dialog(self) -> None:
+        """Open the BitNet installation setup dialog."""
+        dialog = SetupDialog(bitnet_root=self._cfg.bitnet_root, parent=self)
+        dialog.exec()
+        logger.debug("Setup dialog closed")
 
     # ── Terminal launch ──────────────────────────────────────────────────────
 
