@@ -1,0 +1,57 @@
+name: CI Standard
+
+on:
+  push:
+    branches: [main, staging]
+  pull_request:
+    types: [opened, synchronize, reopened, ready_for_review]
+
+jobs:
+  pick-runner:
+    runs-on: ubuntu-latest
+    outputs:
+      runner: ${{ steps.check.outputs.runner }}
+    steps:
+      - name: Check for self-hosted runner
+        id: check
+        env:
+          GH_TOKEN: ${{ secrets.RUNNER_CHECK_TOKEN }}
+        run: |
+          ONLINE=$(gh api /orgs/${{ github.repository_owner }}/actions/runners \
+            --jq '[.runners[] | select(.status == "online") | select(.labels[].name == "d-sorg-fleet")] | length' \
+            2>/dev/null || echo "0")
+          if [[ "$ONLINE" -gt 0 ]]; then
+            echo "runner=d-sorg-fleet" >> $GITHUB_OUTPUT
+          else
+            echo "runner=ubuntu-latest" >> $GITHUB_OUTPUT
+          fi
+
+  quality-gate:
+    needs: pick-runner
+    runs-on: ${{ needs.pick-runner.outputs.runner }}
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.11"
+      - run: pip install ruff mypy
+      - name: Lint
+        run: ruff check src/ tests/
+      - name: Format check
+        run: ruff format --check src/ tests/
+      - name: Type check
+        run: mypy src/ --ignore-missing-imports
+
+  tests:
+    needs: pick-runner
+    runs-on: ${{ needs.pick-runner.outputs.runner }}
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.11"
+      - run: pip install -e ".[dev]"
+      - name: Run tests
+        run: python3 -m pytest tests/ -v --tb=short
+        env:
+          QT_QPA_PLATFORM: offscreen

@@ -1,0 +1,8 @@
+PyQt6>=6.6
+
+[dev]
+pytest>=8
+pytest-qt
+ruff>=0.4
+mypy>=1.9
+pre-commit

@@ -1,0 +1,2 @@
+[console_scripts]
+bitnet-launcher = bitnet_launcher.app:main

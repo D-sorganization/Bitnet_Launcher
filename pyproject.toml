@@ -1,0 +1,47 @@
+[build-system]
+requires = ["setuptools>=68"]
+build-backend = "setuptools.build_meta"
+
+[project]
+name = "bitnet-launcher"
+version = "0.1.0"
+description = "PyQt6 GUI launcher for BitNet LLM models"
+requires-python = ">=3.10"
+dependencies = ["PyQt6>=6.6"]
+
+[project.optional-dependencies]
+dev = ["pytest>=8", "pytest-qt", "ruff>=0.4", "mypy>=1.9", "pre-commit"]
+
+[project.scripts]
+bitnet-launcher = "bitnet_launcher.app:main"
+
+[tool.setuptools.packages.find]
+where = ["src"]
+
+[tool.ruff]
+target-version = "py311"
+line-length = 88
+
+[tool.ruff.lint]
+select = ["E", "F", "W", "I", "B", "UP", "T20"]
+ignore = ["E402"]
+
+[tool.ruff.lint.per-file-ignores]
+"tests/**" = ["S101"]
+
+[tool.pytest.ini_options]
+testpaths = ["tests"]
+markers = ["headless_safe: safe to run without a display"]
+addopts = "-ra -q --strict-markers"
+
+[tool.coverage.run]
+source = ["src"]
+omit = ["tests/*"]
+
+[tool.coverage.report]
+fail_under = 60
+
+[tool.mypy]
+python_version = "3.11"
+ignore_missing_imports = true
+disallow_untyped_defs = true
