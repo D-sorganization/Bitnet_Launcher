@@ -50,6 +50,9 @@ jobs:
       - uses: actions/setup-python@v5
         with:
           python-version: "3.11"
+      # Install Qt system libraries required by PyQt6 on headless CI
+      - name: Install Qt system deps
+        run: sudo apt-get install -y --no-install-recommends libgles2 libegl1 libgl1
       - run: pip install -e ".[dev]"
       - name: Run tests
         run: python3 -m pytest tests/ -v --tb=short
