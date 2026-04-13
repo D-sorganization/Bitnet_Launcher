@@ -34,7 +34,7 @@ ignore = ["E402"]
 [tool.pytest.ini_options]
 testpaths = ["tests"]
 markers = ["headless_safe: safe to run without a display"]
-addopts = "-ra -q --strict-markers"
+addopts = "-ra -q --strict-markers -p no:xvfb"
 
 [tool.coverage.run]
 source = ["src"]

@@ -53,3 +53,7 @@ idle → loading → ready ↔ generating
 - **loading**: buffering stdout, waiting for first `\n> `
 - **ready**: accepting user input
 - **generating**: waiting for `\n> ` after filtering user echo via `<|im_start|>assistant\n`
+
+## Test Configuration
+
+- pytest runs with `-p no:xvfb` to disable the xvfb plugin on self-hosted and headless CI runners where no X display is available
