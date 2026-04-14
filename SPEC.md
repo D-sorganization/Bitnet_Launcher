@@ -57,3 +57,7 @@ idle → loading → ready ↔ generating
 ## Test Configuration
 
 - pytest runs with `-p no:xvfb` to disable the xvfb plugin on self-hosted and headless CI runners where no X display is available
+
+## Repository Hygiene
+
+- Generated Python bytecode artifacts (`__pycache__/`, `*.pyc`, and related files) are ignored and must not be tracked in source control.
