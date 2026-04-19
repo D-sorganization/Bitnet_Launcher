@@ -406,7 +406,7 @@ class HubDialog(QDialog):
         QMessageBox.critical(self, "Download Failed", message)
         logger.error("Download worker error: %s", message)
 
-    def reject(self) -> None:  # type: ignore[override]
+    def reject(self) -> None:
         """Block closing while a download is in progress."""
         if self._worker is not None and self._worker.isRunning():
             QMessageBox.information(

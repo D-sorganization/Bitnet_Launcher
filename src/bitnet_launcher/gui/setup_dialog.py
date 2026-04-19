@@ -357,7 +357,7 @@ class SetupDialog(QDialog):
         self._refresh_status()
         logger.error("InstallerWorker error: %s", message)
 
-    def reject(self) -> None:  # type: ignore[override]
+    def reject(self) -> None:
         """Block closing while an operation is in progress."""
         if self._worker is not None and self._worker.isRunning():
             QMessageBox.information(
