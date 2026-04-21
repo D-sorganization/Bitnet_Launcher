@@ -184,6 +184,7 @@ class SetupDialog(QDialog):
         btn_browse = QPushButton("…")
         btn_browse.setFixedWidth(32)
         btn_browse.setToolTip("Choose BitNet root directory")
+        btn_browse.setAccessibleName("Browse directory")
         btn_browse.clicked.connect(self._browse_path)
         path_layout.addWidget(btn_browse)
 

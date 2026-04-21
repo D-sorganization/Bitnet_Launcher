@@ -33,16 +33,16 @@ PyQt6 desktop GUI for interacting with local BitNet LLM models. Provides:
 | `config.py`              | Path config and InferenceConfig dataclass with DbC           |
 | `models.py`              | ModelInfo dataclass and model discovery                      |
 | `chat_session.py`        | llama-cli stdout state machine (Qt-free)                     |
-| `terminal.py`            | Command building and terminal launch                         |
+| `terminal.py`            | Command building (using shlex for safe quoting) and terminal launch |
 | `theme.py`               | Catppuccin colour palette and Qt stylesheet                  |
 | `hub.py`                 | HubModel catalog (16 models) and download_model() utility    |
 | `installer.py`           | InstallStatus, check_installation(), install_bitnet(), build_bitnet() |
 | `gui/launcher_window.py` | Top-level QMainWindow — wires all panels and dialogs         |
 | `gui/model_panel.py`     | Scrollable model list widget                                 |
-| `gui/settings_panel.py`  | Inference hyperparameter spinboxes                           |
+| `gui/settings_panel.py`  | Inference hyperparameter spinboxes (with accessible labels)  |
 | `gui/chat_panel.py`      | Chat display and user-input row                              |
-| `gui/hub_dialog.py`      | Model catalog browser and background download dialog (mypy-strict) |
-| `gui/setup_dialog.py`    | Installation status and guided setup dialog                  |
+| `gui/hub_dialog.py`      | Model catalog browser and background download dialog (mypy-strict, with accessible labels) |
+| `gui/setup_dialog.py`    | Installation status and guided setup dialog (with accessible labels/buttons) |
 
 `installer.check_installation()` checks optional Python dependency availability
 with `importlib.util.find_spec()` so the GUI can report installation status
