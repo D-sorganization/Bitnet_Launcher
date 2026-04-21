@@ -32,6 +32,7 @@ def _labeled_row(label: str, widget: QWidget) -> QHBoxLayout:
     row = QHBoxLayout()
     lbl = QLabel(label)
     lbl.setFixedWidth(120)
+    lbl.setBuddy(widget)
     row.addWidget(lbl)
     row.addWidget(widget)
     return row
@@ -103,9 +104,11 @@ class SettingsPanel(QWidget):
         layout.addLayout(_labeled_row("Max tokens:", self._n_predict))
 
         layout.addSpacing(6)
-        layout.addWidget(QLabel("System prompt:"))
+        lbl_system_prompt = QLabel("System prompt:")
+        layout.addWidget(lbl_system_prompt)
 
         self._system_prompt = QTextEdit()
+        lbl_system_prompt.setBuddy(self._system_prompt)
         self._system_prompt.setPlaceholderText("You are a helpful assistant.")
         self._system_prompt.setFixedHeight(80)
         self._system_prompt.setFont(QFont("Consolas", 10))
