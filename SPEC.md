@@ -44,6 +44,10 @@ PyQt6 desktop GUI for interacting with local BitNet LLM models. Provides:
 | `gui/hub_dialog.py`      | Model catalog browser and background download dialog (mypy-strict, with accessible labels) |
 | `gui/setup_dialog.py`    | Installation status and guided setup dialog (with accessible labels/buttons) |
 
+`installer.check_installation()` checks optional Python dependency availability
+with `importlib.util.find_spec()` so the GUI can report installation status
+without importing those packages on the main thread.
+
 ### State Machine (ChatSession)
 
 ```
