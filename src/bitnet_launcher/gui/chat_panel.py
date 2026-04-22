@@ -179,6 +179,7 @@ class ChatPanel(QWidget):
 
         self._display = QTextEdit()
         self._display.setReadOnly(True)
+        self._display.setAccessibleName("Chat history")
         self._display.setFont(QFont("Consolas", 10))
         self._display.setStyleSheet(
             f"background: {t.BG}; color: {t.TEXT}; border: 1px solid {t.SURFACE};"
@@ -189,6 +190,7 @@ class ChatPanel(QWidget):
 
         self._input = QLineEdit()
         self._input.setPlaceholderText("Type your message and press Enter…")
+        self._input.setAccessibleName("Message input")
         self._input.setEnabled(False)
         self._input.setFont(QFont("Consolas", 10))
         self._input.returnPressed.connect(self._on_submit)

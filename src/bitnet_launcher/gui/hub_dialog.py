@@ -173,6 +173,8 @@ class HubDialog(QDialog):
 
         self._search = QLineEdit()
         self._search.setPlaceholderText("Search by name…")
+        self._search.setAccessibleName("Search models by name")
+        self._search.setClearButtonEnabled(True)
         self._search.textChanged.connect(self._refresh_table)
         filter_row.addWidget(self._search)
 
