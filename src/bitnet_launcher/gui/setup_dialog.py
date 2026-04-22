@@ -178,6 +178,7 @@ class SetupDialog(QDialog):
 
         self._path_edit = QLineEdit(str(self._bitnet_root))
         self._path_edit.setPlaceholderText("/home/user/BitNet")
+        self._path_edit.setAccessibleName("BitNet root path")
         self._path_edit.editingFinished.connect(self._on_path_edited)
         path_layout.addWidget(self._path_edit)
 
