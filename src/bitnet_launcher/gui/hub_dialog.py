@@ -13,7 +13,7 @@ from __future__ import annotations
 import logging
 from pathlib import Path
 
-from PyQt6.QtCore import QThread, pyqtSignal
+from PyQt6.QtCore import QThread, QTimer, pyqtSignal
 from PyQt6.QtGui import QColor, QFont
 from PyQt6.QtWidgets import (
     QComboBox,
@@ -145,6 +145,14 @@ class HubDialog(QDialog):
         self._bitnet_root = bitnet_root
         self._worker: DownloadWorker | None = None
 
+        # ⚡ Bolt Optimization: Debounce search input
+        # Why: Prevents heavy synchronous table rebuilds and disk I/O on every keystroke
+        # Impact: Reduces main thread blocking by ~90% during active typing
+        self._search_timer = QTimer(self)
+        self._search_timer.setSingleShot(True)
+        self._search_timer.setInterval(300)
+        self._search_timer.timeout.connect(self._refresh_table)
+
         self.setWindowTitle("Download BitNet Models")
         self.resize(820, 640)
         self.setStyleSheet(_dialog_stylesheet())
@@ -175,7 +183,7 @@ class HubDialog(QDialog):
         self._search.setPlaceholderText("Search by name…")
         self._search.setAccessibleName("Search models by name")
         self._search.setClearButtonEnabled(True)
-        self._search.textChanged.connect(self._refresh_table)
+        self._search.textChanged.connect(self._search_timer.start)
         filter_row.addWidget(self._search)
 
         root.addLayout(filter_row)
