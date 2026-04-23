@@ -122,7 +122,7 @@ def discover_models(models_dir: Path) -> list[ModelInfo]:
 
         candidates = []
         for file_entry in os.scandir(model_entry.path):
-            if file_entry.name.endswith(".gguf") and file_entry.is_file():
+            if file_entry.name.lower().endswith(".gguf") and file_entry.is_file():
                 candidates.append(file_entry)
 
         if not candidates:
