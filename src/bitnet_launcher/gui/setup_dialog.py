@@ -227,6 +227,7 @@ class SetupDialog(QDialog):
 
         self._log = QTextEdit()
         self._log.setReadOnly(True)
+        self._log.setAccessibleName("Log output")
         self._log.setStyleSheet(
             f"background: {t.BG}; color: {t.TEXT}; border: 1px solid {t.SURFACE};"
         )
