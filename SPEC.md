@@ -31,7 +31,7 @@ PyQt6 desktop GUI for interacting with local BitNet LLM models. Provides:
 | Module                   | Responsibility                                               |
 | ------------------------ | ------------------------------------------------------------ |
 | `config.py`              | Path config and InferenceConfig dataclass with DbC           |
-| `models.py`              | ModelInfo dataclass and model discovery                      |
+| `models.py`              | ModelInfo dataclass and model discovery (optimized with `os.scandir`) |
 | `chat_session.py`        | llama-cli stdout state machine (Qt-free)                     |
 | `terminal.py`            | Command building and terminal launch using `shlex` for safe shell quoting |
 | `theme.py`               | Catppuccin colour palette and Qt stylesheet                  |
