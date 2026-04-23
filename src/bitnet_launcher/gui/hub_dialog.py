@@ -190,6 +190,7 @@ class HubDialog(QDialog):
 
         # Model table
         self._table = QTableWidget(0, 5)
+        self._table.setAccessibleName("Model catalog")
         self._table.setHorizontalHeaderLabels(
             ["Name", "Params", "Size (GB)", "Tags", "Status"]
         )
@@ -229,6 +230,7 @@ class HubDialog(QDialog):
 
         self._log = QTextEdit()
         self._log.setReadOnly(True)
+        self._log.setAccessibleName("Log output")
         self._log.setFont(QFont("Consolas", 9))
         self._log.setFixedHeight(120)
         self._log.setStyleSheet(
@@ -322,6 +324,7 @@ class HubDialog(QDialog):
             self._table.setItem(row, 4, status_item)
 
         self._btn_download.setEnabled(False)
+        self._btn_download.setToolTip("Select a model to download")
         self._detail_label.setText("")
 
     def _on_selection_changed(self) -> None:
@@ -331,6 +334,7 @@ class HubDialog(QDialog):
         rows = sel_model.selectedRows()
         if not rows:
             self._btn_download.setEnabled(False)
+            self._btn_download.setToolTip("Select a model to download")
             self._detail_label.setText("")
             return
         row = rows[0].row()
@@ -344,7 +348,14 @@ class HubDialog(QDialog):
             f"{model.description}<br>"
             f"<i>HF repo: {model.repo_id}</i>"
         )
-        self._btn_download.setEnabled(not installed and self._worker is None)
+        can_download = not installed and self._worker is None
+        self._btn_download.setEnabled(can_download)
+        if self._worker is not None:
+            self._btn_download.setToolTip("A download is already in progress")
+        elif installed:
+            self._btn_download.setToolTip("Model is already installed")
+        else:
+            self._btn_download.setToolTip("Download the selected model")
 
     # ── Download ─────────────────────────────────────────────────────────────
 
@@ -379,6 +390,7 @@ class HubDialog(QDialog):
         self._log.clear()
         self._progress.setValue(0)
         self._btn_download.setEnabled(False)
+        self._btn_download.setToolTip("A download is already in progress")
         self._btn_close.setEnabled(False)
         self._append_log(f"Starting download: {model.name} …")
 
@@ -414,6 +426,7 @@ class HubDialog(QDialog):
         self._append_log(f"ERROR: {message}")
         self._worker = None
         self._btn_download.setEnabled(True)
+        self._btn_download.setToolTip("Download the selected model")
         self._btn_close.setEnabled(True)
         QMessageBox.critical(self, "Download Failed", message)
         logger.error("Download worker error: %s", message)
