@@ -3,7 +3,7 @@
 ## Identity
 
 - **Repository:** Bitnet_Launcher
-- **Version:** 0.1.0
+- **Version:** 0.1.1
 - **Language:** Python 3.11+
 - **License:** MIT
 
@@ -33,7 +33,7 @@ PyQt6 desktop GUI for interacting with local BitNet LLM models. Provides:
 | `config.py`              | Path config and InferenceConfig dataclass with DbC           |
 | `models.py`              | ModelInfo dataclass and model discovery                      |
 | `chat_session.py`        | llama-cli stdout state machine (Qt-free)                     |
-| `terminal.py`            | Command building (using shlex for safe quoting) and terminal launch |
+| `terminal.py`            | Command building and terminal launch using `shlex` for safe shell quoting |
 | `theme.py`               | Catppuccin colour palette and Qt stylesheet                  |
 | `hub.py`                 | HubModel catalog (16 models) and download_model() utility    |
 | `installer.py`           | InstallStatus, check_installation(), install_bitnet(), build_bitnet() |
@@ -57,6 +57,15 @@ idle → loading → ready ↔ generating
 - **loading**: buffering stdout, waiting for first `\n> `
 - **ready**: accepting user input
 - **generating**: waiting for `\n> ` after filtering user echo via `<|im_start|>assistant\n`
+
+### Terminal Launch Security
+
+`terminal.launch_terminal()` must quote every dynamic value interpolated into the
+`bash -c` script with shell-aware escaping. The llama command argv is rendered
+with `shlex.join()`, and the BitNet working directory is rendered with
+`shlex.quote(str(bitnet_root))` before it is used in the `cd` command. This
+prevents model prompts, model paths, and configured checkout paths from breaking
+out of their intended shell arguments.
 
 ## Test Configuration
 
