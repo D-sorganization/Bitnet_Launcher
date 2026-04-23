@@ -58,6 +58,15 @@ idle → loading → ready ↔ generating
 - **ready**: accepting user input
 - **generating**: waiting for `\n> ` after filtering user echo via `<|im_start|>assistant\n`
 
+### Terminal Launch Security
+
+`terminal.launch_terminal()` constructs the interactive bash command from
+structured arguments instead of shell string concatenation. The `llama-cli`
+argv is escaped with `shlex.join()`, and the BitNet working directory is
+escaped with `shlex.quote(str(bitnet_root))` before it is inserted into the
+`bash -c` command. This prevents user-controlled prompt text and unexpected
+path characters from breaking out into additional shell commands.
+
 ## Test Configuration
 
 - pytest runs with `-p no:xvfb` to disable the xvfb plugin on self-hosted and headless CI runners where no X display is available
