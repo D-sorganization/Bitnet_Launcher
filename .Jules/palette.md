@@ -4,3 +4,6 @@
 ## 2025-01-28 - Dynamic Tooltips for Disabled Buttons
 **Learning:** In PyQt6, disabling a button (`setEnabled(False)`) makes it unresponsive, but a tooltip can still be displayed if hovered, which is crucial for explaining *why* an action is unavailable (e.g., "Model already installed" or "Download in progress").
 **Action:** When conditionally disabling a button, always update its `setToolTip()` string to provide context instead of leaving the user guessing.
+## 2024-05-24 - Qt Stylesheet Focus Indicators
+**Learning:** The app uses a custom Qt stylesheet (Catppuccin) which overrides default OS focus indicators for keyboard navigation, hiding tab focus.
+**Action:** Always explicitly add `:focus` pseudo-class rules (e.g. `border: 1px solid {t.ACCENT};`) to interactive UI components when writing or modifying Qt stylesheets to preserve keyboard accessibility.
