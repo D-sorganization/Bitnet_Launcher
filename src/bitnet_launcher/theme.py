@@ -101,10 +101,17 @@ def build_stylesheet() -> str:
         QPushButton:disabled {{
             color: #585b70;
         }}
+        QPushButton:focus {{
+            border: 1px solid {t.ACCENT};
+            outline: none;
+        }}
         QListWidget {{
             background: {t.SURFACE};
             border: 1px solid {t.OVERLAY};
             border-radius: 4px;
+        }}
+        QListWidget:focus {{
+            border: 1px solid {t.ACCENT};
         }}
         QListWidget::item:selected {{
             background: {t.ACCENT};
@@ -119,6 +126,9 @@ def build_stylesheet() -> str:
             border-radius: 3px;
             color: {t.TEXT};
             padding: 2px 4px;
+        }}
+        QLineEdit:focus, QTextEdit:focus, QSpinBox:focus, QDoubleSpinBox:focus {{
+            border: 1px solid {t.ACCENT};
         }}
         QSpinBox::up-button, QSpinBox::down-button,
         QDoubleSpinBox::up-button, QDoubleSpinBox::down-button {{
