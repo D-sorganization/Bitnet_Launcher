@@ -9,3 +9,7 @@
 ## 2026-04-23 - Faster directory traversal with os.scandir
 **Learning:** `pathlib.Path.iterdir()` combined with `.glob()` and `.stat()` is slow for directory traversal because it instantiates `Path` objects and performs separate `stat()` system calls.
 **Action:** Use `os.scandir()` which is significantly faster (~4-5x) because it yields `os.DirEntry` objects that cache `stat()` results (like `is_dir()`, `is_file()`, and file sizes) on most operating systems, reducing disk I/O.
+
+## 2024-06-25 - PyQt6 QTableWidget Repopulation Lag
+**Learning:** Repopulating a `QTableWidget` without pausing updates (`setUpdatesEnabled(False)`) causes expensive sequential layout recalculations and repaints for every cell insertion. Even with debouncing, rendering many rows synchronously on the main thread will stutter.
+**Action:** Always wrap bulk updates to `QTableWidget` items inside a `try...finally` block with `setUpdatesEnabled(False)` before and `setUpdatesEnabled(True)` after.
