@@ -17,6 +17,7 @@ jobs:
         env:
           GH_TOKEN: ${{ secrets.RUNNER_CHECK_TOKEN }}
           FLEET_MODE: ${{ vars.FLEET_RUNNER_MODE }}
+        shell: bash
         run: |
           MODE="${FLEET_MODE:-hybrid}"
           echo "Fleet mode: $MODE"
