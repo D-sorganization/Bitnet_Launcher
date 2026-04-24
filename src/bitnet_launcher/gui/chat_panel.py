@@ -96,15 +96,8 @@ class ChatPanel(QWidget):
         if not isinstance(text, str):
             raise TypeError(f"text must be str, got {type(text).__name__}")
         t = CatppuccinTheme
-        cursor = self._display.textCursor()
-        cursor.movePosition(QTextCursor.MoveOperation.End)
-        self._display.setTextCursor(cursor)
-
-        if cursor.position() > 0 and not cursor.atBlockStart():
-            self._display.insertPlainText("\n")
-
         self._display.setTextColor(QColor(t.YELLOW))
-        self._display.insertPlainText(f"You: {text}\n")
+        self._display.append(f"You: {text}")
         self._display.setTextColor(QColor(t.TEXT))
         self._scroll_to_bottom()
 

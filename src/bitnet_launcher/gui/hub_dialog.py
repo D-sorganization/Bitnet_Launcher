@@ -303,38 +303,29 @@ class HubDialog(QDialog):
         """Repopulate the table according to current filter settings."""
         t = CatppuccinTheme
         self._visible_models = self._filtered_models()
+        self._table.setRowCount(len(self._visible_models))
 
-        # ⚡ Bolt Optimization: Disable table updates during repopulation
-        # Why: Prevents expensive sequential layout recalculations and repaints
-        # for every cell insertion
-        # Impact: Significantly reduces main thread lag during table refresh
-        self._table.setUpdatesEnabled(False)
-        try:
-            self._table.setRowCount(len(self._visible_models))
+        for row, model in enumerate(self._visible_models):
+            installed = self._is_installed(model)
 
-            for row, model in enumerate(self._visible_models):
-                installed = self._is_installed(model)
+            name_item = QTableWidgetItem(model.name)
+            name_item.setFont(QFont("Consolas", 9))
+            self._table.setItem(row, 0, name_item)
 
-                name_item = QTableWidgetItem(model.name)
-                name_item.setFont(QFont("Consolas", 9))
-                self._table.setItem(row, 0, name_item)
+            self._table.setItem(row, 1, QTableWidgetItem(model.params))
+            self._table.setItem(row, 2, QTableWidgetItem(f"{model.size_gb:.1f}"))
+            self._table.setItem(row, 3, QTableWidgetItem(", ".join(model.tags)))
 
-                self._table.setItem(row, 1, QTableWidgetItem(model.params))
-                self._table.setItem(row, 2, QTableWidgetItem(f"{model.size_gb:.1f}"))
-                self._table.setItem(row, 3, QTableWidgetItem(", ".join(model.tags)))
+            status_item = QTableWidgetItem("Installed" if installed else "—")
+            if installed:
+                status_item.setForeground(QColor(t.GREEN))
+            else:
+                status_item.setForeground(QColor(t.SUBTEXT))
+            self._table.setItem(row, 4, status_item)
 
-                status_item = QTableWidgetItem("Installed" if installed else "—")
-                if installed:
-                    status_item.setForeground(QColor(t.GREEN))
-                else:
-                    status_item.setForeground(QColor(t.SUBTEXT))
-                self._table.setItem(row, 4, status_item)
-
-            self._btn_download.setEnabled(False)
-            self._btn_download.setToolTip("Select a model to download")
-            self._detail_label.setText("")
-        finally:
-            self._table.setUpdatesEnabled(True)
+        self._btn_download.setEnabled(False)
+        self._btn_download.setToolTip("Select a model to download")
+        self._detail_label.setText("")
 
     def _on_selection_changed(self) -> None:
         """Update the detail label and download button when selection changes."""
@@ -504,12 +495,22 @@ def _dialog_stylesheet() -> str:
         QPushButton:disabled {{
             color: #585b70;
         }}
+        QPushButton:focus {{
+            border: 1px solid {t.ACCENT};
+            outline: none;
+        }}
         QLineEdit, QComboBox {{
             background: {t.SURFACE};
             border: 1px solid {t.OVERLAY};
             border-radius: 3px;
             color: {t.TEXT};
             padding: 2px 4px;
+        }}
+        QLineEdit:focus, QComboBox:focus {{
+            border: 1px solid {t.ACCENT};
+        }}
+        QTableWidget:focus {{
+            border: 1px solid {t.ACCENT};
         }}
         QProgressBar {{
             background: {t.SURFACE};
