@@ -70,7 +70,14 @@ jobs:
           python-version: "3.11"
       # Install Qt system libraries required by PyQt6 on headless CI
       - name: Install Qt system deps
-        run: sudo apt-get install -y --no-install-recommends libgles2 libegl1 libgl1
+        run: |
+          sudo killall apt apt-get || true
+          sudo rm -f /var/lib/apt/lists/lock
+          sudo rm -f /var/cache/apt/archives/lock
+          sudo rm -f /var/lib/dpkg/lock*
+          sudo dpkg --configure -a || true
+          sudo apt-get update -y || true
+          sudo apt-get install -y --no-install-recommends libgles2 libegl1 libgl1
       - run: pip install -e ".[dev]"
       - name: Run tests
         run: python3 -m pytest tests/ -v --tb=short
