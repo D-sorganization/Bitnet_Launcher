@@ -74,7 +74,3 @@ out of their intended shell arguments.
 ## Repository Hygiene
 
 - Generated Python bytecode artifacts (`__pycache__/`, `*.pyc`, and related files) are ignored and must not be tracked in source control.
-
-### Security
-
-- **Chat Panel HTML Injection:** `QTextEdit` input appending is strictly forced to plaintext mode using `insertPlainText()` instead of `append()` to prevent user input from being evaluated as rich text or HTML. This stops HTML injection / UI spoofing.

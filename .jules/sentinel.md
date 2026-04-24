@@ -6,7 +6,3 @@
 **Vulnerability:** In `src/bitnet_launcher/terminal.py`, `bitnet_root` is enclosed in double quotes during bash command construction (e.g., `f'cd "{bitnet_root}" && ...'`). An attacker or unexpected path could contain double quotes and bash meta-characters, leading to command injection.
 **Learning:** Constructing bash commands by string concatenation—even using double quotes—can fail securely if the parameter contains double quotes or backticks. Always use `shlex.quote()` to safely escape arbitrary paths in a shell context.
 **Prevention:** Use `shlex.quote(str(path))` instead of `f'"{path}"'` when injecting into a bash `-c` string.
-## 2026-04-24 - [Fix HTML Injection in Chat Panel]
-**Vulnerability:** The `ChatPanel.append_user` method in `src/bitnet_launcher/gui/chat_panel.py` used `QTextEdit.append()` to display user input. `append()` evaluates strings containing HTML tags, allowing users to inject arbitrary HTML, potentially messing up the UI or causing external requests.
-**Learning:** In Qt, `QTextEdit.append()` automatically processes its input as HTML/Rich Text if it looks like HTML, making it unsafe for untrusted user input without escaping.
-**Prevention:** Use `insertPlainText()` instead of `append()` for displaying user-provided text, as it safely handles all input as raw text. To mimic `append()` behavior (appending to a new line), explicitly manage the text cursor and insert a newline when necessary.
