@@ -410,11 +410,18 @@ def _dialog_stylesheet() -> str:
         QPushButton:disabled {{
             color: #585b70;
         }}
+        QPushButton:focus {{
+            border: 1px solid {t.ACCENT};
+            outline: none;
+        }}
         QLineEdit {{
             background: {t.SURFACE};
             border: 1px solid {t.OVERLAY};
             border-radius: 3px;
             color: {t.TEXT};
             padding: 2px 4px;
+        }}
+        QLineEdit:focus {{
+            border: 1px solid {t.ACCENT};
         }}
     """

@@ -77,6 +77,7 @@ class ModelPanel(QWidget):
         group_layout = QVBoxLayout(group)
 
         self._list = QListWidget()
+        self._list.setAccessibleName("Model list")
         self._list.setFont(QFont("Consolas", 10))
         self._list.currentRowChanged.connect(self._on_row_changed)
 
