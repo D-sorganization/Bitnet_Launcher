@@ -58,6 +58,11 @@ idle → loading → ready ↔ generating
 - **ready**: accepting user input
 - **generating**: waiting for `\n> ` after filtering user echo via `<|im_start|>assistant\n`
 
+
+### GUI Security
+
+The application ensures that untrusted string inputs are not evaluated as Rich Text or HTML when appended to `QTextEdit` widgets (like chat history or setup logs). It prevents XSS/HTML injection by using `insertPlainText()` instead of `append()` for untrusted texts.
+
 ### Terminal Launch Security
 
 `terminal.launch_terminal()` must quote every dynamic value interpolated into the
