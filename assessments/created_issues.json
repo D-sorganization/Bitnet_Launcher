@@ -1,0 +1,47 @@
+[
+  {
+    "url": "https://github.com/D-sorganization/Bitnet_Launcher/issues/29",
+    "title": "[P0] [N] No LICENSE file",
+    "priority": "P0"
+  },
+  {
+    "url": "https://github.com/D-sorganization/Bitnet_Launcher/issues/30",
+    "title": "[P0] [M] No CHANGELOG",
+    "priority": "P0"
+  },
+  {
+    "url": "https://github.com/D-sorganization/Bitnet_Launcher/issues/31",
+    "title": "[P0] [I] No .env.example",
+    "priority": "P0"
+  },
+  {
+    "url": "https://github.com/D-sorganization/Bitnet_Launcher/issues/32",
+    "title": "[P0] [G] No lockfile",
+    "priority": "P0"
+  },
+  {
+    "url": "https://github.com/D-sorganization/Bitnet_Launcher/issues/33",
+    "title": "[P1] [C] Only 6 test files for 4110 LOC",
+    "priority": "P1"
+  },
+  {
+    "url": "https://github.com/D-sorganization/Bitnet_Launcher/issues/34",
+    "title": "[P1] [H] 8 hardcoded secrets",
+    "priority": "P1"
+  },
+  {
+    "url": "https://github.com/D-sorganization/Bitnet_Launcher/issues/35",
+    "title": "[P1] [H] 22 subprocess calls",
+    "priority": "P1"
+  },
+  {
+    "url": "https://github.com/D-sorganization/Bitnet_Launcher/issues/36",
+    "title": "[P1] [E] No benchmark suite",
+    "priority": "P1"
+  },
+  {
+    "url": "https://github.com/D-sorganization/Bitnet_Launcher/issues/37",
+    "title": "[P2] [O] No AGENTS.md",
+    "priority": "P2"
+  }
+]

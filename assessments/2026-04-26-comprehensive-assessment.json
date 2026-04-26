@@ -1,0 +1,104 @@
+{
+  "repo": "Bitnet_Launcher",
+  "owner": "D-sorganization",
+  "branch": "fix/disable-xvfb-plugin",
+  "head_sha": "cb614a827bfd05b9d90484ef72ba2f3b8f2fd336",
+  "date": "2026-04-26",
+  "total_score": 65.9,
+  "grade": "C",
+  "criteria": {
+    "A": {
+      "score": 75
+    },
+    "B": {
+      "score": 70
+    },
+    "C": {
+      "score": 40
+    },
+    "D": {
+      "score": 85
+    },
+    "E": {
+      "score": 20
+    },
+    "F": {
+      "score": 90
+    },
+    "G": {
+      "score": 55
+    },
+    "H": {
+      "score": 80
+    },
+    "I": {
+      "score": 30
+    },
+    "J": {
+      "score": 60
+    },
+    "K": {
+      "score": 90
+    },
+    "L": {
+      "score": 60
+    },
+    "M": {
+      "score": 25
+    },
+    "N": {
+      "score": 0
+    },
+    "O": {
+      "score": 70
+    }
+  },
+  "findings": [
+    {
+      "criterion": "N",
+      "priority": "P0",
+      "title": "No LICENSE file"
+    },
+    {
+      "criterion": "M",
+      "priority": "P0",
+      "title": "No CHANGELOG"
+    },
+    {
+      "criterion": "I",
+      "priority": "P0",
+      "title": "No .env.example"
+    },
+    {
+      "criterion": "G",
+      "priority": "P0",
+      "title": "No lockfile"
+    },
+    {
+      "criterion": "C",
+      "priority": "P1",
+      "title": "Only 6 test files for 4110 LOC"
+    },
+    {
+      "criterion": "H",
+      "priority": "P1",
+      "title": "8 hardcoded secrets"
+    },
+    {
+      "criterion": "H",
+      "priority": "P1",
+      "title": "22 subprocess calls"
+    },
+    {
+      "criterion": "E",
+      "priority": "P1",
+      "title": "No benchmark suite"
+    },
+    {
+      "criterion": "O",
+      "priority": "P2",
+      "title": "No AGENTS.md"
+    }
+  ],
+  "overall_score": 65.9
+}
