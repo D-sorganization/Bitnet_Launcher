@@ -10,3 +10,7 @@
 **Vulnerability:** Untrusted string input was appended to `QTextEdit` via the `append()` method, which natively parses and renders HTML, leading to potential Cross-Site Scripting (XSS) and Rich Text injection.
 **Learning:** `QTextEdit.append()` accepts HTML and applies parsing. When dealing with untrusted user text or logs, it will render HTML tags unless the content is strictly plain text only. This behavior is dangerous when handling inputs directly from users, models, or system logs.
 **Prevention:** Use `insertPlainText()` along with cursor manipulation (moving cursor to end and inserting a newline) rather than `append()` to ensure all content is strictly treated as text.
+## 2025-03-01 - Prevent HTML Injection in QLabel via AutoText
+**Vulnerability:** `QLabel` objects initialized with untrusted text (like `QLabel("...")` or `setText()`) can automatically render HTML if the text looks like HTML or if the text format is set to `AutoText` (the default). If a model name or user input containing HTML tags is displayed in a status label, this could lead to Rich Text injection or UI redressing.
+**Learning:** In PyQt applications, `QLabel` uses `Qt.TextFormat.AutoText` by default, which heuristically parses text. Any widget accepting raw user data to display must be explicitly forced into plain text mode if it doesn't need to support HTML styling.
+**Prevention:** Always use `.setTextFormat(Qt.TextFormat.PlainText)` on `QLabel` instances that display dynamic, untrusted text.

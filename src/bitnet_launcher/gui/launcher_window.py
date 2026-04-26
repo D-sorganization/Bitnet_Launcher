@@ -7,6 +7,7 @@ QProcess and the ChatSession state machine.
 from __future__ import annotations
 
 import logging
+import shlex
 
 from PyQt6.QtCore import QProcess, Qt
 from PyQt6.QtGui import QCloseEvent, QFont
@@ -168,6 +169,7 @@ class BitNetLauncher(QMainWindow):
         root.addWidget(self._chat_panel)
 
         self._status = QLabel("Ready.")
+        self._status.setTextFormat(Qt.TextFormat.PlainText)
         self._status.setStyleSheet(
             f"color: {CatppuccinTheme.SUBTEXT}; font-size: 10px;"
         )
@@ -212,7 +214,7 @@ class BitNetLauncher(QMainWindow):
             self._set_status(f"Opened terminal: {model.name}")
         except FileNotFoundError:
             cmd = build_command(self._cfg.llama_cli, model, config)
-            bash_cmd = " ".join(cmd)
+            bash_cmd = shlex.join(cmd)
             QMessageBox.critical(
                 self,
                 "Terminal not found",
