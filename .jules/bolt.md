@@ -9,3 +9,7 @@
 ## 2026-04-23 - Faster directory traversal with os.scandir
 **Learning:** `pathlib.Path.iterdir()` combined with `.glob()` and `.stat()` is slow for directory traversal because it instantiates `Path` objects and performs separate `stat()` system calls.
 **Action:** Use `os.scandir()` which is significantly faster (~4-5x) because it yields `os.DirEntry` objects that cache `stat()` results (like `is_dir()`, `is_file()`, and file sizes) on most operating systems, reducing disk I/O.
+
+## 2026-04-26 - PyQt6 object instantiation and disk I/O in loops
+**Learning:** Instantiating `QFont` or `QColor` in frequent UI update loops (e.g. `_refresh_table` when searching) is slow. Also, synchronous `Path.exists()` calls within main thread UI loops cause micro-stutters when populating large tables.
+**Action:** Cache Qt objects (`QFont`, `QColor`) outside loops and use memory caches (e.g., dict cache or `lru_cache`) for disk I/O status checks in UI callbacks.

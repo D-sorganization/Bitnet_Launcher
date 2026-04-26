@@ -145,6 +145,9 @@ class HubDialog(QDialog):
         self._bitnet_root = bitnet_root
         self._worker: DownloadWorker | None = None
 
+        # ⚡ Bolt Optimization: Cache disk I/O to avoid micro-stutters
+        self._installed_cache: dict[str, bool] = {}
+
         # ⚡ Bolt Optimization: Debounce search input
         # Why: Prevents heavy synchronous table rebuilds and disk I/O on every keystroke
         # Impact: Reduces main thread blocking by ~90% during active typing
@@ -294,8 +297,10 @@ class HubDialog(QDialog):
 
     def _is_installed(self, model: HubModel) -> bool:
         """Return ``True`` if the model's GGUF file already exists."""
-        gguf = self._models_dir / model.name / "ggml-model-i2_s.gguf"
-        return gguf.exists()
+        if model.name not in self._installed_cache:
+            gguf = self._models_dir / model.name / "ggml-model-i2_s.gguf"
+            self._installed_cache[model.name] = gguf.exists()
+        return self._installed_cache[model.name]
 
     # ── Table population ─────────────────────────────────────────────────────
 
@@ -305,11 +310,16 @@ class HubDialog(QDialog):
         self._visible_models = self._filtered_models()
         self._table.setRowCount(len(self._visible_models))
 
+        # ⚡ Bolt Optimization: Cache Qt objects outside the loop
+        font_consolas_9 = QFont("Consolas", 9)
+        color_green = QColor(t.GREEN)
+        color_subtext = QColor(t.SUBTEXT)
+
         for row, model in enumerate(self._visible_models):
             installed = self._is_installed(model)
 
             name_item = QTableWidgetItem(model.name)
-            name_item.setFont(QFont("Consolas", 9))
+            name_item.setFont(font_consolas_9)
             self._table.setItem(row, 0, name_item)
 
             self._table.setItem(row, 1, QTableWidgetItem(model.params))
@@ -318,9 +328,9 @@ class HubDialog(QDialog):
 
             status_item = QTableWidgetItem("Installed" if installed else "—")
             if installed:
-                status_item.setForeground(QColor(t.GREEN))
+                status_item.setForeground(color_green)
             else:
-                status_item.setForeground(QColor(t.SUBTEXT))
+                status_item.setForeground(color_subtext)
             self._table.setItem(row, 4, status_item)
 
         self._btn_download.setEnabled(False)
@@ -424,6 +434,10 @@ class HubDialog(QDialog):
         self._append_log("Download complete.")
         self._worker = None
         self._btn_close.setEnabled(True)
+
+        # ⚡ Bolt Optimization: Invalidate cache for the downloaded model
+        self._installed_cache.clear()
+
         self._refresh_table()
         logger.info("Download worker finished successfully")
 
