@@ -239,6 +239,7 @@ class HubDialog(QDialog):
         log_layout.addWidget(self._log)
 
         self._progress = QProgressBar()
+        self._progress.setAccessibleName("Download progress")
         self._progress.setRange(0, 100)
         self._progress.setValue(0)
         self._progress.setTextVisible(True)
