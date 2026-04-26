@@ -325,7 +325,9 @@ class SetupDialog(QDialog):
         """Create and start an :class:`InstallerWorker`."""
         self._log.clear()
         self._btn_install.setEnabled(False)
+        self._btn_install.setToolTip("An operation is currently in progress")
         self._btn_build.setEnabled(False)
+        self._btn_build.setToolTip("An operation is currently in progress")
         self._btn_close.setEnabled(False)
 
         self._worker = InstallerWorker(mode, self._bitnet_root, parent=self)
@@ -349,7 +351,11 @@ class SetupDialog(QDialog):
         """Re-enable controls and refresh status after a successful run."""
         self._worker = None
         self._btn_install.setEnabled(True)
+        self._btn_install.setToolTip(
+            "Clone the BitNet repository and install Python dependencies"
+        )
         self._btn_build.setEnabled(True)
+        self._btn_build.setToolTip("Compile llama-cli from source using cmake")
         self._btn_close.setEnabled(True)
         self._append_log("\n--- Done ---")
         self._refresh_status()
@@ -359,7 +365,11 @@ class SetupDialog(QDialog):
         """Handle worker failure."""
         self._worker = None
         self._btn_install.setEnabled(True)
+        self._btn_install.setToolTip(
+            "Clone the BitNet repository and install Python dependencies"
+        )
         self._btn_build.setEnabled(True)
+        self._btn_build.setToolTip("Compile llama-cli from source using cmake")
         self._btn_close.setEnabled(True)
         self._append_log(f"ERROR: {message}")
         QMessageBox.critical(self, "Operation Failed", message)

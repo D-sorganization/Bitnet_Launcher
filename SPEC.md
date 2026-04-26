@@ -41,8 +41,8 @@ PyQt6 desktop GUI for interacting with local BitNet LLM models. Provides:
 | `gui/model_panel.py`     | Scrollable model list widget (with accessible list name)     |
 | `gui/settings_panel.py`  | Inference hyperparameter spinboxes (with accessible labels)  |
 | `gui/chat_panel.py`      | Chat display and user-input row (with accessible labels)     |
-| `gui/hub_dialog.py`      | Model catalog browser and background download dialog (mypy-strict, accessible labels, dynamic tooltips, QTimer-debounced search) |
-| `gui/setup_dialog.py`    | Installation status and guided setup dialog (with accessible labels/buttons/focus states) |
+| `gui/hub_dialog.py`      | Model catalog browser and background download dialog (mypy-strict, accessible labels, dynamic tooltips, accessible progress bar, QTimer-debounced search) |
+| `gui/setup_dialog.py`    | Installation status and guided setup dialog (with accessible labels/buttons/focus states, disabled-button dynamic tooltips) |
 
 `installer.check_installation()` checks optional Python dependency availability
 with `importlib.util.find_spec()` so the GUI can report installation status
