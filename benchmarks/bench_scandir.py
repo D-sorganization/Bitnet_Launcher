@@ -1,8 +1,8 @@
 import os
+import tempfile
 import time
 from pathlib import Path
 import shutil
-import tempfile
 
 def setup_mock_models(base_dir: Path, n_models: int = 100, n_files: int = 10):
     for i in range(n_models):
@@ -11,6 +11,7 @@ def setup_mock_models(base_dir: Path, n_models: int = 100, n_files: int = 10):
         for j in range(n_files):
             ext = ".gguf" if j == 0 else ".txt"
             (model_dir / f"file_{j}{ext}").write_text("dummy data")
+
 
 def bench_iterdir(models_dir: Path):
     start = time.perf_counter()
@@ -24,6 +25,7 @@ def bench_iterdir(models_dir: Path):
             size = chosen.stat().st_size
             found.append((model_dir.name, chosen, size))
     return time.perf_counter() - start, len(found)
+
 
 def bench_scandir(models_dir: Path):
     start = time.perf_counter()
@@ -45,19 +47,20 @@ def bench_scandir(models_dir: Path):
 def main():
     with tempfile.TemporaryDirectory() as tmp_dir:
         tmp_path = Path(tmp_dir)
-        print(f"Setting up 100 mock models in {tmp_path}...")
+        print(f"Setting up 100 mock models in {tmp_path}...")  # noqa: T201
         setup_mock_models(tmp_path, 100, 10)
-        
+
         # Warm up
         bench_iterdir(tmp_path)
         bench_scandir(tmp_path)
-        
+
         it_time, it_count = bench_iterdir(tmp_path)
         sc_time, sc_count = bench_scandir(tmp_path)
-        
-        print(f"Path.iterdir() + glob: {it_time:.6f}s ({it_count} models)")
-        print(f"os.scandir():           {sc_time:.6f}s ({sc_count} models)")
-        print(f"Speedup: {it_time/sc_time:.2f}x")
+
+        print(f"Path.iterdir() + glob: {it_time:.6f}s ({it_count} models)")  # noqa: T201
+        print(f"os.scandir():           {sc_time:.6f}s ({sc_count} models)")  # noqa: T201
+        print(f"Speedup: {it_time / sc_time:.2f}x")  # noqa: T201
+
 
 if __name__ == "__main__":
     main()

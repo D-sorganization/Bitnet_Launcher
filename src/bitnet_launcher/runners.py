@@ -7,7 +7,7 @@ import logging
 from collections.abc import AsyncGenerator
 from pathlib import Path
 
-from bitnet_launcher.chat_session import ChatSession
+from bitnet_launcher.config import InferenceConfig
 from bitnet_launcher.models import ModelInfo
 from bitnet_launcher.terminal import build_command
 
@@ -30,9 +30,7 @@ class LocalLlamaRunner:
         self._bitnet_root = bitnet_root
         self._process: asyncio.subprocess.Process | None = None
 
-    async def start(
-        self, model: ModelInfo, config: dict[str, str | int | float]
-    ) -> None:
+    async def start(self, model: ModelInfo, config: InferenceConfig) -> None:
         """Start the llama-cli process."""
         if self._process is not None and self._process.returncode is None:
             raise RuntimeError("Process is already running")

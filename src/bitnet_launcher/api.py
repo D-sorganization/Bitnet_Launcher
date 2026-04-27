@@ -5,12 +5,12 @@ from __future__ import annotations
 import logging
 from collections.abc import AsyncGenerator
 from contextlib import asynccontextmanager
-from pathlib import Path
+
 
 from fastapi import FastAPI, HTTPException
 from pydantic import BaseModel
 
-from bitnet_launcher.config import BitnetConfig
+from bitnet_launcher.config import BitnetConfig, InferenceConfig
 from bitnet_launcher.models import ModelInfo, discover_models
 
 logger = logging.getLogger(__name__)
@@ -57,6 +57,7 @@ async def list_models() -> list[ModelResponse]:
 
 
 from fastapi.responses import StreamingResponse
+
 from bitnet_launcher.runners import LocalLlamaRunner
 
 # Global registry to hold active runners (simplified for single-user local API)
@@ -77,7 +78,7 @@ async def start_chat(model_name: str) -> StreamingResponse:
     )
     # Start process with default config for API
     # You can extend this endpoint to accept config parameters
-    await runner.start(model, config={"n_predict": 512})
+    await runner.start(model, config=InferenceConfig(n_predict=512))
     active_runners[model_name] = runner
 
     async def event_generator() -> AsyncGenerator[str, None]:
@@ -98,7 +99,7 @@ async def send_chat_message(model_name: str, message: str) -> dict[str, str]:
     runner = active_runners.get(model_name)
     if not runner:
         raise HTTPException(status_code=404, detail="Active chat session not found")
-    
+
     await runner.send_message(message)
     return {"status": "success", "message": "Message sent to process stdin"}
 
