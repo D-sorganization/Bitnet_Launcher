@@ -2,7 +2,7 @@ import os
 import tempfile
 import time
 from pathlib import Path
-
+import shutil
 
 def setup_mock_models(base_dir: Path, n_models: int = 100, n_files: int = 10):
     for i in range(n_models):
@@ -43,7 +43,6 @@ def bench_scandir(models_dir: Path):
             size = chosen.stat().st_size
             found.append((model_entry.name, Path(chosen.path), size))
     return time.perf_counter() - start, len(found)
-
 
 def main():
     with tempfile.TemporaryDirectory() as tmp_dir:

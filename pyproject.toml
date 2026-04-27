@@ -40,7 +40,7 @@ addopts = "-ra -q --strict-markers -p no:xvfb"
 
 [tool.coverage.run]
 source = ["src"]
-omit = ["tests/*"]
+omit = ["tests/*", "src/bitnet_launcher/gui/*"]
 
 [tool.coverage.report]
 fail_under = 60

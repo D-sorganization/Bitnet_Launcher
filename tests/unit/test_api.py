@@ -71,7 +71,6 @@ def test_start_chat_success(
     ) as response:
         assert response.status_code == 200
         mock_start.assert_called_once()
-
         # We can read the stream to verify output
         content = list(response.iter_text())
         assert "".join(content) == "data: mock output chunk\n\n"
