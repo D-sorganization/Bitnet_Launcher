@@ -9,7 +9,7 @@ from contextlib import asynccontextmanager
 from fastapi import FastAPI, HTTPException
 from pydantic import BaseModel
 
-from bitnet_launcher.config import BitnetConfig
+from bitnet_launcher.config import BitnetConfig, InferenceConfig
 from bitnet_launcher.models import ModelInfo, discover_models
 
 logger = logging.getLogger(__name__)
@@ -77,7 +77,7 @@ async def start_chat(model_name: str) -> StreamingResponse:
     )
     # Start process with default config for API
     # You can extend this endpoint to accept config parameters
-    await runner.start(model, config={"n_predict": 512})
+    await runner.start(model, config=InferenceConfig(n_predict=512))
     active_runners[model_name] = runner
 
     async def event_generator() -> AsyncGenerator[str, None]:
