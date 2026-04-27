@@ -31,6 +31,7 @@ from PyQt6.QtWidgets import (
     QTableWidgetItem,
     QTextEdit,
     QVBoxLayout,
+    QWidget,
 )
 
 from bitnet_launcher.gui.styles import get_hub_dialog_stylesheet
@@ -191,6 +192,7 @@ class HubDialog(QDialog):
         btn_row = QHBoxLayout()
         self._btn_close = QPushButton("Close")
         self._btn_close.setFixedHeight(32)
+        self._btn_close.setToolTip("Close the dialog")
         self._btn_close.clicked.connect(self.reject)
         btn_row.addWidget(self._btn_close)
 
@@ -340,6 +342,7 @@ class HubDialog(QDialog):
         self._btn_download.setEnabled(False)
         self._btn_download.setToolTip("A download is already in progress")
         self._btn_close.setEnabled(False)
+        self._btn_close.setToolTip("A download is already in progress")
         self._append_log(f"Starting download: {model.name} …")
 
         self._worker = DownloadWorker(
@@ -372,6 +375,7 @@ class HubDialog(QDialog):
         self._append_log("Download complete.")
         self._worker = None
         self._btn_close.setEnabled(True)
+        self._btn_close.setToolTip("Close the dialog")
 
         # ⚡ Bolt Optimization: Invalidate cache for the downloaded model
         self._installed_cache.clear()
@@ -386,6 +390,7 @@ class HubDialog(QDialog):
         self._btn_download.setEnabled(True)
         self._btn_download.setToolTip("Download the selected model")
         self._btn_close.setEnabled(True)
+        self._btn_close.setToolTip("Close the dialog")
         QMessageBox.critical(self, "Download Failed", message)
         logger.error("Download worker error: %s", message)
 

@@ -298,7 +298,7 @@ class BitNetLauncher(QMainWindow):
         self._on_process_finished(-1, QProcess.ExitStatus.CrashExit)
 
     def _on_process_finished(self, code: int, status: QProcess.ExitStatus) -> None:
-        self._chat_panel.input_enabled = False
+        self._chat_panel.reset_state()
         self._btn_chat.setEnabled(True)
         self._btn_chat.setToolTip("Start an embedded chat session in this window")
         self._btn_stop.setEnabled(False)

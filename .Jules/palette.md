@@ -10,3 +10,6 @@
 ## 2024-04-26 - Disabled Button Tooltips
 **Learning:** When conditionally disabling a button (`setEnabled(False)`), screen reader users or keyboard navigators may still focus on or interact with the space, and the tooltip is still visible on disabled elements. It helps users to know *why* the button is unavailable.
 **Action:** Always update the `setToolTip()` string of a button when disabling it to explain the state (e.g., "An operation is currently in progress"), and restore the original tooltip when re-enabling it.
+## 2024-05-27 - Disabled Button Tooltips
+**Learning:** When conditionally disabling a button (`setEnabled(False)`), screen reader users or keyboard navigators may still focus on or interact with the space, and the tooltip is still visible on disabled elements. It helps users to know *why* the button is unavailable.
+**Action:** Always update the `setToolTip()` string of a button when disabling it to explain the state (e.g., "An operation is currently in progress"), and restore the original tooltip when re-enabling it.

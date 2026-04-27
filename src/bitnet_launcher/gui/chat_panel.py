@@ -74,7 +74,20 @@ class ChatPanel(QWidget):
         self._input.setEnabled(value)
         self._btn_send.setEnabled(value)
         if value:
+            self._input.setPlaceholderText("Type your message and press Enter…")
+            self._btn_send.setToolTip("Send message")
             self._input.setFocus()
+        else:
+            self._input.setPlaceholderText("Waiting for model to respond…")
+            self._btn_send.setToolTip("A generation or load is in progress")
+
+    def reset_state(self) -> None:
+        """Reset the input row to the initial 'no session' state."""
+        self._input.setEnabled(False)
+        self._btn_send.setEnabled(False)
+        self._input.setPlaceholderText("Start a chat session to type messages…")
+        self._btn_send.setToolTip("No active chat session")
+        self._input.clear()
 
     def clear(self) -> None:
         """Clear all text from the chat display."""
@@ -195,16 +208,13 @@ class ChatPanel(QWidget):
         input_row = QHBoxLayout()
 
         self._input = QLineEdit()
-        self._input.setPlaceholderText("Type your message and press Enter…")
         self._input.setAccessibleName("Message input")
-        self._input.setEnabled(False)
         self._input.setFont(QFont("Consolas", 10))
         self._input.returnPressed.connect(self._on_submit)
         input_row.addWidget(self._input)
 
         self._btn_send = QPushButton("Send")
         self._btn_send.setFixedWidth(70)
-        self._btn_send.setEnabled(False)
         self._btn_send.clicked.connect(self._on_submit)
         input_row.addWidget(self._btn_send)
 
@@ -213,6 +223,7 @@ class ChatPanel(QWidget):
         outer = QVBoxLayout(self)
         outer.setContentsMargins(0, 0, 0, 0)
         outer.addWidget(group)
+        self.reset_state()
 
     def _on_submit(self) -> None:
         text = self._input.text().strip()
