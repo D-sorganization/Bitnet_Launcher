@@ -31,6 +31,7 @@ from PyQt6.QtWidgets import (
     QTableWidgetItem,
     QTextEdit,
     QVBoxLayout,
+    QWidget,
 )
 
 from bitnet_launcher.gui.styles import get_hub_dialog_stylesheet
@@ -41,8 +42,6 @@ from bitnet_launcher.theme import CatppuccinTheme
 logger = logging.getLogger(__name__)
 
 _ALL_TAGS_LABEL = "All"
-
-
 
 
 # ---------------------------------------------------------------------------
@@ -397,5 +396,3 @@ class HubDialog(QDialog):
             )
             return
         super().reject()
-
-
