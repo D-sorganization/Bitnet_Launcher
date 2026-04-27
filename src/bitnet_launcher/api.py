@@ -56,16 +56,51 @@ async def list_models() -> list[ModelResponse]:
     ]
 
 
+from fastapi.responses import StreamingResponse
+from bitnet_launcher.runners import LocalLlamaRunner
+
+# Global registry to hold active runners (simplified for single-user local API)
+active_runners: dict[str, LocalLlamaRunner] = {}
+
+
 @app.post("/chat/start")
-async def start_chat(model_name: str) -> dict[str, str]:
-    """Start a chat session for a specific model."""
+async def start_chat(model_name: str) -> StreamingResponse:
+    """Start a chat session and stream the stdout using Server-Sent Events."""
     models: list[ModelInfo] = discover_models(config.models_dir)
     model = next((m for m in models if m.name == model_name), None)
     if not model:
         raise HTTPException(status_code=404, detail="Model not found")
 
-    # TODO: Implement chat session management via API
-    return {"status": "success", "message": f"Started session with {model_name}"}
+    runner = LocalLlamaRunner(
+        llama_cli=config.llama_cli,
+        bitnet_root=config.bitnet_root,
+    )
+    # Start process with default config for API
+    # You can extend this endpoint to accept config parameters
+    await runner.start(model, config={"n_predict": 512})
+    active_runners[model_name] = runner
+
+    async def event_generator() -> AsyncGenerator[str, None]:
+        try:
+            async for chunk in runner.stream_stdout():
+                # Server-Sent Events format
+                yield f"data: {chunk}\n\n"
+        finally:
+            await runner.stop()
+            active_runners.pop(model_name, None)
+
+    return StreamingResponse(event_generator(), media_type="text/event-stream")
+
+
+@app.post("/chat/send")
+async def send_chat_message(model_name: str, message: str) -> dict[str, str]:
+    """Send a message to an active chat session."""
+    runner = active_runners.get(model_name)
+    if not runner:
+        raise HTTPException(status_code=404, detail="Active chat session not found")
+    
+    await runner.send_message(message)
+    return {"status": "success", "message": "Message sent to process stdin"}
 
 
 if __name__ == "__main__":

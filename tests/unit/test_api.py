@@ -2,8 +2,9 @@
 
 from __future__ import annotations
 
+from collections.abc import AsyncGenerator
 from typing import Any
-from unittest.mock import patch
+from unittest.mock import AsyncMock, patch
 
 from fastapi.testclient import TestClient
 
@@ -48,17 +49,33 @@ def test_start_chat_not_found(mock_discover: Any) -> None:
     assert response.json() == {"detail": "Model not found"}
 
 
+@patch("bitnet_launcher.api.LocalLlamaRunner.stream_stdout")
+@patch("bitnet_launcher.api.LocalLlamaRunner.start")
 @patch("bitnet_launcher.api.discover_models")
-def test_start_chat_success(mock_discover: Any, tmp_path: Any) -> None:
+def test_start_chat_success(mock_discover: Any, mock_start: Any, mock_stream: Any, tmp_path: Any) -> None:
     """Test starting chat with a valid model."""
     model_path = tmp_path / "bitnet_b1_58-3B" / "ggml-model-i2_s.gguf"
     mock_discover.return_value = [
         ModelInfo(name="bitnet_b1_58-3B", path=model_path, size_bytes=1024),
     ]
 
-    response = client.post("/chat/start", params={"model_name": "bitnet_b1_58-3B"})
-    assert response.status_code == 200
-    assert response.json() == {
-        "status": "success",
-        "message": "Started session with bitnet_b1_58-3B",
-    }
+    async def mock_generator() -> AsyncGenerator[str, None]:
+        yield "mock output chunk"
+
+    mock_stream.return_value = mock_generator()
+
+    with client.stream("POST", "/chat/start", params={"model_name": "bitnet_b1_58-3B"}) as response:
+        assert response.status_code == 200
+        mock_start.assert_called_once()
+        
+        # We can read the stream to verify output
+        content = list(response.iter_text())
+        assert "".join(content) == "data: mock output chunk\n\n"
+
+    # Test the send message endpoint with a mock runner
+    with patch("bitnet_launcher.api.active_runners") as mock_runners:
+        mock_runner = AsyncMock()
+        mock_runners.get.return_value = mock_runner
+        send_resp = client.post("/chat/send", params={"model_name": "bitnet_b1_58-3B", "message": "hello"})
+        assert send_resp.status_code == 200
+        mock_runner.send_message.assert_called_once_with("hello")
