@@ -25,7 +25,7 @@ jobs:
 
   spec-freshness:
     name: Verify SPEC.md freshness
-    runs-on: ubuntu-latest
+    runs-on: d-sorg-fleet
     # Skip if spec-exempt label is applied
     if: ${{ !contains(github.event.pull_request.labels.*.name, 'spec-exempt') }}
     timeout-minutes: 5
