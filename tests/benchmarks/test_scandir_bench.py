@@ -1,10 +1,11 @@
 import os
-import time
 from pathlib import Path
-import shutil
-import tempfile
+from typing import Any
 
-def setup_mock_models(base_dir: Path, n_models: int = 100, n_files: int = 10):
+import pytest
+
+
+def setup_mock_models(base_dir: Path, n_models: int = 100, n_files: int = 10) -> None:
     for i in range(n_models):
         model_dir = base_dir / f"model_family_{i}"
         model_dir.mkdir(parents=True, exist_ok=True)
@@ -12,8 +13,8 @@ def setup_mock_models(base_dir: Path, n_models: int = 100, n_files: int = 10):
             ext = ".gguf" if j == 0 else ".txt"
             (model_dir / f"file_{j}{ext}").write_text("dummy data")
 
-def bench_iterdir(models_dir: Path):
-    start = time.perf_counter()
+
+def run_iterdir(models_dir: Path) -> int:
     found = []
     for model_dir in sorted(models_dir.iterdir()):
         if not model_dir.is_dir():
@@ -23,10 +24,10 @@ def bench_iterdir(models_dir: Path):
             chosen = candidates[0]
             size = chosen.stat().st_size
             found.append((model_dir.name, chosen, size))
-    return time.perf_counter() - start, len(found)
+    return len(found)
 
-def bench_scandir(models_dir: Path):
-    start = time.perf_counter()
+
+def run_scandir(models_dir: Path) -> int:
     found = []
     for model_entry in sorted(os.scandir(models_dir), key=lambda e: e.name):
         if not model_entry.is_dir():
@@ -40,24 +41,18 @@ def bench_scandir(models_dir: Path):
             chosen = candidates[0]
             size = chosen.stat().st_size
             found.append((model_entry.name, Path(chosen.path), size))
-    return time.perf_counter() - start, len(found)
+    return len(found)
 
-def main():
-    with tempfile.TemporaryDirectory() as tmp_dir:
-        tmp_path = Path(tmp_dir)
-        print(f"Setting up 100 mock models in {tmp_path}...")
-        setup_mock_models(tmp_path, 100, 10)
-        
-        # Warm up
-        bench_iterdir(tmp_path)
-        bench_scandir(tmp_path)
-        
-        it_time, it_count = bench_iterdir(tmp_path)
-        sc_time, sc_count = bench_scandir(tmp_path)
-        
-        print(f"Path.iterdir() + glob: {it_time:.6f}s ({it_count} models)")
-        print(f"os.scandir():           {sc_time:.6f}s ({sc_count} models)")
-        print(f"Speedup: {it_time/sc_time:.2f}x")
 
-if __name__ == "__main__":
-    main()
+@pytest.mark.benchmark(group="model_discovery")
+def test_bench_iterdir(benchmark: Any, tmp_path: Path) -> None:
+    setup_mock_models(tmp_path, 100, 10)
+    count = benchmark(run_iterdir, tmp_path)
+    assert count == 100
+
+
+@pytest.mark.benchmark(group="model_discovery")
+def test_bench_scandir(benchmark: Any, tmp_path: Path) -> None:
+    setup_mock_models(tmp_path, 100, 10)
+    count = benchmark(run_scandir, tmp_path)
+    assert count == 100
