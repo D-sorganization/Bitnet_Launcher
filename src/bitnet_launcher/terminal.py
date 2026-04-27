@@ -7,6 +7,7 @@ opening a new Windows Terminal tab with an interactive model session.
 from __future__ import annotations
 
 import logging
+import shlex
 import subprocess
 from pathlib import Path
 
@@ -127,10 +128,11 @@ def launch_terminal(
         raise ValueError("wt_exe must not be blank")
 
     cmd = build_command(llama_cli, model, config)
-    bash_cmd = " ".join(f'"{part}"' if " " in part else part for part in cmd)
+    bash_cmd = shlex.join(cmd)
+    # Security: Safely escape the bitnet_root path to prevent command injection
+    quoted_root = shlex.quote(str(bitnet_root))
     full_bash = (
-        f'cd "{bitnet_root}" && {bash_cmd}; '
-        'echo; echo "--- session ended ---"; exec bash'
+        f'cd {quoted_root} && {bash_cmd}; echo; echo "--- session ended ---"; exec bash'
     )
 
     def _try_launch(wt: str) -> None:

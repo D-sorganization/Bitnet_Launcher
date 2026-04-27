@@ -2,7 +2,7 @@ Metadata-Version: 2.4
 Name: bitnet-launcher
 Version: 0.1.0
 Summary: PyQt6 GUI launcher for BitNet LLM models
-Requires-Python: >=3.11
+Requires-Python: >=3.10
 Requires-Dist: PyQt6>=6.6
 Provides-Extra: dev
 Requires-Dist: pytest>=8; extra == "dev"
@@ -10,3 +10,7 @@ Requires-Dist: pytest-qt; extra == "dev"
 Requires-Dist: ruff>=0.4; extra == "dev"
 Requires-Dist: mypy>=1.9; extra == "dev"
 Requires-Dist: pre-commit; extra == "dev"
+Provides-Extra: hub
+Requires-Dist: huggingface-hub>=0.20; extra == "hub"
+Provides-Extra: all
+Requires-Dist: bitnet-launcher[dev,hub]; extra == "all"

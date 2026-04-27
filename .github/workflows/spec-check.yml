@@ -23,48 +23,9 @@ permissions:
 
 jobs:
 
-  # ── Dispatcher: route to self-hosted if available ──────────────────────────
-  pick-runner:
-    runs-on: ubuntu-latest
-    timeout-minutes: 2
-    outputs:
-      runner: ${{ steps.check.outputs.runner }}
-    steps:
-      - name: Check for self-hosted runner
-        id: check
-        env:
-          GH_TOKEN: ${{ secrets.RUNNER_CHECK_TOKEN }}
-          FLEET_MODE: ${{ vars.FLEET_RUNNER_MODE }}
-        run: |
-          MODE="${FLEET_MODE:-hybrid}"
-          echo "Fleet mode: $MODE"
-
-          case "$MODE" in
-            local)
-              echo "runner=d-sorg-fleet" >> $GITHUB_OUTPUT
-              echo "Routing to self-hosted fleet (mode=local)"
-              ;;
-            cloud)
-              echo "runner=ubuntu-latest" >> $GITHUB_OUTPUT
-              echo "Routing to GitHub-hosted (mode=cloud)"
-              ;;
-            hybrid|*)
-              AVAILABLE=$(gh api /orgs/${{ github.repository_owner }}/actions/runners \
-                --jq '[.runners[] | select(.status == "online") | select(.busy == false) | select(.labels[].name == "d-sorg-fleet")] | length' \
-                2>/dev/null || echo "0")
-              if [[ "$AVAILABLE" -gt 0 ]]; then
-                echo "runner=d-sorg-fleet" >> $GITHUB_OUTPUT
-                echo "$AVAILABLE idle fleet runner(s) - routing locally"
-              else
-                echo "runner=ubuntu-latest" >> $GITHUB_OUTPUT
-                echo "No idle fleet runners - falling back to GitHub-hosted"
-              fi
-              ;;
-          esac
   spec-freshness:
-    needs: pick-runner
     name: Verify SPEC.md freshness
-    runs-on: ${{ needs.pick-runner.outputs.runner }}
+    runs-on: ubuntu-latest
     # Skip if spec-exempt label is applied
     if: ${{ !contains(github.event.pull_request.labels.*.name, 'spec-exempt') }}
     timeout-minutes: 5
@@ -77,6 +38,7 @@ jobs:
 
       - name: Check if source files changed without SPEC.md update
         id: check
+        shell: bash
         run: |
           # Get the list of changed files in this PR
           CHANGED_FILES=$(git diff --name-only origin/${{ github.base_ref }}...HEAD)
@@ -163,6 +125,7 @@ jobs:
 
       - name: Fail if spec is stale
         if: steps.check.outputs.needs_update == 'true'
+        shell: bash
         run: |
           echo "::error::Source files changed but SPEC.md was not updated."
           echo "Update SPEC.md or add the 'spec-exempt' label to bypass."
@@ -170,6 +133,7 @@ jobs:
 
       - name: Spec check passed
         if: steps.check.outputs.needs_update == 'false'
+        shell: bash
         run: |
           echo "✅ Spec check passed."
           if [[ "${{ steps.check.outputs.spec_changed }}" == "true" ]]; then

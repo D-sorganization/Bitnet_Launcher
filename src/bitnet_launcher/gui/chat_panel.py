@@ -97,7 +97,13 @@ class ChatPanel(QWidget):
             raise TypeError(f"text must be str, got {type(text).__name__}")
         t = CatppuccinTheme
         self._display.setTextColor(QColor(t.YELLOW))
-        self._display.append(f"You: {text}")
+        cursor = self._display.textCursor()
+        cursor.movePosition(cursor.MoveOperation.End)
+        self._display.setTextCursor(cursor)
+        doc = self._display.document()
+        if doc is not None and not doc.isEmpty():
+            self._display.insertPlainText("\n")
+        self._display.insertPlainText(f"You: {text}")
         self._display.setTextColor(QColor(t.TEXT))
         self._scroll_to_bottom()
 
@@ -121,7 +127,7 @@ class ChatPanel(QWidget):
             raise TypeError(f"text must be str, got {type(text).__name__}")
         t = CatppuccinTheme
         cursor = self._display.textCursor()
-        cursor.movePosition(QTextCursor.MoveOperation.End)
+        cursor.movePosition(cursor.MoveOperation.End)
         self._display.setTextCursor(cursor)
         self._display.setTextColor(QColor(t.GREEN))
         self._display.insertPlainText(text)
@@ -179,6 +185,7 @@ class ChatPanel(QWidget):
 
         self._display = QTextEdit()
         self._display.setReadOnly(True)
+        self._display.setAccessibleName("Chat history")
         self._display.setFont(QFont("Consolas", 10))
         self._display.setStyleSheet(
             f"background: {t.BG}; color: {t.TEXT}; border: 1px solid {t.SURFACE};"
@@ -189,6 +196,7 @@ class ChatPanel(QWidget):
 
         self._input = QLineEdit()
         self._input.setPlaceholderText("Type your message and press Enter…")
+        self._input.setAccessibleName("Message input")
         self._input.setEnabled(False)
         self._input.setFont(QFont("Consolas", 10))
         self._input.returnPressed.connect(self._on_submit)
