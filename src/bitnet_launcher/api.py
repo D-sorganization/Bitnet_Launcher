@@ -6,7 +6,6 @@ import logging
 from collections.abc import AsyncGenerator
 from contextlib import asynccontextmanager
 
-
 from fastapi import FastAPI, HTTPException
 from pydantic import BaseModel
 
