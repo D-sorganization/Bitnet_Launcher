@@ -13,7 +13,7 @@ from __future__ import annotations
 import logging
 from pathlib import Path
 
-from PyQt6.QtCore import QThread, QTimer, pyqtSignal
+from PyQt6.QtCore import QTimer
 from PyQt6.QtGui import QColor, QFont
 from PyQt6.QtWidgets import (
     QComboBox,
@@ -34,78 +34,14 @@ from PyQt6.QtWidgets import (
     QWidget,
 )
 
-from bitnet_launcher.hub import CATALOG, HubModel, download_model
+from bitnet_launcher.hub import CATALOG, HubModel
 from bitnet_launcher.theme import CatppuccinTheme
+from bitnet_launcher.gui.hub_worker import DownloadWorker
+from bitnet_launcher.gui.hub_stylesheet import dialog_stylesheet
 
 logger = logging.getLogger(__name__)
 
 _ALL_TAGS_LABEL = "All"
-
-
-# ---------------------------------------------------------------------------
-# Background worker
-# ---------------------------------------------------------------------------
-
-
-class DownloadWorker(QThread):
-    """Worker thread that runs :func:`~bitnet_launcher.hub.download_model`.
-
-    Signals
-    -------
-    log_line(str):
-        Emitted for each line of subprocess output.
-    progress(float):
-        Emitted with a value in ``[0.0, 1.0]``.
-    finished():
-        Emitted on successful completion.
-    error(str):
-        Emitted with a description if the download fails.
-    """
-
-    log_line = pyqtSignal(str)
-    progress = pyqtSignal(float)
-    finished = pyqtSignal()
-    error = pyqtSignal(str)
-
-    def __init__(
-        self,
-        hub_model: HubModel,
-        models_dir: Path,
-        bitnet_root: Path,
-        parent: QWidget | None = None,
-    ) -> None:
-        """Initialise the worker.
-
-        Parameters
-        ----------
-        hub_model:
-            Model to download.
-        models_dir:
-            Directory where downloaded models are stored.
-        bitnet_root:
-            Root of the BitNet checkout containing ``setup_env.py``.
-        parent:
-            Optional Qt parent.
-        """
-        super().__init__(parent)
-        self._hub_model = hub_model
-        self._models_dir = models_dir
-        self._bitnet_root = bitnet_root
-
-    def run(self) -> None:
-        """Execute the download in the worker thread."""
-        try:
-            download_model(
-                self._hub_model,
-                self._models_dir,
-                self._bitnet_root,
-                on_log=self.log_line.emit,
-                on_progress=self.progress.emit,
-            )
-            self.finished.emit()
-        except Exception as exc:  # noqa: BLE001
-            logger.exception("DownloadWorker error: %s", exc)
-            self.error.emit(str(exc))
 
 
 # ---------------------------------------------------------------------------
@@ -158,7 +94,7 @@ class HubDialog(QDialog):
 
         self.setWindowTitle("Download BitNet Models")
         self.resize(820, 640)
-        self.setStyleSheet(_dialog_stylesheet())
+        self.setStyleSheet(dialog_stylesheet())
         self._build_ui()
         self._populate_tag_filter()
         self._refresh_table()
@@ -462,86 +398,3 @@ class HubDialog(QDialog):
         super().reject()
 
 
-# ---------------------------------------------------------------------------
-# Stylesheet helper
-# ---------------------------------------------------------------------------
-
-
-def _dialog_stylesheet() -> str:
-    """Return a stylesheet suitable for the hub dialog."""
-    t = CatppuccinTheme
-    return f"""
-        QDialog, QWidget {{
-            background: {t.BG};
-            color: {t.TEXT};
-        }}
-        QGroupBox {{
-            border: 1px solid {t.SURFACE};
-            border-radius: 4px;
-            margin-top: 8px;
-            padding-top: 4px;
-            color: {t.SUBTEXT};
-            font-size: 11px;
-        }}
-        QGroupBox::title {{
-            subcontrol-origin: margin;
-            left: 8px;
-        }}
-        QTableWidget {{
-            background: {t.SURFACE};
-            alternate-background-color: {t.BG};
-            border: 1px solid {t.OVERLAY};
-            gridline-color: {t.OVERLAY};
-        }}
-        QTableWidget::item:selected {{
-            background: {t.ACCENT};
-            color: {t.BG};
-        }}
-        QHeaderView::section {{
-            background: {t.OVERLAY};
-            color: {t.TEXT};
-            padding: 4px;
-            border: none;
-        }}
-        QPushButton {{
-            background: {t.SURFACE};
-            color: {t.TEXT};
-            border: 1px solid {t.OVERLAY};
-            border-radius: 4px;
-            padding: 4px 12px;
-        }}
-        QPushButton:hover {{
-            background: {t.OVERLAY};
-        }}
-        QPushButton:disabled {{
-            color: #585b70;
-        }}
-        QPushButton:focus {{
-            border: 1px solid {t.ACCENT};
-            outline: none;
-        }}
-        QLineEdit, QComboBox {{
-            background: {t.SURFACE};
-            border: 1px solid {t.OVERLAY};
-            border-radius: 3px;
-            color: {t.TEXT};
-            padding: 2px 4px;
-        }}
-        QLineEdit:focus, QComboBox:focus {{
-            border: 1px solid {t.ACCENT};
-        }}
-        QTableWidget:focus {{
-            border: 1px solid {t.ACCENT};
-        }}
-        QProgressBar {{
-            background: {t.SURFACE};
-            border: 1px solid {t.OVERLAY};
-            border-radius: 3px;
-            text-align: center;
-            color: {t.TEXT};
-        }}
-        QProgressBar::chunk {{
-            background: {t.ACCENT};
-            border-radius: 3px;
-        }}
-    """
