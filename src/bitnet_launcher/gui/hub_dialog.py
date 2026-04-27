@@ -34,8 +34,8 @@ from PyQt6.QtWidgets import (
     QWidget,
 )
 
-from bitnet_launcher.gui.hub_stylesheet import dialog_stylesheet
-from bitnet_launcher.gui.hub_worker import DownloadWorker
+from bitnet_launcher.gui.styles import get_hub_dialog_stylesheet
+from bitnet_launcher.gui.workers import DownloadWorker
 from bitnet_launcher.hub import CATALOG, HubModel
 from bitnet_launcher.theme import CatppuccinTheme
 
@@ -94,7 +94,7 @@ class HubDialog(QDialog):
 
         self.setWindowTitle("Download BitNet Models")
         self.resize(820, 640)
-        self.setStyleSheet(dialog_stylesheet())
+        self.setStyleSheet(get_hub_dialog_stylesheet())
         self._build_ui()
         self._populate_tag_filter()
         self._refresh_table()

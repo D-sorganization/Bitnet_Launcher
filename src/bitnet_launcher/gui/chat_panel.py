@@ -48,6 +48,13 @@ class ChatPanel(QWidget):
         super().__init__(parent)
         self._build_ui()
 
+        # ⚡ Bolt Optimization: Cache QColor objects to prevent instantiating them often
+        self._color_yellow = QColor(CatppuccinTheme.YELLOW)
+        self._color_green = QColor(CatppuccinTheme.GREEN)
+        self._color_accent = QColor(CatppuccinTheme.ACCENT)
+        self._color_subtext = QColor(CatppuccinTheme.SUBTEXT)
+        self._color_text = QColor(CatppuccinTheme.TEXT)
+
     # ── Public API ──────────────────────────────────────────────────────────
 
     @property
@@ -95,8 +102,7 @@ class ChatPanel(QWidget):
         """
         if not isinstance(text, str):
             raise TypeError(f"text must be str, got {type(text).__name__}")
-        t = CatppuccinTheme
-        self._display.setTextColor(QColor(t.YELLOW))
+        self._display.setTextColor(self._color_yellow)
         cursor = self._display.textCursor()
         cursor.movePosition(cursor.MoveOperation.End)
         self._display.setTextCursor(cursor)
@@ -104,7 +110,7 @@ class ChatPanel(QWidget):
         if doc is not None and not doc.isEmpty():
             self._display.insertPlainText("\n")
         self._display.insertPlainText(f"You: {text}")
-        self._display.setTextColor(QColor(t.TEXT))
+        self._display.setTextColor(self._color_text)
         self._scroll_to_bottom()
 
     def append_assistant(self, text: str) -> None:
@@ -125,13 +131,13 @@ class ChatPanel(QWidget):
         """
         if not isinstance(text, str):
             raise TypeError(f"text must be str, got {type(text).__name__}")
-        t = CatppuccinTheme
+
         cursor = self._display.textCursor()
         cursor.movePosition(cursor.MoveOperation.End)
         self._display.setTextCursor(cursor)
-        self._display.setTextColor(QColor(t.GREEN))
+        self._display.setTextColor(self._color_green)
         self._display.insertPlainText(text)
-        self._display.setTextColor(QColor(t.TEXT))
+        self._display.setTextColor(self._color_text)
         self._scroll_to_bottom()
 
     def append_system(self, text: str) -> None:
@@ -149,10 +155,10 @@ class ChatPanel(QWidget):
         """
         if not isinstance(text, str):
             raise TypeError(f"text must be str, got {type(text).__name__}")
-        t = CatppuccinTheme
-        self._display.setTextColor(QColor(t.ACCENT))
+
+        self._display.setTextColor(self._color_accent)
         self._display.insertPlainText(text)
-        self._display.setTextColor(QColor(t.TEXT))
+        self._display.setTextColor(self._color_text)
         self._scroll_to_bottom()
 
     def append_dim(self, text: str) -> None:
@@ -170,16 +176,17 @@ class ChatPanel(QWidget):
         """
         if not isinstance(text, str):
             raise TypeError(f"text must be str, got {type(text).__name__}")
-        t = CatppuccinTheme
-        self._display.setTextColor(QColor(t.SUBTEXT))
+
+        self._display.setTextColor(self._color_subtext)
         self._display.insertPlainText(text)
-        self._display.setTextColor(QColor(t.TEXT))
+        self._display.setTextColor(self._color_text)
         self._scroll_to_bottom()
 
     # ── UI construction ─────────────────────────────────────────────────────
 
     def _build_ui(self) -> None:
         t = CatppuccinTheme
+
         group = QGroupBox("Chat")
         group_layout = QVBoxLayout(group)
 
