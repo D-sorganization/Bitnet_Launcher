@@ -30,9 +30,7 @@ class LocalLlamaRunner:
         self._bitnet_root = bitnet_root
         self._process: asyncio.subprocess.Process | None = None
 
-    async def start(
-        self, model: ModelInfo, config: InferenceConfig
-    ) -> None:
+    async def start(self, model: ModelInfo, config: InferenceConfig) -> None:
         """Start the llama-cli process."""
         if self._process is not None and self._process.returncode is None:
             raise RuntimeError("Process is already running")
