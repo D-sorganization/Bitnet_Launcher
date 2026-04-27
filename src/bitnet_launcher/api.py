@@ -5,7 +5,6 @@ from __future__ import annotations
 import logging
 from collections.abc import AsyncGenerator
 from contextlib import asynccontextmanager
-from pathlib import Path
 
 from fastapi import FastAPI, HTTPException
 from pydantic import BaseModel
@@ -57,6 +56,7 @@ async def list_models() -> list[ModelResponse]:
 
 
 from fastapi.responses import StreamingResponse
+
 from bitnet_launcher.runners import LocalLlamaRunner
 
 # Global registry to hold active runners (simplified for single-user local API)
@@ -98,7 +98,7 @@ async def send_chat_message(model_name: str, message: str) -> dict[str, str]:
     runner = active_runners.get(model_name)
     if not runner:
         raise HTTPException(status_code=404, detail="Active chat session not found")
-    
+
     await runner.send_message(message)
     return {"status": "success", "message": "Message sent to process stdin"}
 

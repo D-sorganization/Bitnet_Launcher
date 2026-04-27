@@ -7,7 +7,6 @@ import logging
 from collections.abc import AsyncGenerator
 from pathlib import Path
 
-from bitnet_launcher.chat_session import ChatSession
 from bitnet_launcher.models import ModelInfo
 from bitnet_launcher.terminal import build_command
 
@@ -75,6 +74,6 @@ class LocalLlamaRunner:
             self._process.terminate()
             try:
                 await asyncio.wait_for(self._process.wait(), timeout=5.0)
-            except asyncio.TimeoutError:
+            except TimeoutError:
                 self._process.kill()
             self._process = None
