@@ -11,28 +11,27 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
-      - uses: actions/setup-python@v5
+      - name: Install uv
+        uses: astral-sh/setup-uv@v3
         with:
-          python-version: "3.11"
-      - run: pip install ruff mypy
-        shell: bash
+          version: "latest"
+      - name: Sync dependencies
+        run: uv sync --extra dev --frozen
       - name: Lint
-        run: ruff check src/ tests/
-        shell: bash
+        run: uv run ruff check src/ tests/
       - name: Format check
-        run: ruff format --check src/ tests/
-        shell: bash
+        run: uv run ruff format --check src/ tests/
       - name: Type check
-        run: mypy src/ --ignore-missing-imports
-        shell: bash
+        run: uv run mypy src/ --ignore-missing-imports
 
   tests:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
-      - uses: actions/setup-python@v5
+      - name: Install uv
+        uses: astral-sh/setup-uv@v3
         with:
-          python-version: "3.11"
+          version: "latest"
       # Install Qt system libraries required by PyQt6 on headless CI
       - name: Install Qt system deps
         shell: bash
@@ -47,11 +46,10 @@ jobs:
             sudo apt-get update -y || true
             sudo apt-get install -y --no-install-recommends libgles2 libegl1 libgl1
           fi
-      - run: pip install -e ".[dev]"
-        shell: bash
+      - name: Sync dependencies
+        run: uv sync --extra dev --frozen
       - name: Run tests
         shell: bash
-        run: python3 -m pytest tests/ -v --tb=short
+        run: uv run pytest tests/ -v --tb=short
         env:
           QT_QPA_PLATFORM: offscreen
-
