@@ -3,7 +3,7 @@
 ## Identity
 
 - **Repository:** Bitnet_Launcher
-- **Version:** 0.1.1
+- **Version:** 0.1.4
 - **Language:** Python 3.11+
 - **License:** MIT
 
@@ -34,15 +34,15 @@ PyQt6 desktop GUI for interacting with local BitNet LLM models. Provides:
 | `models.py`              | ModelInfo dataclass and model discovery (optimized with `os.scandir`) |
 | `chat_session.py`        | llama-cli stdout state machine (Qt-free)                     |
 | `terminal.py`            | Command building and terminal launch using `shlex` for safe shell quoting |
-| `theme.py`               | Catppuccin colour palette and Qt stylesheet                  |
+| `theme.py`               | Catppuccin colour palette and Qt stylesheet (with explicit focus indicators for accessibility) |
 | `hub.py`                 | HubModel catalog (16 models) and download_model() utility    |
 | `installer.py`           | InstallStatus, check_installation(), install_bitnet(), build_bitnet() |
-| `gui/launcher_window.py` | Top-level QMainWindow — wires all panels and dialogs         |
-| `gui/model_panel.py`     | Scrollable model list widget                                 |
+| `gui/launcher_window.py` | Top-level QMainWindow — wires all panels and dialogs (with dynamic tooltips) |
+| `gui/model_panel.py`     | Scrollable model list widget (with accessible list name)     |
 | `gui/settings_panel.py`  | Inference hyperparameter spinboxes (with accessible labels)  |
 | `gui/chat_panel.py`      | Chat display and user-input row (with accessible labels)     |
-| `gui/hub_dialog.py`      | Model catalog browser and background download dialog (mypy-strict, accessible labels, dynamic tooltips, QTimer-debounced search) |
-| `gui/setup_dialog.py`    | Installation status and guided setup dialog (with accessible labels/buttons) |
+| `gui/hub_dialog.py`      | Model catalog browser and background download dialog (mypy-strict, accessible labels, dynamic tooltips, accessible progress bar, QTimer-debounced search, cached Qt objects, memory-cached disk I/O) |
+| `gui/setup_dialog.py`    | Installation status and guided setup dialog (with accessible labels/buttons/focus states, disabled-button dynamic tooltips) |
 
 `installer.check_installation()` checks optional Python dependency availability
 with `importlib.util.find_spec()` so the GUI can report installation status
@@ -57,6 +57,11 @@ idle → loading → ready ↔ generating
 - **loading**: buffering stdout, waiting for first `\n> `
 - **ready**: accepting user input
 - **generating**: waiting for `\n> ` after filtering user echo via `<|im_start|>assistant\n`
+
+
+### GUI Security
+
+The application ensures that untrusted string inputs are not evaluated as Rich Text or HTML when appended to `QTextEdit` widgets (like chat history or setup logs) or `QLabel` widgets (like status messages). It prevents XSS/HTML injection by using `insertPlainText()` instead of `append()` for `QTextEdit`, and setting `.setTextFormat(Qt.TextFormat.PlainText)` for `QLabel`.
 
 ### Terminal Launch Security
 

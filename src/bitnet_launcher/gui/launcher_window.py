@@ -7,6 +7,7 @@ QProcess and the ChatSession state machine.
 from __future__ import annotations
 
 import logging
+import shlex
 
 from PyQt6.QtCore import QProcess, Qt
 from PyQt6.QtGui import QCloseEvent, QFont
@@ -125,6 +126,7 @@ class BitNetLauncher(QMainWindow):
         self._btn_stop = QPushButton("\u25a0  Stop")
         self._btn_stop.setFixedHeight(36)
         self._btn_stop.setEnabled(False)
+        self._btn_stop.setToolTip("No active chat session to stop")
         self._btn_stop.setStyleSheet(f"color: {t.RED};")
         self._btn_stop.clicked.connect(self._stop_chat)
         btn_row.addWidget(self._btn_stop)
@@ -167,6 +169,7 @@ class BitNetLauncher(QMainWindow):
         root.addWidget(self._chat_panel)
 
         self._status = QLabel("Ready.")
+        self._status.setTextFormat(Qt.TextFormat.PlainText)
         self._status.setStyleSheet(
             f"color: {CatppuccinTheme.SUBTEXT}; font-size: 10px;"
         )
@@ -211,7 +214,7 @@ class BitNetLauncher(QMainWindow):
             self._set_status(f"Opened terminal: {model.name}")
         except FileNotFoundError:
             cmd = build_command(self._cfg.llama_cli, model, config)
-            bash_cmd = " ".join(cmd)
+            bash_cmd = shlex.join(cmd)
             QMessageBox.critical(
                 self,
                 "Terminal not found",
@@ -254,7 +257,9 @@ class BitNetLauncher(QMainWindow):
             return
 
         self._btn_chat.setEnabled(False)
+        self._btn_chat.setToolTip("A chat session is already running")
         self._btn_stop.setEnabled(True)
+        self._btn_stop.setToolTip("Stop the current chat session")
         self._set_status(f"Running: {model.name}")
         logger.info("Chat session started for model: %s", model.name)
 
@@ -295,7 +300,9 @@ class BitNetLauncher(QMainWindow):
     def _on_process_finished(self, code: int, status: QProcess.ExitStatus) -> None:
         self._chat_panel.input_enabled = False
         self._btn_chat.setEnabled(True)
+        self._btn_chat.setToolTip("Start an embedded chat session in this window")
         self._btn_stop.setEnabled(False)
+        self._btn_stop.setToolTip("No active chat session to stop")
         self._session.reset()
         self._chat_panel.append_system("\n--- Session ended ---\n")
         self._set_status("Ready.")

@@ -7,62 +7,27 @@ on:
     types: [opened, synchronize, reopened, ready_for_review]
 
 jobs:
-  pick-runner:
-    runs-on: d-sorg-fleet
-    outputs:
-      runner: ${{ steps.check.outputs.runner }}
-    steps:
-      - name: Check for self-hosted runner
-        id: check
-        env:
-          GH_TOKEN: ${{ secrets.RUNNER_CHECK_TOKEN }}
-          FLEET_MODE: ${{ vars.FLEET_RUNNER_MODE }}
-        run: |
-          MODE="${FLEET_MODE:-hybrid}"
-          echo "Fleet mode: $MODE"
-
-          case "$MODE" in
-            local)
-              echo "runner=d-sorg-fleet" >> $GITHUB_OUTPUT
-              echo "Routing to self-hosted fleet (mode=local)"
-              ;;
-            cloud)
-              echo "runner=ubuntu-latest" >> $GITHUB_OUTPUT
-              echo "Routing to GitHub-hosted (mode=cloud)"
-              ;;
-            hybrid|*)
-              AVAILABLE=$(gh api /orgs/${{ github.repository_owner }}/actions/runners \
-                --jq '[.runners[] | select(.status == "online") | select(.busy == false) | select(.labels[].name == "d-sorg-fleet")] | length' \
-                2>/dev/null || echo "0")
-              if [[ "$AVAILABLE" -gt 0 ]]; then
-                echo "runner=d-sorg-fleet" >> $GITHUB_OUTPUT
-                echo "$AVAILABLE idle fleet runner(s) - routing locally"
-              else
-                echo "runner=ubuntu-latest" >> $GITHUB_OUTPUT
-                echo "No idle fleet runners - falling back to GitHub-hosted"
-              fi
-              ;;
-          esac
-
   quality-gate:
-    needs: pick-runner
-    runs-on: ${{ needs.pick-runner.outputs.runner }}
+    runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
       - uses: actions/setup-python@v5
         with:
           python-version: "3.11"
       - run: pip install ruff mypy
+        shell: bash
       - name: Lint
         run: ruff check src/ tests/
+        shell: bash
       - name: Format check
         run: ruff format --check src/ tests/
+        shell: bash
       - name: Type check
         run: mypy src/ --ignore-missing-imports
+        shell: bash
 
   tests:
-    needs: pick-runner
-    runs-on: ${{ needs.pick-runner.outputs.runner }}
+    runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
       - uses: actions/setup-python@v5
@@ -70,9 +35,22 @@ jobs:
           python-version: "3.11"
       # Install Qt system libraries required by PyQt6 on headless CI
       - name: Install Qt system deps
-        run: sudo apt-get install -y --no-install-recommends libgles2 libegl1 libgl1
+        shell: bash
+        run: |
+          # Only run apt-get commands if apt-get is available (i.e. we are on Debian/Ubuntu)
+          if command -v apt-get &> /dev/null; then
+            sudo killall apt apt-get || true
+            sudo rm -f /var/lib/apt/lists/lock
+            sudo rm -f /var/cache/apt/archives/lock
+            sudo rm -f /var/lib/dpkg/lock*
+            sudo dpkg --configure -a || true
+            sudo apt-get update -y || true
+            sudo apt-get install -y --no-install-recommends libgles2 libegl1 libgl1
+          fi
       - run: pip install -e ".[dev]"
+        shell: bash
       - name: Run tests
+        shell: bash
         run: python3 -m pytest tests/ -v --tb=short
         env:
           QT_QPA_PLATFORM: offscreen

@@ -128,6 +128,14 @@ class TestDiscoverModels:
         result = discover_models(models_dir)
         assert result[0].path.name == "model-i2_s.gguf"
 
+    def test_accepts_mixed_case_gguf_suffix(self, tmp_path: Path) -> None:
+        models_dir = tmp_path / "models"
+        models_dir.mkdir()
+        _make_model_dir(models_dir, "llama3-1b", filename="MODEL.GGUF")
+        result = discover_models(models_dir)
+        assert len(result) == 1
+        assert result[0].path.name == "MODEL.GGUF"
+
     def test_skips_placeholder_files(self, tmp_path: Path) -> None:
         models_dir = tmp_path / "models"
         models_dir.mkdir()
