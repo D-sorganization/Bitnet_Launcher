@@ -3,6 +3,7 @@ Name: bitnet-launcher
 Version: 0.1.0
 Summary: PyQt6 GUI launcher for BitNet LLM models
 Requires-Python: >=3.10
+License-File: LICENSE
 Requires-Dist: PyQt6>=6.6
 Provides-Extra: dev
 Requires-Dist: pytest>=8; extra == "dev"
@@ -10,7 +11,12 @@ Requires-Dist: pytest-qt; extra == "dev"
 Requires-Dist: ruff>=0.4; extra == "dev"
 Requires-Dist: mypy>=1.9; extra == "dev"
 Requires-Dist: pre-commit; extra == "dev"
+Requires-Dist: httpx; extra == "dev"
 Provides-Extra: hub
 Requires-Dist: huggingface-hub>=0.20; extra == "hub"
+Provides-Extra: api
+Requires-Dist: fastapi; extra == "api"
+Requires-Dist: uvicorn; extra == "api"
 Provides-Extra: all
-Requires-Dist: bitnet-launcher[dev,hub]; extra == "all"
+Requires-Dist: bitnet-launcher[api,dev,hub]; extra == "all"
+Dynamic: license-file

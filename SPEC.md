@@ -21,7 +21,6 @@ PyQt6 desktop GUI for interacting with local BitNet LLM models. Provides:
 ## Non-Goals
 
 - Not a training tool
-- Not a server/API — local desktop only
 - Not cross-platform (WSL + Windows Terminal specific)
 
 ## Architecture
@@ -34,6 +33,8 @@ PyQt6 desktop GUI for interacting with local BitNet LLM models. Provides:
 | `models.py`              | ModelInfo dataclass and model discovery (optimized with `os.scandir`) |
 | `chat_session.py`        | llama-cli stdout state machine (Qt-free)                     |
 | `terminal.py`            | Command building and terminal launch using `shlex` for safe shell quoting |
+| `runners.py`             | Decoupled async process wrapper for llama-cli (FastAPI compatible) |
+| `api.py`                 | FastAPI server providing REST endpoints for model interaction |
 | `theme.py`               | Catppuccin colour palette and Qt stylesheet (with explicit focus indicators for accessibility) |
 | `hub.py`                 | HubModel catalog (16 models) and download_model() utility    |
 | `installer.py`           | InstallStatus, check_installation(), install_bitnet(), build_bitnet() |

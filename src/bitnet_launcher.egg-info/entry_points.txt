@@ -1,2 +1,3 @@
 [console_scripts]
+bitnet-api = bitnet_launcher.api:app
 bitnet-launcher = bitnet_launcher.app:main

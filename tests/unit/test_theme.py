@@ -1,6 +1,5 @@
 import pytest
 from PyQt6.QtGui import QPalette
-from PyQt6.QtWidgets import QApplication
 
 from bitnet_launcher.theme import CatppuccinTheme, build_palette, build_stylesheet
 
