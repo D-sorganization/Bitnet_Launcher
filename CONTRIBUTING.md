@@ -95,7 +95,7 @@ Enhancement suggestions are tracked as GitHub issues. When creating an enhanceme
 
 1. Update the README.md or documentation with details of changes if applicable
 2. Ensure all tests pass and code coverage is maintained
-3. Update the CHANGELOG.md with details of your changes
+3. Update release notes if maintainers request them
 4. Your pull request will be reviewed by maintainers
 5. Address any feedback from reviewers
 6. Once approved, a maintainer will merge your pull request
