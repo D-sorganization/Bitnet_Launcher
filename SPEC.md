@@ -80,3 +80,6 @@ out of their intended shell arguments.
 ## Repository Hygiene
 
 - Generated Python bytecode artifacts (`__pycache__/`, `*.pyc`, and related files) are ignored and must not be tracked in source control.
+
+### UI Improvements
+- Model Panel detail labels are explicitly set to `PlainText` format to prevent unintended HTML parsing of dynamically generated file paths and model names.
