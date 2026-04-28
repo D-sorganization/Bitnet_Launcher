@@ -14,3 +14,7 @@
 **Vulnerability:** `QLabel` objects initialized with untrusted text (like `QLabel("...")` or `setText()`) can automatically render HTML if the text looks like HTML or if the text format is set to `AutoText` (the default). If a model name or user input containing HTML tags is displayed in a status label, this could lead to Rich Text injection or UI redressing.
 **Learning:** In PyQt applications, `QLabel` uses `Qt.TextFormat.AutoText` by default, which heuristically parses text. Any widget accepting raw user data to display must be explicitly forced into plain text mode if it doesn't need to support HTML styling.
 **Prevention:** Always use `.setTextFormat(Qt.TextFormat.PlainText)` on `QLabel` instances that display dynamic, untrusted text.
+## 2025-03-01 - Prevent HTML Injection in rich text QLabel
+**Vulnerability:** In `src/bitnet_launcher/gui/hub_dialog.py`, dynamic external properties (`model.name`, `model.description`, `model.repo_id`) were directly formatted into a rich-text HTML string inside a `QLabel`, leading to potential Cross-Site Scripting (XSS) and HTML injection if the Hugging Face catalog contained malicious characters.
+**Learning:** In PyQt6, when a `QLabel` requires rich text formatting (using tags like `<b>` or `<br>`), you cannot simply use `Qt.TextFormat.PlainText`. Thus, any untrusted dynamic data injected into the string must be manually escaped.
+**Prevention:** Always use `html.escape()` on dynamic values before interpolating them into a string that will be evaluated as HTML by a `QLabel`.
