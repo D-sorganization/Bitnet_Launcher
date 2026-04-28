@@ -10,6 +10,7 @@ remains responsive.
 
 from __future__ import annotations
 
+import html
 import logging
 from pathlib import Path
 
@@ -289,11 +290,14 @@ class HubDialog(QDialog):
             return
         model = self._visible_models[row]
         installed = self._is_installed(model)
+        name_esc = html.escape(model.name)
+        desc_esc = html.escape(model.description)
+        repo_esc = html.escape(model.repo_id)
         self._detail_label.setText(
-            f"<b>{model.name}</b> — {model.params} params, "
+            f"<b>{name_esc}</b> — {model.params} params, "
             f"{model.size_gb:.1f} GB download<br>"
-            f"{model.description}<br>"
-            f"<i>HF repo: {model.repo_id}</i>"
+            f"{desc_esc}<br>"
+            f"<i>HF repo: {repo_esc}</i>"
         )
         can_download = not installed and self._worker is None
         self._btn_download.setEnabled(can_download)

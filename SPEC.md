@@ -62,7 +62,7 @@ idle → loading → ready ↔ generating
 
 ### GUI Security
 
-The application ensures that untrusted string inputs are not evaluated as Rich Text or HTML when appended to `QTextEdit` widgets (like chat history or setup logs) or `QLabel` widgets (like status messages). It prevents XSS/HTML injection by using `insertPlainText()` instead of `append()` for `QTextEdit`, and setting `.setTextFormat(Qt.TextFormat.PlainText)` for `QLabel`.
+The application ensures that untrusted string inputs are not evaluated as Rich Text or HTML when appended to `QTextEdit` widgets (like chat history or setup logs) or `QLabel` widgets (like status messages). It prevents XSS/HTML injection by using `insertPlainText()` instead of `append()` for `QTextEdit`, and setting `.setTextFormat(Qt.TextFormat.PlainText)` for `QLabel`. When a `QLabel` requires rich text formatting (using tags like `<b>` or `<br>`), `html.escape()` is manually applied to any untrusted dynamic data injected into the HTML string.
 
 ### Terminal Launch Security
 
