@@ -9,7 +9,7 @@ from __future__ import annotations
 
 import logging
 
-from PyQt6.QtCore import pyqtSignal
+from PyQt6.QtCore import Qt, pyqtSignal
 from PyQt6.QtGui import QFont
 from PyQt6.QtWidgets import (
     QGroupBox,
@@ -77,6 +77,7 @@ class ModelPanel(QWidget):
         group_layout = QVBoxLayout(group)
 
         self._list = QListWidget()
+        self._list.setAccessibleName("Model list")
         self._list.setFont(QFont("Consolas", 10))
         self._list.currentRowChanged.connect(self._on_row_changed)
 
@@ -92,6 +93,7 @@ class ModelPanel(QWidget):
         group_layout.addWidget(self._list)
 
         self._detail = QLabel()
+        self._detail.setTextFormat(Qt.TextFormat.PlainText)
         self._detail.setWordWrap(True)
         self._detail.setStyleSheet(f"color: {t.SUBTEXT}; font-size: 10px;")
         group_layout.addWidget(self._detail)

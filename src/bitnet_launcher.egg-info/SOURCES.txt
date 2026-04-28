@@ -1,12 +1,15 @@
+LICENSE
 README.md
 pyproject.toml
 src/bitnet_launcher/__init__.py
+src/bitnet_launcher/api.py
 src/bitnet_launcher/app.py
 src/bitnet_launcher/chat_session.py
 src/bitnet_launcher/config.py
 src/bitnet_launcher/hub.py
 src/bitnet_launcher/installer.py
 src/bitnet_launcher/models.py
+src/bitnet_launcher/runners.py
 src/bitnet_launcher/terminal.py
 src/bitnet_launcher/theme.py
 src/bitnet_launcher.egg-info/PKG-INFO
@@ -22,3 +25,5 @@ src/bitnet_launcher/gui/launcher_window.py
 src/bitnet_launcher/gui/model_panel.py
 src/bitnet_launcher/gui/settings_panel.py
 src/bitnet_launcher/gui/setup_dialog.py
+src/bitnet_launcher/gui/styles.py
+src/bitnet_launcher/gui/workers.py

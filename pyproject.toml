@@ -10,12 +10,14 @@ requires-python = ">=3.10"
 dependencies = ["PyQt6>=6.6"]
 
 [project.optional-dependencies]
-dev = ["pytest>=8", "pytest-qt", "ruff>=0.4", "mypy>=1.9", "pre-commit"]
+dev = ["pytest>=8", "pytest-qt", "pytest-asyncio", "ruff>=0.4", "mypy>=1.9", "pre-commit", "httpx"]
 hub = ["huggingface-hub>=0.20"]
-all = ["bitnet-launcher[dev,hub]"]
+api = ["fastapi", "uvicorn"]
+all = ["bitnet-launcher[dev,hub,api]"]
 
 [project.scripts]
 bitnet-launcher = "bitnet_launcher.app:main"
+bitnet-api = "bitnet_launcher.api:app"
 
 [tool.setuptools.packages.find]
 where = ["src"]
@@ -38,7 +40,7 @@ addopts = "-ra -q --strict-markers -p no:xvfb"
 
 [tool.coverage.run]
 source = ["src"]
-omit = ["tests/*"]
+omit = ["tests/*", "src/bitnet_launcher/gui/*"]
 
 [tool.coverage.report]
 fail_under = 60

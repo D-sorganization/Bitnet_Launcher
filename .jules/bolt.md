@@ -9,3 +9,11 @@
 ## 2026-04-23 - Faster directory traversal with os.scandir
 **Learning:** `pathlib.Path.iterdir()` combined with `.glob()` and `.stat()` is slow for directory traversal because it instantiates `Path` objects and performs separate `stat()` system calls.
 **Action:** Use `os.scandir()` which is significantly faster (~4-5x) because it yields `os.DirEntry` objects that cache `stat()` results (like `is_dir()`, `is_file()`, and file sizes) on most operating systems, reducing disk I/O.
+
+## 2026-04-26 - PyQt6 object instantiation and disk I/O in loops
+**Learning:** Instantiating `QFont` or `QColor` in frequent UI update loops (e.g. `_refresh_table` when searching) is slow. Also, synchronous `Path.exists()` calls within main thread UI loops cause micro-stutters when populating large tables.
+**Action:** Cache Qt objects (`QFont`, `QColor`) outside loops and use memory caches (e.g., dict cache or `lru_cache`) for disk I/O status checks in UI callbacks.
+
+## 2024-05-18 - Avoid repeated QColor instantiations in frequent UI updates
+**Learning:** In PyQt, instantiating `QColor` (and potentially other Qt objects) repeatedly inside frequently called methods (like `append_assistant` during LLM text streaming) creates measurable overhead and can cause UI micro-stutters.
+**Action:** Cache these objects as instance variables during initialization (`__init__`) and reuse them across calls to eliminate the object creation overhead in the hot path.

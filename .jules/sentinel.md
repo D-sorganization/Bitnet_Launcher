@@ -6,3 +6,15 @@
 **Vulnerability:** In `src/bitnet_launcher/terminal.py`, `bitnet_root` is enclosed in double quotes during bash command construction (e.g., `f'cd "{bitnet_root}" && ...'`). An attacker or unexpected path could contain double quotes and bash meta-characters, leading to command injection.
 **Learning:** Constructing bash commands by string concatenation—even using double quotes—can fail securely if the parameter contains double quotes or backticks. Always use `shlex.quote()` to safely escape arbitrary paths in a shell context.
 **Prevention:** Use `shlex.quote(str(path))` instead of `f'"{path}"'` when injecting into a bash `-c` string.
+## 2025-02-17 - Prevent XSS/HTML Injection in QTextEdit
+**Vulnerability:** Untrusted string input was appended to `QTextEdit` via the `append()` method, which natively parses and renders HTML, leading to potential Cross-Site Scripting (XSS) and Rich Text injection.
+**Learning:** `QTextEdit.append()` accepts HTML and applies parsing. When dealing with untrusted user text or logs, it will render HTML tags unless the content is strictly plain text only. This behavior is dangerous when handling inputs directly from users, models, or system logs.
+**Prevention:** Use `insertPlainText()` along with cursor manipulation (moving cursor to end and inserting a newline) rather than `append()` to ensure all content is strictly treated as text.
+## 2025-03-01 - Prevent HTML Injection in QLabel via AutoText
+**Vulnerability:** `QLabel` objects initialized with untrusted text (like `QLabel("...")` or `setText()`) can automatically render HTML if the text looks like HTML or if the text format is set to `AutoText` (the default). If a model name or user input containing HTML tags is displayed in a status label, this could lead to Rich Text injection or UI redressing.
+**Learning:** In PyQt applications, `QLabel` uses `Qt.TextFormat.AutoText` by default, which heuristically parses text. Any widget accepting raw user data to display must be explicitly forced into plain text mode if it doesn't need to support HTML styling.
+**Prevention:** Always use `.setTextFormat(Qt.TextFormat.PlainText)` on `QLabel` instances that display dynamic, untrusted text.
+## 2025-03-01 - Prevent HTML Injection in rich text QLabel
+**Vulnerability:** In `src/bitnet_launcher/gui/hub_dialog.py`, dynamic external properties (`model.name`, `model.description`, `model.repo_id`) were directly formatted into a rich-text HTML string inside a `QLabel`, leading to potential Cross-Site Scripting (XSS) and HTML injection if the Hugging Face catalog contained malicious characters.
+**Learning:** In PyQt6, when a `QLabel` requires rich text formatting (using tags like `<b>` or `<br>`), you cannot simply use `Qt.TextFormat.PlainText`. Thus, any untrusted dynamic data injected into the string must be manually escaped.
+**Prevention:** Always use `html.escape()` on dynamic values before interpolating them into a string that will be evaluated as HTML by a `QLabel`.
