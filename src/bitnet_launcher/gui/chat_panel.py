@@ -204,6 +204,7 @@ class ChatPanel(QWidget):
         self._input = QLineEdit()
         self._input.setPlaceholderText("Type your message and press Enter…")
         self._input.setAccessibleName("Message input")
+        self._input.setClearButtonEnabled(True)
         self._input.setEnabled(False)
         self._input.setFont(QFont("Consolas", 10))
         self._input.returnPressed.connect(self._on_submit)
