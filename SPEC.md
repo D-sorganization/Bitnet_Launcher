@@ -3,7 +3,7 @@
 ## Identity
 
 - **Repository:** Bitnet_Launcher
-- **Version:** 0.1.5
+- **Version:** 0.1.4
 - **Language:** Python 3.11+
 - **License:** MIT
 
@@ -42,7 +42,7 @@ PyQt6 desktop GUI for interacting with local BitNet LLM models. Provides:
 | `gui/model_panel.py`     | Scrollable model list widget (with accessible list name)     |
 | `gui/settings_panel.py`  | Inference hyperparameter spinboxes (with accessible labels)  |
 | `gui/chat_panel.py`      | Chat display and user-input row (with accessible labels, cached QColor objects)     |
-| `gui/hub_dialog.py`      | Model catalog browser and background download dialog (mypy-strict, accessible labels, dynamic tooltips, accessible progress bar, QTimer-debounced search, cached Qt objects, memory-cached disk I/O, and suspended QTableWidget repaints during batch refresh) |
+| `gui/hub_dialog.py`      | Model catalog browser and background download dialog (mypy-strict, accessible labels, dynamic tooltips, accessible progress bar, QTimer-debounced search, cached Qt objects, memory-cached disk I/O, suspended table updates) |
 | `gui/setup_dialog.py`    | Installation status and guided setup dialog (with accessible labels/buttons/focus states, disabled-button dynamic tooltips) |
 
 `installer.check_installation()` checks optional Python dependency availability
@@ -83,4 +83,3 @@ out of their intended shell arguments.
 
 ### UI Improvements
 - Model Panel detail labels are explicitly set to `PlainText` format to prevent unintended HTML parsing of dynamically generated file paths and model names.
-- Hub Dialog table refreshes disable `QTableWidget` updates while rebuilding filtered model rows, then restore updates in a `finally` block so search/filter rendering avoids per-cell repaint churn without leaving the table disabled after an exception.

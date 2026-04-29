@@ -8,7 +8,6 @@ Requires-Dist: PyQt6>=6.6
 Provides-Extra: dev
 Requires-Dist: pytest>=8; extra == "dev"
 Requires-Dist: pytest-qt; extra == "dev"
-Requires-Dist: pytest-asyncio; extra == "dev"
 Requires-Dist: ruff>=0.4; extra == "dev"
 Requires-Dist: mypy>=1.9; extra == "dev"
 Requires-Dist: pre-commit; extra == "dev"
