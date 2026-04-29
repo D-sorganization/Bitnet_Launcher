@@ -13,3 +13,7 @@
 ## 2024-05-25 - QLabel Rich Text Auto-detection
 **Learning:** By default, `QLabel` in PyQt6 uses `Qt.TextFormat.AutoText`, which parses HTML. If untrusted dynamic text (like file paths or names) is set, any text resembling HTML tags (like `<` or `>`) will be incorrectly parsed and rendered, potentially hiding information or leading to Rich Text injection.
 **Action:** Always apply `.setTextFormat(Qt.TextFormat.PlainText)` on `QLabel` instances that display untrusted or dynamic text where HTML is not intended.
+
+## 2024-05-18 - QLineEdit Clear Button
+**Learning:** PyQt6's `QLineEdit` has a built-in `setClearButtonEnabled(True)` method that adds a handy 'x' button inside the text field when it has content. This provides a standard and accessible way for users to quickly clear input without manually selecting and deleting it.
+**Action:** When creating text input fields (`QLineEdit`) where users might want to easily clear their entire input (like chat messages, search fields, or path inputs), explicitly enable this feature for better UX.
