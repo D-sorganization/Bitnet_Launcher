@@ -17,3 +17,7 @@
 ## 2024-05-18 - Avoid repeated QColor instantiations in frequent UI updates
 **Learning:** In PyQt, instantiating `QColor` (and potentially other Qt objects) repeatedly inside frequently called methods (like `append_assistant` during LLM text streaming) creates measurable overhead and can cause UI micro-stutters.
 **Action:** Cache these objects as instance variables during initialization (`__init__`) and reuse them across calls to eliminate the object creation overhead in the hot path.
+
+## 2024-06-05 - PyQt6 QTableWidget bulk updates
+**Learning:** Repopulating a `QTableWidget` without disabling updates causes synchronous layout recalculations and repaints for every single `setItem` call. This creates a significant performance bottleneck and blocks the main thread during batch insertions, especially when recreating the entire table inside a search filter callback.
+**Action:** Always wrap `QTableWidget` batch updates with `setUpdatesEnabled(False)` and `setUpdatesEnabled(True)` to defer layout recalculations until all items have been inserted.

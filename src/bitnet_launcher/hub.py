@@ -207,7 +207,7 @@ CATALOG: list[HubModel] = [
 # ---------------------------------------------------------------------------
 
 
-def download_model(
+def download_model(  # noqa: C901
     hub_model: HubModel,
     models_dir: Path,
     bitnet_root: Path,

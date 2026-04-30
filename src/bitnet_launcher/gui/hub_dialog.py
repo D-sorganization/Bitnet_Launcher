@@ -246,30 +246,38 @@ class HubDialog(QDialog):
         """Repopulate the table according to current filter settings."""
         t = CatppuccinTheme
         self._visible_models = self._filtered_models()
-        self._table.setRowCount(len(self._visible_models))
 
-        # ⚡ Bolt Optimization: Cache Qt objects outside the loop
-        font_consolas_9 = QFont("Consolas", 9)
-        color_green = QColor(t.GREEN)
-        color_subtext = QColor(t.SUBTEXT)
+        # ⚡ Bolt Optimization: Suspend table updates during batch insertions
+        # Why: Prevents expensive synchronous layout recalculations and repaints
+        # for every single cell inserted, drastically improving rendering speed.
+        self._table.setUpdatesEnabled(False)
+        try:
+            self._table.setRowCount(len(self._visible_models))
 
-        for row, model in enumerate(self._visible_models):
-            installed = self._is_installed(model)
+            # ⚡ Bolt Optimization: Cache Qt objects outside the loop
+            font_consolas_9 = QFont("Consolas", 9)
+            color_green = QColor(t.GREEN)
+            color_subtext = QColor(t.SUBTEXT)
 
-            name_item = QTableWidgetItem(model.name)
-            name_item.setFont(font_consolas_9)
-            self._table.setItem(row, 0, name_item)
+            for row, model in enumerate(self._visible_models):
+                installed = self._is_installed(model)
 
-            self._table.setItem(row, 1, QTableWidgetItem(model.params))
-            self._table.setItem(row, 2, QTableWidgetItem(f"{model.size_gb:.1f}"))
-            self._table.setItem(row, 3, QTableWidgetItem(", ".join(model.tags)))
+                name_item = QTableWidgetItem(model.name)
+                name_item.setFont(font_consolas_9)
+                self._table.setItem(row, 0, name_item)
 
-            status_item = QTableWidgetItem("Installed" if installed else "—")
-            if installed:
-                status_item.setForeground(color_green)
-            else:
-                status_item.setForeground(color_subtext)
-            self._table.setItem(row, 4, status_item)
+                self._table.setItem(row, 1, QTableWidgetItem(model.params))
+                self._table.setItem(row, 2, QTableWidgetItem(f"{model.size_gb:.1f}"))
+                self._table.setItem(row, 3, QTableWidgetItem(", ".join(model.tags)))
+
+                status_item = QTableWidgetItem("Installed" if installed else "—")
+                if installed:
+                    status_item.setForeground(color_green)
+                else:
+                    status_item.setForeground(color_subtext)
+                self._table.setItem(row, 4, status_item)
+        finally:
+            self._table.setUpdatesEnabled(True)
 
         self._btn_download.setEnabled(False)
         self._btn_download.setToolTip("Select a model to download")

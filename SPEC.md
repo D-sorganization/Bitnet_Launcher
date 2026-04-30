@@ -41,8 +41,8 @@ PyQt6 desktop GUI for interacting with local BitNet LLM models. Provides:
 | `gui/launcher_window.py` | Top-level QMainWindow — wires all panels and dialogs (with dynamic tooltips) |
 | `gui/model_panel.py`     | Scrollable model list widget (with accessible list name)     |
 | `gui/settings_panel.py`  | Inference hyperparameter spinboxes (with accessible labels)  |
-| `gui/chat_panel.py`      | Chat display and user-input row (with accessible labels, cached QColor objects)     |
-| `gui/hub_dialog.py`      | Model catalog browser and background download dialog (mypy-strict, accessible labels, dynamic tooltips, accessible progress bar, QTimer-debounced search, cached Qt objects, memory-cached disk I/O) |
+| `gui/chat_panel.py`      | Chat display and user-input row (with accessible labels, cached QColor objects, and clear button on input)     |
+| `gui/hub_dialog.py`      | Model catalog browser and background download dialog (mypy-strict, accessible labels, dynamic tooltips, accessible progress bar, QTimer-debounced search, cached Qt objects, memory-cached disk I/O, and suspended QTableWidget repaints during batch refresh) |
 | `gui/setup_dialog.py`    | Installation status and guided setup dialog (with accessible labels/buttons/focus states, disabled-button dynamic tooltips) |
 
 `installer.check_installation()` checks optional Python dependency availability
@@ -80,3 +80,6 @@ out of their intended shell arguments.
 ## Repository Hygiene
 
 - Generated Python bytecode artifacts (`__pycache__/`, `*.pyc`, and related files) are ignored and must not be tracked in source control.
+
+### UI Improvements
+- Model Panel detail labels are explicitly set to `PlainText` format to prevent unintended HTML parsing of dynamically generated file paths and model names.
