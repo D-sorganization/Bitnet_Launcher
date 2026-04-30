@@ -184,23 +184,21 @@ class HubDialog(QDialog):
         self._table.setHorizontalHeaderLabels(
             ["Name", "Params", "Size (GB)", "Tags", "Status"]
         )
-        self._table.horizontalHeader().setSectionResizeMode(
-            0, QHeaderView.ResizeMode.Stretch
-        )
-        self._table.horizontalHeader().setSectionResizeMode(
-            3, QHeaderView.ResizeMode.Stretch
-        )
+        h_header = self._table.horizontalHeader()
+        assert h_header is not None
+        h_header.setSectionResizeMode(0, QHeaderView.ResizeMode.Stretch)
+        h_header.setSectionResizeMode(3, QHeaderView.ResizeMode.Stretch)
         for col in (1, 2, 4):
-            self._table.horizontalHeader().setSectionResizeMode(
-                col, QHeaderView.ResizeMode.ResizeToContents
-            )
+            h_header.setSectionResizeMode(col, QHeaderView.ResizeMode.ResizeToContents)
         self._table.setSelectionBehavior(QTableWidget.SelectionBehavior.SelectRows)
         self._table.setEditTriggers(QTableWidget.EditTrigger.NoEditTriggers)
         self._table.setAlternatingRowColors(True)
-        self._table.verticalHeader().setVisible(False)
-        self._table.selectionModel().selectionChanged.connect(
-            self._on_selection_changed
-        )
+        v_header = self._table.verticalHeader()
+        assert v_header is not None
+        v_header.setVisible(False)
+        sel_model = self._table.selectionModel()
+        assert sel_model is not None
+        sel_model.selectionChanged.connect(self._on_selection_changed)
         root.addWidget(self._table)
 
         # Detail label
@@ -332,7 +330,9 @@ class HubDialog(QDialog):
 
     def _on_selection_changed(self) -> None:
         """Update the detail label and download button when selection changes."""
-        rows = self._table.selectionModel().selectedRows()
+        sel_model = self._table.selectionModel()
+        assert sel_model is not None
+        rows = sel_model.selectedRows()
         if not rows:
             self._btn_download.setEnabled(False)
             self._detail_label.setText("")
@@ -357,7 +357,9 @@ class HubDialog(QDialog):
 
     def _selected_model(self) -> HubModel | None:
         """Return the currently selected :class:`~bitnet_launcher.hub.HubModel`."""
-        rows = self._table.selectionModel().selectedRows()
+        sel_model = self._table.selectionModel()
+        assert sel_model is not None
+        rows = sel_model.selectedRows()
         if not rows:
             return None
         row = rows[0].row()
