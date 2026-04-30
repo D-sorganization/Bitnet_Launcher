@@ -14,7 +14,7 @@ import html
 import logging
 from pathlib import Path
 
-from PyQt6.QtCore import QThread, pyqtSignal
+from PyQt6.QtCore import QThread, QTimer, pyqtSignal
 from PyQt6.QtGui import QColor, QFont
 from PyQt6.QtWidgets import (
     QComboBox,
@@ -170,9 +170,17 @@ class HubDialog(QDialog):
         self._tag_combo.currentIndexChanged.connect(self._refresh_table)
         filter_row.addWidget(self._tag_combo)
 
+        # ⚡ Bolt Optimization: Debounce search input
+        # Why: Prevents synchronous disk I/O and layout recalculations on every
+        # keystroke, making typing in the search box significantly smoother.
+        self._search_timer = QTimer()
+        self._search_timer.setSingleShot(True)
+        self._search_timer.setInterval(300)
+        self._search_timer.timeout.connect(self._refresh_table)
+
         self._search = QLineEdit()
         self._search.setPlaceholderText("Search by name…")
-        self._search.textChanged.connect(self._refresh_table)
+        self._search.textChanged.connect(self._search_timer.start)
         filter_row.addWidget(self._search)
 
         root.addLayout(filter_row)
