@@ -1,19 +1,19 @@
 PyQt6>=6.6
+fastapi
+pydantic
+uvicorn
 
 [all]
-bitnet-launcher[api,dev,hub]
-
-[api]
-fastapi
-uvicorn
+bitnet-launcher[dev,hub]
 
 [dev]
 pytest>=8
 pytest-qt
+pytest-asyncio
+httpx
 ruff>=0.4
 mypy>=1.9
 pre-commit
-httpx
 
 [hub]
 huggingface-hub>=0.20
