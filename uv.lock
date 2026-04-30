@@ -52,12 +52,14 @@ name = "bitnet-launcher"
 version = "0.1.0"
 source = { editable = "." }
 dependencies = [
+    { name = "fastapi" },
+    { name = "pydantic" },
     { name = "pyqt6" },
+    { name = "uvicorn" },
 ]
 
 [package.optional-dependencies]
 all = [
-    { name = "fastapi" },
     { name = "httpx" },
     { name = "huggingface-hub" },
     { name = "mypy" },
@@ -66,11 +68,6 @@ all = [
     { name = "pytest-asyncio" },
     { name = "pytest-qt" },
     { name = "ruff" },
-    { name = "uvicorn" },
-]
-api = [
-    { name = "fastapi" },
-    { name = "uvicorn" },
 ]
 dev = [
     { name = "httpx" },
@@ -87,20 +84,21 @@ hub = [
 
 [package.metadata]
 requires-dist = [
-    { name = "bitnet-launcher", extras = ["dev", "hub", "api"], marker = "extra == 'all'" },
-    { name = "fastapi", marker = "extra == 'api'" },
+    { name = "bitnet-launcher", extras = ["dev", "hub"], marker = "extra == 'all'" },
+    { name = "fastapi" },
     { name = "httpx", marker = "extra == 'dev'" },
     { name = "huggingface-hub", marker = "extra == 'hub'", specifier = ">=0.20" },
     { name = "mypy", marker = "extra == 'dev'", specifier = ">=1.9" },
     { name = "pre-commit", marker = "extra == 'dev'" },
+    { name = "pydantic" },
     { name = "pyqt6", specifier = ">=6.6" },
     { name = "pytest", marker = "extra == 'dev'", specifier = ">=8" },
     { name = "pytest-asyncio", marker = "extra == 'dev'" },
     { name = "pytest-qt", marker = "extra == 'dev'" },
     { name = "ruff", marker = "extra == 'dev'", specifier = ">=0.4" },
-    { name = "uvicorn", marker = "extra == 'api'" },
+    { name = "uvicorn" },
 ]
-provides-extras = ["dev", "hub", "api", "all"]
+provides-extras = ["dev", "hub", "all"]
 
 [[package]]
 name = "certifi"

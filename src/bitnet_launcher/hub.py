@@ -207,6 +207,25 @@ CATALOG: list[HubModel] = [
 # ---------------------------------------------------------------------------
 
 
+def _validate_download_args(
+    hub_model: HubModel,
+    models_dir: Path,
+    bitnet_root: Path,
+    on_log: Callable[[str], None],
+    on_progress: Callable[[float], None],
+) -> None:
+    if not isinstance(hub_model, HubModel):
+        raise TypeError(f"hub_model must be a HubModel, got {type(hub_model).__name__}")
+    if not isinstance(models_dir, Path):
+        raise TypeError(f"models_dir must be a Path, got {type(models_dir).__name__}")
+    if not isinstance(bitnet_root, Path):
+        raise TypeError(f"bitnet_root must be a Path, got {type(bitnet_root).__name__}")
+    if not callable(on_log):
+        raise TypeError("on_log must be callable")
+    if not callable(on_progress):
+        raise TypeError("on_progress must be callable")
+
+
 def download_model(
     hub_model: HubModel,
     models_dir: Path,
@@ -251,16 +270,7 @@ def download_model(
     RuntimeError
         If ``setup_env.py`` exits with a non-zero return code.
     """
-    if not isinstance(hub_model, HubModel):
-        raise TypeError(f"hub_model must be a HubModel, got {type(hub_model).__name__}")
-    if not isinstance(models_dir, Path):
-        raise TypeError(f"models_dir must be a Path, got {type(models_dir).__name__}")
-    if not isinstance(bitnet_root, Path):
-        raise TypeError(f"bitnet_root must be a Path, got {type(bitnet_root).__name__}")
-    if not callable(on_log):
-        raise TypeError("on_log must be callable")
-    if not callable(on_progress):
-        raise TypeError("on_progress must be callable")
+    _validate_download_args(hub_model, models_dir, bitnet_root, on_log, on_progress)
 
     setup_env = bitnet_root / "setup_env.py"
     if not setup_env.exists():
