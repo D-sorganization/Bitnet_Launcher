@@ -30,24 +30,18 @@ PyQt6 desktop GUI for interacting with local BitNet LLM models. Provides:
 | Module                   | Responsibility                                               |
 | ------------------------ | ------------------------------------------------------------ |
 | `config.py`              | Path config and InferenceConfig dataclass with DbC           |
-| `models.py`              | ModelInfo dataclass and model discovery (optimized with `os.scandir`) |
+| `models.py`              | ModelInfo dataclass and model discovery                      |
 | `chat_session.py`        | llama-cli stdout state machine (Qt-free)                     |
-| `terminal.py`            | Command building and terminal launch using `shlex` for safe shell quoting |
-| `runners.py`             | Decoupled async process wrapper for llama-cli (FastAPI compatible) |
-| `api.py`                 | FastAPI server providing REST endpoints for model interaction |
-| `theme.py`               | Catppuccin colour palette and Qt stylesheet (with explicit focus indicators for accessibility) |
+| `terminal.py`            | Command building and terminal launch                         |
+| `theme.py`               | Catppuccin colour palette and Qt stylesheet                  |
 | `hub.py`                 | HubModel catalog (16 models) and download_model() utility    |
 | `installer.py`           | InstallStatus, check_installation(), install_bitnet(), build_bitnet() |
-| `gui/launcher_window.py` | Top-level QMainWindow — wires all panels and dialogs (with dynamic tooltips) |
-| `gui/model_panel.py`     | Scrollable model list widget (with accessible list name)     |
-| `gui/settings_panel.py`  | Inference hyperparameter spinboxes (with accessible labels)  |
-| `gui/chat_panel.py`      | Chat display and user-input row (with accessible labels, cached QColor objects, and clear button on input)     |
-| `gui/hub_dialog.py`      | Model catalog browser and background download dialog (mypy-strict, accessible labels, dynamic tooltips, accessible progress bar, QTimer-debounced search, cached Qt objects, memory-cached disk I/O, and suspended QTableWidget repaints during batch refresh) |
-| `gui/setup_dialog.py`    | Installation status and guided setup dialog (with accessible labels/buttons/focus states, disabled-button dynamic tooltips) |
-
-`installer.check_installation()` checks optional Python dependency availability
-with `importlib.util.find_spec()` so the GUI can report installation status
-without importing those packages on the main thread.
+| `gui/launcher_window.py` | Top-level QMainWindow — wires all panels and dialogs         |
+| `gui/model_panel.py`     | Scrollable model list widget                                 |
+| `gui/settings_panel.py`  | Inference hyperparameter spinboxes                           |
+| `gui/chat_panel.py`      | Chat display and user-input row                              |
+| `gui/hub_dialog.py`      | Model catalog browser and background download dialog         |
+| `gui/setup_dialog.py`    | Installation status and guided setup dialog                  |
 
 ### State Machine (ChatSession)
 

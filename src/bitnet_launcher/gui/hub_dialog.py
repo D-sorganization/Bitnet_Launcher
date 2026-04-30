@@ -10,11 +10,10 @@ remains responsive.
 
 from __future__ import annotations
 
-import html
 import logging
 from pathlib import Path
 
-from PyQt6.QtCore import QTimer
+from PyQt6.QtCore import QThread, pyqtSignal
 from PyQt6.QtGui import QColor, QFont
 from PyQt6.QtWidgets import (
     QComboBox,
@@ -35,14 +34,78 @@ from PyQt6.QtWidgets import (
     QWidget,
 )
 
-from bitnet_launcher.gui.styles import get_hub_dialog_stylesheet
-from bitnet_launcher.gui.workers import DownloadWorker
-from bitnet_launcher.hub import CATALOG, HubModel
+from bitnet_launcher.hub import CATALOG, HubModel, download_model
 from bitnet_launcher.theme import CatppuccinTheme
 
 logger = logging.getLogger(__name__)
 
 _ALL_TAGS_LABEL = "All"
+
+
+# ---------------------------------------------------------------------------
+# Background worker
+# ---------------------------------------------------------------------------
+
+
+class DownloadWorker(QThread):
+    """Worker thread that runs :func:`~bitnet_launcher.hub.download_model`.
+
+    Signals
+    -------
+    log_line(str):
+        Emitted for each line of subprocess output.
+    progress(float):
+        Emitted with a value in ``[0.0, 1.0]``.
+    finished():
+        Emitted on successful completion.
+    error(str):
+        Emitted with a description if the download fails.
+    """
+
+    log_line = pyqtSignal(str)
+    progress = pyqtSignal(float)
+    finished = pyqtSignal()
+    error = pyqtSignal(str)
+
+    def __init__(
+        self,
+        hub_model: HubModel,
+        models_dir: Path,
+        bitnet_root: Path,
+        parent: QWidget | None = None,
+    ) -> None:
+        """Initialise the worker.
+
+        Parameters
+        ----------
+        hub_model:
+            Model to download.
+        models_dir:
+            Directory where downloaded models are stored.
+        bitnet_root:
+            Root of the BitNet checkout containing ``setup_env.py``.
+        parent:
+            Optional Qt parent.
+        """
+        super().__init__(parent)
+        self._hub_model = hub_model
+        self._models_dir = models_dir
+        self._bitnet_root = bitnet_root
+
+    def run(self) -> None:
+        """Execute the download in the worker thread."""
+        try:
+            download_model(
+                self._hub_model,
+                self._models_dir,
+                self._bitnet_root,
+                on_log=self.log_line.emit,
+                on_progress=self.progress.emit,
+            )
+            self.finished.emit()
+        except Exception as exc:  # noqa: BLE001
+            logger.exception("DownloadWorker error: %s", exc)
+            self.error.emit(str(exc))
 
 
 # ---------------------------------------------------------------------------
@@ -82,20 +145,9 @@ class HubDialog(QDialog):
         self._bitnet_root = bitnet_root
         self._worker: DownloadWorker | None = None
 
-        # ⚡ Bolt Optimization: Cache disk I/O to avoid micro-stutters
-        self._installed_cache: dict[str, bool] = {}
-
-        # ⚡ Bolt Optimization: Debounce search input
-        # Why: Prevents heavy synchronous table rebuilds and disk I/O on every keystroke
-        # Impact: Reduces main thread blocking by ~90% during active typing
-        self._search_timer = QTimer(self)
-        self._search_timer.setSingleShot(True)
-        self._search_timer.setInterval(300)
-        self._search_timer.timeout.connect(self._refresh_table)
-
         self.setWindowTitle("Download BitNet Models")
         self.resize(820, 640)
-        self.setStyleSheet(get_hub_dialog_stylesheet())
+        self.setStyleSheet(_dialog_stylesheet())
         self._build_ui()
         self._populate_tag_filter()
         self._refresh_table()
@@ -110,45 +162,42 @@ class HubDialog(QDialog):
 
         # Filter row
         filter_row = QHBoxLayout()
-        lbl_filter = QLabel("Filter:")
-        filter_row.addWidget(lbl_filter)
+        filter_row.addWidget(QLabel("Filter:"))
 
         self._tag_combo = QComboBox()
         self._tag_combo.setFixedWidth(140)
-        lbl_filter.setBuddy(self._tag_combo)
         self._tag_combo.currentIndexChanged.connect(self._refresh_table)
         filter_row.addWidget(self._tag_combo)
 
         self._search = QLineEdit()
         self._search.setPlaceholderText("Search by name…")
-        self._search.setAccessibleName("Search models by name")
-        self._search.setClearButtonEnabled(True)
-        self._search.textChanged.connect(self._search_timer.start)
+        self._search.textChanged.connect(self._refresh_table)
         filter_row.addWidget(self._search)
 
         root.addLayout(filter_row)
 
         # Model table
         self._table = QTableWidget(0, 5)
-        self._table.setAccessibleName("Model catalog")
         self._table.setHorizontalHeaderLabels(
             ["Name", "Params", "Size (GB)", "Tags", "Status"]
         )
-        header = self._table.horizontalHeader()
-        assert header is not None
-        header.setSectionResizeMode(0, QHeaderView.ResizeMode.Stretch)
-        header.setSectionResizeMode(3, QHeaderView.ResizeMode.Stretch)
+        self._table.horizontalHeader().setSectionResizeMode(
+            0, QHeaderView.ResizeMode.Stretch
+        )
+        self._table.horizontalHeader().setSectionResizeMode(
+            3, QHeaderView.ResizeMode.Stretch
+        )
         for col in (1, 2, 4):
-            header.setSectionResizeMode(col, QHeaderView.ResizeMode.ResizeToContents)
+            self._table.horizontalHeader().setSectionResizeMode(
+                col, QHeaderView.ResizeMode.ResizeToContents
+            )
         self._table.setSelectionBehavior(QTableWidget.SelectionBehavior.SelectRows)
         self._table.setEditTriggers(QTableWidget.EditTrigger.NoEditTriggers)
         self._table.setAlternatingRowColors(True)
-        v_header = self._table.verticalHeader()
-        assert v_header is not None
-        v_header.setVisible(False)
-        sel_model = self._table.selectionModel()
-        assert sel_model is not None
-        sel_model.selectionChanged.connect(self._on_selection_changed)
+        self._table.verticalHeader().setVisible(False)
+        self._table.selectionModel().selectionChanged.connect(
+            self._on_selection_changed
+        )
         root.addWidget(self._table)
 
         # Detail label
@@ -170,7 +219,6 @@ class HubDialog(QDialog):
 
         self._log = QTextEdit()
         self._log.setReadOnly(True)
-        self._log.setAccessibleName("Log output")
         self._log.setFont(QFont("Consolas", 9))
         self._log.setFixedHeight(120)
         self._log.setStyleSheet(
@@ -179,7 +227,6 @@ class HubDialog(QDialog):
         log_layout.addWidget(self._log)
 
         self._progress = QProgressBar()
-        self._progress.setAccessibleName("Download progress")
         self._progress.setRange(0, 100)
         self._progress.setValue(0)
         self._progress.setTextVisible(True)
@@ -235,10 +282,8 @@ class HubDialog(QDialog):
 
     def _is_installed(self, model: HubModel) -> bool:
         """Return ``True`` if the model's GGUF file already exists."""
-        if model.name not in self._installed_cache:
-            gguf = self._models_dir / model.name / "ggml-model-i2_s.gguf"
-            self._installed_cache[model.name] = gguf.exists()
-        return self._installed_cache[model.name]
+        gguf = self._models_dir / model.name / "ggml-model-i2_s.gguf"
+        return gguf.exists()
 
     # ── Table population ─────────────────────────────────────────────────────
 
@@ -246,51 +291,34 @@ class HubDialog(QDialog):
         """Repopulate the table according to current filter settings."""
         t = CatppuccinTheme
         self._visible_models = self._filtered_models()
+        self._table.setRowCount(len(self._visible_models))
 
-        # ⚡ Bolt Optimization: Suspend table updates during batch insertions
-        # Why: Prevents expensive synchronous layout recalculations and repaints
-        # for every single cell inserted, drastically improving rendering speed.
-        self._table.setUpdatesEnabled(False)
-        try:
-            self._table.setRowCount(len(self._visible_models))
+        for row, model in enumerate(self._visible_models):
+            installed = self._is_installed(model)
 
-            # ⚡ Bolt Optimization: Cache Qt objects outside the loop
-            font_consolas_9 = QFont("Consolas", 9)
-            color_green = QColor(t.GREEN)
-            color_subtext = QColor(t.SUBTEXT)
+            name_item = QTableWidgetItem(model.name)
+            name_item.setFont(QFont("Consolas", 9))
+            self._table.setItem(row, 0, name_item)
 
-            for row, model in enumerate(self._visible_models):
-                installed = self._is_installed(model)
+            self._table.setItem(row, 1, QTableWidgetItem(model.params))
+            self._table.setItem(row, 2, QTableWidgetItem(f"{model.size_gb:.1f}"))
+            self._table.setItem(row, 3, QTableWidgetItem(", ".join(model.tags)))
 
-                name_item = QTableWidgetItem(model.name)
-                name_item.setFont(font_consolas_9)
-                self._table.setItem(row, 0, name_item)
-
-                self._table.setItem(row, 1, QTableWidgetItem(model.params))
-                self._table.setItem(row, 2, QTableWidgetItem(f"{model.size_gb:.1f}"))
-                self._table.setItem(row, 3, QTableWidgetItem(", ".join(model.tags)))
-
-                status_item = QTableWidgetItem("Installed" if installed else "—")
-                if installed:
-                    status_item.setForeground(color_green)
-                else:
-                    status_item.setForeground(color_subtext)
-                self._table.setItem(row, 4, status_item)
-        finally:
-            self._table.setUpdatesEnabled(True)
+            status_item = QTableWidgetItem("Installed" if installed else "—")
+            if installed:
+                status_item.setForeground(QColor(t.GREEN))
+            else:
+                status_item.setForeground(QColor(t.SUBTEXT))
+            self._table.setItem(row, 4, status_item)
 
         self._btn_download.setEnabled(False)
-        self._btn_download.setToolTip("Select a model to download")
         self._detail_label.setText("")
 
     def _on_selection_changed(self) -> None:
         """Update the detail label and download button when selection changes."""
-        sel_model = self._table.selectionModel()
-        assert sel_model is not None
-        rows = sel_model.selectedRows()
+        rows = self._table.selectionModel().selectedRows()
         if not rows:
             self._btn_download.setEnabled(False)
-            self._btn_download.setToolTip("Select a model to download")
             self._detail_label.setText("")
             return
         row = rows[0].row()
@@ -298,31 +326,19 @@ class HubDialog(QDialog):
             return
         model = self._visible_models[row]
         installed = self._is_installed(model)
-        name_esc = html.escape(model.name)
-        desc_esc = html.escape(model.description)
-        repo_esc = html.escape(model.repo_id)
         self._detail_label.setText(
-            f"<b>{name_esc}</b> — {model.params} params, "
+            f"<b>{model.name}</b> — {model.params} params, "
             f"{model.size_gb:.1f} GB download<br>"
-            f"{desc_esc}<br>"
-            f"<i>HF repo: {repo_esc}</i>"
+            f"{model.description}<br>"
+            f"<i>HF repo: {model.repo_id}</i>"
         )
-        can_download = not installed and self._worker is None
-        self._btn_download.setEnabled(can_download)
-        if self._worker is not None:
-            self._btn_download.setToolTip("A download is already in progress")
-        elif installed:
-            self._btn_download.setToolTip("Model is already installed")
-        else:
-            self._btn_download.setToolTip("Download the selected model")
+        self._btn_download.setEnabled(not installed and self._worker is None)
 
     # ── Download ─────────────────────────────────────────────────────────────
 
     def _selected_model(self) -> HubModel | None:
         """Return the currently selected :class:`~bitnet_launcher.hub.HubModel`."""
-        sel_model = self._table.selectionModel()
-        assert sel_model is not None
-        rows = sel_model.selectedRows()
+        rows = self._table.selectionModel().selectedRows()
         if not rows:
             return None
         row = rows[0].row()
@@ -349,7 +365,6 @@ class HubDialog(QDialog):
         self._log.clear()
         self._progress.setValue(0)
         self._btn_download.setEnabled(False)
-        self._btn_download.setToolTip("A download is already in progress")
         self._btn_close.setEnabled(False)
         self._append_log(f"Starting download: {model.name} …")
 
@@ -365,13 +380,7 @@ class HubDialog(QDialog):
 
     def _append_log(self, line: str) -> None:
         """Append *line* to the log text area."""
-        cursor = self._log.textCursor()
-        cursor.movePosition(cursor.MoveOperation.End)
-        self._log.setTextCursor(cursor)
-        doc = self._log.document()
-        if doc is not None and not doc.isEmpty():
-            self._log.insertPlainText("\n")
-        self._log.insertPlainText(line)
+        self._log.append(line)
 
     def _on_progress(self, value: float) -> None:
         """Update the progress bar (0.0–1.0)."""
@@ -383,10 +392,6 @@ class HubDialog(QDialog):
         self._append_log("Download complete.")
         self._worker = None
         self._btn_close.setEnabled(True)
-
-        # ⚡ Bolt Optimization: Invalidate cache for the downloaded model
-        self._installed_cache.clear()
-
         self._refresh_table()
         logger.info("Download worker finished successfully")
 
@@ -395,7 +400,6 @@ class HubDialog(QDialog):
         self._append_log(f"ERROR: {message}")
         self._worker = None
         self._btn_download.setEnabled(True)
-        self._btn_download.setToolTip("Download the selected model")
         self._btn_close.setEnabled(True)
         QMessageBox.critical(self, "Download Failed", message)
         logger.error("Download worker error: %s", message)
@@ -408,3 +412,78 @@ class HubDialog(QDialog):
             )
             return
         super().reject()
+
+
+# ---------------------------------------------------------------------------
+# Stylesheet helper
+# ---------------------------------------------------------------------------
+
+
+def _dialog_stylesheet() -> str:
+    """Return a stylesheet suitable for the hub dialog."""
+    t = CatppuccinTheme
+    return f"""
+        QDialog, QWidget {{
+            background: {t.BG};
+            color: {t.TEXT};
+        }}
+        QGroupBox {{
+            border: 1px solid {t.SURFACE};
+            border-radius: 4px;
+            margin-top: 8px;
+            padding-top: 4px;
+            color: {t.SUBTEXT};
+            font-size: 11px;
+        }}
+        QGroupBox::title {{
+            subcontrol-origin: margin;
+            left: 8px;
+        }}
+        QTableWidget {{
+            background: {t.SURFACE};
+            alternate-background-color: {t.BG};
+            border: 1px solid {t.OVERLAY};
+            gridline-color: {t.OVERLAY};
+        }}
+        QTableWidget::item:selected {{
+            background: {t.ACCENT};
+            color: {t.BG};
+        }}
+        QHeaderView::section {{
+            background: {t.OVERLAY};
+            color: {t.TEXT};
+            padding: 4px;
+            border: none;
+        }}
+        QPushButton {{
+            background: {t.SURFACE};
+            color: {t.TEXT};
+            border: 1px solid {t.OVERLAY};
+            border-radius: 4px;
+            padding: 4px 12px;
+        }}
+        QPushButton:hover {{
+            background: {t.OVERLAY};
+        }}
+        QPushButton:disabled {{
+            color: #585b70;
+        }}
+        QLineEdit, QComboBox {{
+            background: {t.SURFACE};
+            border: 1px solid {t.OVERLAY};
+            border-radius: 3px;
+            color: {t.TEXT};
+            padding: 2px 4px;
+        }}
+        QProgressBar {{
+            background: {t.SURFACE};
+            border: 1px solid {t.OVERLAY};
+            border-radius: 3px;
+            text-align: center;
+            color: {t.TEXT};
+        }}
+        QProgressBar::chunk {{
+            background: {t.ACCENT};
+            border-radius: 3px;
+        }}
+    """
