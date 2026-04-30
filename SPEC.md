@@ -30,12 +30,10 @@ PyQt6 desktop GUI for interacting with local BitNet LLM models. Provides:
 | Module                   | Responsibility                                               |
 | ------------------------ | ------------------------------------------------------------ |
 | `config.py`              | Path config and InferenceConfig dataclass with DbC           |
-| `models.py`              | ModelInfo dataclass and model discovery (optimized with `os.scandir`) |
+| `models.py`              | ModelInfo dataclass and model discovery                      |
 | `chat_session.py`        | llama-cli stdout state machine (Qt-free)                     |
-| `terminal.py`            | Command building and terminal launch using `shlex` for safe shell quoting |
-| `runners.py`             | Decoupled async process wrapper for llama-cli (FastAPI compatible) |
-| `api.py`                 | FastAPI server providing REST endpoints for model interaction |
-| `theme.py`               | Catppuccin colour palette and Qt stylesheet (with explicit focus indicators for accessibility) |
+| `terminal.py`            | Command building and terminal launch                         |
+| `theme.py`               | Catppuccin colour palette and Qt stylesheet                  |
 | `hub.py`                 | HubModel catalog (16 models) and download_model() utility    |
 | `installer.py`           | InstallStatus, check_installation(), install_bitnet(), build_bitnet() |
 | `gui/launcher_window.py` | Top-level QMainWindow — wires all panels and dialogs (with dynamic tooltips) |
@@ -76,6 +74,12 @@ out of their intended shell arguments.
 ## Test Configuration
 
 - pytest runs with `-p no:xvfb` to disable the xvfb plugin on self-hosted and headless CI runners where no X display is available
+
+## Code Complexity
+
+- McCabe complexity enforcement is enabled via Ruff with a maximum complexity threshold of 10 (C90)
+- Violations are enforced at lint time as part of the CI pipeline
+- Exceptions for legacy functions may be granted with `# noqa: C901` comments when refactoring is not feasible
 
 ## Repository Hygiene
 

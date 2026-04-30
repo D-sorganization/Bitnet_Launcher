@@ -178,14 +178,12 @@ class SetupDialog(QDialog):
 
         self._path_edit = QLineEdit(str(self._bitnet_root))
         self._path_edit.setPlaceholderText("/home/user/BitNet")
-        self._path_edit.setAccessibleName("BitNet root path")
         self._path_edit.editingFinished.connect(self._on_path_edited)
         path_layout.addWidget(self._path_edit)
 
         btn_browse = QPushButton("…")
         btn_browse.setFixedWidth(32)
         btn_browse.setToolTip("Choose BitNet root directory")
-        btn_browse.setAccessibleName("Browse directory")
         btn_browse.clicked.connect(self._browse_path)
         path_layout.addWidget(btn_browse)
 
@@ -227,7 +225,6 @@ class SetupDialog(QDialog):
 
         self._log = QTextEdit()
         self._log.setReadOnly(True)
-        self._log.setAccessibleName("Log output")
         self._log.setStyleSheet(
             f"background: {t.BG}; color: {t.TEXT}; border: 1px solid {t.SURFACE};"
         )
@@ -325,9 +322,7 @@ class SetupDialog(QDialog):
         """Create and start an :class:`InstallerWorker`."""
         self._log.clear()
         self._btn_install.setEnabled(False)
-        self._btn_install.setToolTip("An operation is currently in progress")
         self._btn_build.setEnabled(False)
-        self._btn_build.setToolTip("An operation is currently in progress")
         self._btn_close.setEnabled(False)
 
         self._worker = InstallerWorker(mode, self._bitnet_root, parent=self)
@@ -339,23 +334,13 @@ class SetupDialog(QDialog):
 
     def _append_log(self, line: str) -> None:
         """Append *line* to the log text area."""
-        cursor = self._log.textCursor()
-        cursor.movePosition(cursor.MoveOperation.End)
-        self._log.setTextCursor(cursor)
-        doc = self._log.document()
-        if doc is not None and not doc.isEmpty():
-            self._log.insertPlainText("\n")
-        self._log.insertPlainText(line)
+        self._log.append(line)
 
     def _on_worker_finished(self) -> None:
         """Re-enable controls and refresh status after a successful run."""
         self._worker = None
         self._btn_install.setEnabled(True)
-        self._btn_install.setToolTip(
-            "Clone the BitNet repository and install Python dependencies"
-        )
         self._btn_build.setEnabled(True)
-        self._btn_build.setToolTip("Compile llama-cli from source using cmake")
         self._btn_close.setEnabled(True)
         self._append_log("\n--- Done ---")
         self._refresh_status()
@@ -365,11 +350,7 @@ class SetupDialog(QDialog):
         """Handle worker failure."""
         self._worker = None
         self._btn_install.setEnabled(True)
-        self._btn_install.setToolTip(
-            "Clone the BitNet repository and install Python dependencies"
-        )
         self._btn_build.setEnabled(True)
-        self._btn_build.setToolTip("Compile llama-cli from source using cmake")
         self._btn_close.setEnabled(True)
         self._append_log(f"ERROR: {message}")
         QMessageBox.critical(self, "Operation Failed", message)
@@ -426,18 +407,11 @@ def _dialog_stylesheet() -> str:
         QPushButton:disabled {{
             color: #585b70;
         }}
-        QPushButton:focus {{
-            border: 1px solid {t.ACCENT};
-            outline: none;
-        }}
         QLineEdit {{
             background: {t.SURFACE};
             border: 1px solid {t.OVERLAY};
             border-radius: 3px;
             color: {t.TEXT};
             padding: 2px 4px;
-        }}
-        QLineEdit:focus {{
-            border: 1px solid {t.ACCENT};
         }}
     """

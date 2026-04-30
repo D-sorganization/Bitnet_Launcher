@@ -85,7 +85,7 @@ class InferenceConfig:
     n_predict: int = -1
     system_prompt: str = "You are a helpful assistant."
 
-    def __post_init__(self) -> None:
+    def __post_init__(self) -> None:  # noqa: C901
         """Enforce DbC invariants on all fields."""
         if not isinstance(self.threads, int):
             raise TypeError(f"threads must be int, got {type(self.threads).__name__}")
