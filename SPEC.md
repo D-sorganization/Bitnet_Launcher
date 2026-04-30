@@ -71,6 +71,12 @@ out of their intended shell arguments.
 
 - pytest runs with `-p no:xvfb` to disable the xvfb plugin on self-hosted and headless CI runners where no X display is available
 
+## Code Complexity
+
+- McCabe complexity enforcement is enabled via Ruff with a maximum complexity threshold of 10 (C90)
+- Violations are enforced at lint time as part of the CI pipeline
+- Exceptions for legacy functions may be granted with `# noqa: C901` comments when refactoring is not feasible
+
 ## Repository Hygiene
 
 - Generated Python bytecode artifacts (`__pycache__/`, `*.pyc`, and related files) are ignored and must not be tracked in source control.
