@@ -87,3 +87,6 @@ out of their intended shell arguments.
 
 ### UI Improvements
 - Model Panel detail labels are explicitly set to `PlainText` format to prevent unintended HTML parsing of dynamically generated file paths and model names.
+
+### Performance Updates
+- Debounced search input to avoid stuttering during rapid typing
