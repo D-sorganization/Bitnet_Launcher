@@ -14,7 +14,7 @@ import html
 import logging
 from pathlib import Path
 
-from PyQt6.QtCore import QThread, pyqtSignal
+from PyQt6.QtCore import QThread, QTimer, pyqtSignal
 from PyQt6.QtGui import QColor, QFont
 from PyQt6.QtWidgets import (
     QComboBox,
@@ -170,9 +170,17 @@ class HubDialog(QDialog):
         self._tag_combo.currentIndexChanged.connect(self._refresh_table)
         filter_row.addWidget(self._tag_combo)
 
+        # ⚡ Bolt Optimization: Debounce search input
+        # Why: Prevents synchronous disk I/O and layout recalculations on every
+        # keystroke, making typing in the search box significantly smoother.
+        self._search_timer = QTimer()
+        self._search_timer.setSingleShot(True)
+        self._search_timer.setInterval(300)
+        self._search_timer.timeout.connect(self._refresh_table)
+
         self._search = QLineEdit()
         self._search.setPlaceholderText("Search by name…")
-        self._search.textChanged.connect(self._refresh_table)
+        self._search.textChanged.connect(self._search_timer.start)
         filter_row.addWidget(self._search)
 
         root.addLayout(filter_row)
@@ -182,23 +190,30 @@ class HubDialog(QDialog):
         self._table.setHorizontalHeaderLabels(
             ["Name", "Params", "Size (GB)", "Tags", "Status"]
         )
-        self._table.horizontalHeader().setSectionResizeMode(
-            0, QHeaderView.ResizeMode.Stretch
-        )
-        self._table.horizontalHeader().setSectionResizeMode(
-            3, QHeaderView.ResizeMode.Stretch
-        )
-        for col in (1, 2, 4):
-            self._table.horizontalHeader().setSectionResizeMode(
-                col, QHeaderView.ResizeMode.ResizeToContents
-            )
+
+        # We know QTableWidget has horizontal/vertical headers, but mypy doesn't
+        # narrow the type down from QTableView's QHeaderView|None return type
+        horizontal_header = self._table.horizontalHeader()
+        if horizontal_header is not None:
+            horizontal_header.setSectionResizeMode(0, QHeaderView.ResizeMode.Stretch)
+            horizontal_header.setSectionResizeMode(3, QHeaderView.ResizeMode.Stretch)
+            for col in (1, 2, 4):
+                horizontal_header.setSectionResizeMode(
+                    col, QHeaderView.ResizeMode.ResizeToContents
+                )
+
+        vertical_header = self._table.verticalHeader()
+        if vertical_header is not None:
+            vertical_header.setVisible(False)
+
         self._table.setSelectionBehavior(QTableWidget.SelectionBehavior.SelectRows)
         self._table.setEditTriggers(QTableWidget.EditTrigger.NoEditTriggers)
         self._table.setAlternatingRowColors(True)
-        self._table.verticalHeader().setVisible(False)
-        self._table.selectionModel().selectionChanged.connect(
-            self._on_selection_changed
-        )
+
+        selection_model = self._table.selectionModel()
+        if selection_model is not None:
+            selection_model.selectionChanged.connect(self._on_selection_changed)
+
         root.addWidget(self._table)
 
         # Detail label
@@ -330,7 +345,8 @@ class HubDialog(QDialog):
 
     def _on_selection_changed(self) -> None:
         """Update the detail label and download button when selection changes."""
-        rows = self._table.selectionModel().selectedRows()
+        selection_model = self._table.selectionModel()
+        rows = selection_model.selectedRows() if selection_model is not None else []
         if not rows:
             self._btn_download.setEnabled(False)
             self._detail_label.setText("")
@@ -355,7 +371,8 @@ class HubDialog(QDialog):
 
     def _selected_model(self) -> HubModel | None:
         """Return the currently selected :class:`~bitnet_launcher.hub.HubModel`."""
-        rows = self._table.selectionModel().selectedRows()
+        selection_model = self._table.selectionModel()
+        rows = selection_model.selectedRows() if selection_model is not None else []
         if not rows:
             return None
         row = rows[0].row()
