@@ -1,5 +1,9 @@
 # CLAUDE.md — Bitnet_Launcher
 
+## Branch Policy
+
+All work on `main` branch. PRs target `main`.
+
 ## What This Is
 
 PyQt6 GUI for selecting and chatting with local BitNet LLM models. Wraps the
