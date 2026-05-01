@@ -15,7 +15,7 @@ import logging
 from pathlib import Path
 
 from PyQt6.QtCore import QThread, QTimer, pyqtSignal
-from PyQt6.QtGui import QColor, QFont
+from PyQt6.QtGui import QColor, QFont, QTextCursor
 from PyQt6.QtWidgets import (
     QComboBox,
     QDialog,
@@ -414,7 +414,12 @@ class HubDialog(QDialog):
 
     def _append_log(self, line: str) -> None:
         """Append *line* to the log text area."""
-        self._log.append(line)
+        cursor = self._log.textCursor()
+        cursor.movePosition(QTextCursor.MoveOperation.End)
+        self._log.setTextCursor(cursor)
+        if self._log.document() is not None and not self._log.document().isEmpty():
+            self._log.insertPlainText("\n")
+        self._log.insertPlainText(line)
 
     def _on_progress(self, value: float) -> None:
         """Update the progress bar (0.0–1.0)."""

@@ -16,6 +16,7 @@ from enum import Enum, auto
 from pathlib import Path
 
 from PyQt6.QtCore import QThread, pyqtSignal
+from PyQt6.QtGui import QTextCursor
 from PyQt6.QtWidgets import (
     QDialog,
     QFileDialog,
@@ -334,7 +335,12 @@ class SetupDialog(QDialog):
 
     def _append_log(self, line: str) -> None:
         """Append *line* to the log text area."""
-        self._log.append(line)
+        cursor = self._log.textCursor()
+        cursor.movePosition(QTextCursor.MoveOperation.End)
+        self._log.setTextCursor(cursor)
+        if self._log.document() is not None and not self._log.document().isEmpty():
+            self._log.insertPlainText("\n")
+        self._log.insertPlainText(line)
 
     def _on_worker_finished(self) -> None:
         """Re-enable controls and refresh status after a successful run."""
