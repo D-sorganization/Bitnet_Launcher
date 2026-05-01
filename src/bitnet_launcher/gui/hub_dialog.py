@@ -145,6 +145,8 @@ class HubDialog(QDialog):
         self._models_dir = models_dir
         self._bitnet_root = bitnet_root
         self._worker: DownloadWorker | None = None
+        # ⚡ Bolt Optimization: Cache synchronous disk I/O in UI loops
+        self._installed_cache: dict[str, bool] = {}
 
         self.setWindowTitle("Download BitNet Models")
         self.resize(820, 640)
@@ -298,8 +300,10 @@ class HubDialog(QDialog):
 
     def _is_installed(self, model: HubModel) -> bool:
         """Return ``True`` if the model's GGUF file already exists."""
-        gguf = self._models_dir / model.name / "ggml-model-i2_s.gguf"
-        return gguf.exists()
+        if model.name not in self._installed_cache:
+            gguf = self._models_dir / model.name / "ggml-model-i2_s.gguf"
+            self._installed_cache[model.name] = gguf.exists()
+        return self._installed_cache[model.name]
 
     # ── Table population ─────────────────────────────────────────────────────
 
@@ -432,6 +436,7 @@ class HubDialog(QDialog):
         self._append_log("Download complete.")
         self._worker = None
         self._btn_close.setEnabled(True)
+        self._installed_cache.clear()
         self._refresh_table()
         logger.info("Download worker finished successfully")
 
