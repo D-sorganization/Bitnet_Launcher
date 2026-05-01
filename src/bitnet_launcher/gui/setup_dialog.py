@@ -338,7 +338,8 @@ class SetupDialog(QDialog):
         cursor = self._log.textCursor()
         cursor.movePosition(QTextCursor.MoveOperation.End)
         self._log.setTextCursor(cursor)
-        if self._log.document() is not None and not self._log.document().isEmpty():
+        doc = self._log.document()
+        if doc is not None and not doc.isEmpty():
             self._log.insertPlainText("\n")
         self._log.insertPlainText(line)
 
