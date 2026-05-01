@@ -93,3 +93,6 @@ out of their intended shell arguments.
 ### Performance Updates
 - Debounced search input to avoid stuttering during rapid typing
 - Cached synchronous disk I/O (`Path.exists()`) checks in `HubDialog` to prevent UI freezing during model filtering
+
+### Recent Security Updates
+- Replaced `QTextEdit.append()` with safe `insertPlainText()` logic in dialog log outputs to prevent GUI spoofing and XSS vulnerabilities from untrusted subprocess logs.
