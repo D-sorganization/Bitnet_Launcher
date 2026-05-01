@@ -17,3 +17,6 @@
 ## 2024-05-18 - QLineEdit Clear Button
 **Learning:** PyQt6's `QLineEdit` has a built-in `setClearButtonEnabled(True)` method that adds a handy 'x' button inside the text field when it has content. This provides a standard and accessible way for users to quickly clear input without manually selecting and deleting it.
 **Action:** When creating text input fields (`QLineEdit`) where users might want to easily clear their entire input (like chat messages, search fields, or path inputs), explicitly enable this feature for better UX.
+## 2024-05-01 - Dynamic Tooltips for Disabled States
+**Learning:** Setting static tooltips on disabled elements is helpful, but updating the tooltip text dynamically based on the state (e.g. why the button is disabled) creates a much more intuitive and user-friendly experience, as it gives users actionable feedback on how to enable the action.
+**Action:** When conditionally disabling an action button (`setEnabled(False)`), immediately update its `setToolTip()` string to explain the specific reason the action is currently unavailable.

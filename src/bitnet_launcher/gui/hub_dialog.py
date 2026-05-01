@@ -180,6 +180,7 @@ class HubDialog(QDialog):
 
         self._search = QLineEdit()
         self._search.setPlaceholderText("Search by name…")
+        self._search.setClearButtonEnabled(True)
         self._search.textChanged.connect(self._search_timer.start)
         filter_row.addWidget(self._search)
 
@@ -262,6 +263,7 @@ class HubDialog(QDialog):
         self._btn_download = QPushButton("⬇  Download Selected")
         self._btn_download.setFixedHeight(32)
         self._btn_download.setEnabled(False)
+        self._btn_download.setToolTip("Select a model to download")
         self._btn_download.setStyleSheet(
             f"QPushButton {{ color: {t.GREEN}; border-color: {t.GREEN}; }}"
             f"QPushButton:hover {{ background: #1e3a2f; }}"
@@ -341,6 +343,7 @@ class HubDialog(QDialog):
             self._table.setUpdatesEnabled(True)
 
         self._btn_download.setEnabled(False)
+        self._btn_download.setToolTip("Select a model to download")
         self._detail_label.setText("")
 
     def _on_selection_changed(self) -> None:
@@ -349,6 +352,7 @@ class HubDialog(QDialog):
         rows = selection_model.selectedRows() if selection_model is not None else []
         if not rows:
             self._btn_download.setEnabled(False)
+            self._btn_download.setToolTip("Select a model to download")
             self._detail_label.setText("")
             return
         row = rows[0].row()
@@ -366,6 +370,12 @@ class HubDialog(QDialog):
             f"<i>HF repo: {repo_esc}</i>"
         )
         self._btn_download.setEnabled(not installed and self._worker is None)
+        if installed:
+            self._btn_download.setToolTip("Model is already installed")
+        elif self._worker is not None:
+            self._btn_download.setToolTip("A download is already in progress")
+        else:
+            self._btn_download.setToolTip("Download this model")
 
     # ── Download ─────────────────────────────────────────────────────────────
 
