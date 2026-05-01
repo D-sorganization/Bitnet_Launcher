@@ -90,3 +90,4 @@ out of their intended shell arguments.
 
 ### Performance Updates
 - Debounced search input to avoid stuttering during rapid typing
+- Cached synchronous disk I/O (`Path.exists()`) checks in `HubDialog` to prevent UI freezing during model filtering
