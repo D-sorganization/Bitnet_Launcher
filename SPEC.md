@@ -87,6 +87,8 @@ out of their intended shell arguments.
 
 ### UI Improvements
 - Model Panel detail labels are explicitly set to `PlainText` format to prevent unintended HTML parsing of dynamically generated file paths and model names.
+- Hub Dialog includes dynamic tooltips on the download button explaining its disabled state.
+- QLineEdit inputs (such as search inputs) are configured with clear buttons.
 
 ### Performance Updates
 - Debounced search input to avoid stuttering during rapid typing
