@@ -3,7 +3,7 @@
 ## Identity
 
 - **Repository:** Bitnet_Launcher
-- **Version:** 0.1.4
+- **Version:** 0.1.5
 - **Language:** Python 3.11+
 - **License:** MIT
 
@@ -88,6 +88,9 @@ out of their intended shell arguments.
 ### UI Improvements
 - Model Panel detail labels are explicitly set to `PlainText` format to prevent unintended HTML parsing of dynamically generated file paths and model names.
 - Hub Dialog includes dynamic tooltips on the download button explaining its disabled state.
+- Hub Dialog includes accessible names for its search input, tag filter, and log output.
+- Chat Panel includes dynamic tooltips on the send button explaining its disabled state.
+- Setup Dialog includes dynamic tooltips on action buttons explaining their disabled state during long-running operations.
 - QLineEdit inputs (such as search inputs) are configured with clear buttons.
 
 ### Performance Updates
