@@ -220,7 +220,7 @@ class BitNetLauncher(QMainWindow):
             msg.setWindowTitle("Terminal not found")
             msg.setTextFormat(Qt.TextFormat.PlainText)
             msg.setText(
-                "Could not launch Windows Terminal.\nRun manually:\n\n" f"{bash_cmd}"
+                f"Could not launch Windows Terminal.\nRun manually:\n\n{bash_cmd}"
             )
             msg.exec()
 
