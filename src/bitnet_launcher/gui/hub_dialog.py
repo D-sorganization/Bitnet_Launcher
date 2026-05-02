@@ -14,7 +14,7 @@ import html
 import logging
 from pathlib import Path
 
-from PyQt6.QtCore import QThread, QTimer, pyqtSignal
+from PyQt6.QtCore import Qt, QThread, QTimer, pyqtSignal
 from PyQt6.QtGui import QColor, QFont, QTextCursor
 from PyQt6.QtWidgets import (
     QComboBox,
@@ -402,12 +402,15 @@ class HubDialog(QDialog):
 
         setup_env = self._bitnet_root / "setup_env.py"
         if not setup_env.exists():
-            QMessageBox.critical(
-                self,
-                "BitNet not found",
+            msg = QMessageBox(self)
+            msg.setIcon(QMessageBox.Icon.Critical)
+            msg.setWindowTitle("BitNet not found")
+            msg.setTextFormat(Qt.TextFormat.PlainText)
+            msg.setText(
                 f"setup_env.py not found at:\n{self._bitnet_root}\n\n"
-                "Use the Setup dialog to install BitNet first.",
+                "Use the Setup dialog to install BitNet first."
             )
+            msg.exec()
             return
 
         self._log.clear()
@@ -456,7 +459,12 @@ class HubDialog(QDialog):
         self._worker = None
         self._btn_download.setEnabled(True)
         self._btn_close.setEnabled(True)
-        QMessageBox.critical(self, "Download Failed", message)
+        msg = QMessageBox(self)
+        msg.setIcon(QMessageBox.Icon.Critical)
+        msg.setWindowTitle("Download Failed")
+        msg.setTextFormat(Qt.TextFormat.PlainText)
+        msg.setText(message)
+        msg.exec()
         logger.error("Download worker error: %s", message)
 
     def reject(self) -> None:  # type: ignore[override]
