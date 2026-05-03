@@ -168,6 +168,7 @@ class HubDialog(QDialog):
         filter_row.addWidget(QLabel("Filter:"))
 
         self._tag_combo = QComboBox()
+        self._tag_combo.setAccessibleName("Filter by tag")
         self._tag_combo.setFixedWidth(140)
         self._tag_combo.currentIndexChanged.connect(self._refresh_table)
         filter_row.addWidget(self._tag_combo)
@@ -181,6 +182,7 @@ class HubDialog(QDialog):
         self._search_timer.timeout.connect(self._refresh_table)
 
         self._search = QLineEdit()
+        self._search.setAccessibleName("Search models")
         self._search.setPlaceholderText("Search by name…")
         self._search.setClearButtonEnabled(True)
         self._search.textChanged.connect(self._search_timer.start)
@@ -237,6 +239,7 @@ class HubDialog(QDialog):
         log_layout = QVBoxLayout(log_group)
 
         self._log = QTextEdit()
+        self._log.setAccessibleName("Download log")
         self._log.setReadOnly(True)
         self._log.setFont(QFont("Consolas", 9))
         self._log.setFixedHeight(120)

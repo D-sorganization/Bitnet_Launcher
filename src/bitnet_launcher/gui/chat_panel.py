@@ -81,7 +81,10 @@ class ChatPanel(QWidget):
         self._input.setEnabled(value)
         self._btn_send.setEnabled(value)
         if value:
+            self._btn_send.setToolTip("Send message")
             self._input.setFocus()
+        else:
+            self._btn_send.setToolTip("Wait for the current response to finish")
 
     def clear(self) -> None:
         """Clear all text from the chat display."""
@@ -213,6 +216,7 @@ class ChatPanel(QWidget):
         self._btn_send = QPushButton("Send")
         self._btn_send.setFixedWidth(70)
         self._btn_send.setEnabled(False)
+        self._btn_send.setToolTip("Wait for the current response to finish")
         self._btn_send.clicked.connect(self._on_submit)
         input_row.addWidget(self._btn_send)
 
