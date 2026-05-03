@@ -20,3 +20,6 @@
 ## 2024-05-01 - Dynamic Tooltips for Disabled States
 **Learning:** Setting static tooltips on disabled elements is helpful, but updating the tooltip text dynamically based on the state (e.g. why the button is disabled) creates a much more intuitive and user-friendly experience, as it gives users actionable feedback on how to enable the action.
 **Action:** When conditionally disabling an action button (`setEnabled(False)`), immediately update its `setToolTip()` string to explain the specific reason the action is currently unavailable.
+## 2026-05-03 - Unified Dialog Stylesheet Focus Indicators
+**Learning:** In a codebase with custom stylesheets, using a centrally defined stylesheet (like `get_hub_dialog_stylesheet()`) across similar dialogs ensures consistent accessibility features like `:focus` indicators are applied everywhere, rather than relying on duplicated local definitions that might be missing them.
+**Action:** When adding or improving styles, look for opportunities to replace locally-defined stylesheets lacking accessibility with centralized, complete ones to ensure consistent behavior across the application.

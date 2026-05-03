@@ -179,6 +179,8 @@ class SetupDialog(QDialog):
 
         self._path_edit = QLineEdit(str(self._bitnet_root))
         self._path_edit.setPlaceholderText("/home/user/BitNet")
+        self._path_edit.setAccessibleName("BitNet Root Path")
+        self._path_edit.setClearButtonEnabled(True)
         self._path_edit.editingFinished.connect(self._on_path_edited)
         path_layout.addWidget(self._path_edit)
 
@@ -440,11 +442,18 @@ def _dialog_stylesheet() -> str:
         QPushButton:disabled {{
             color: #585b70;
         }}
+        QPushButton:focus {{
+            border: 1px solid {t.ACCENT};
+            outline: none;
+        }}
         QLineEdit {{
             background: {t.SURFACE};
             border: 1px solid {t.OVERLAY};
             border-radius: 3px;
             color: {t.TEXT};
             padding: 2px 4px;
+        }}
+        QLineEdit:focus {{
+            border: 1px solid {t.ACCENT};
         }}
     """
