@@ -62,6 +62,9 @@ idle → loading → ready ↔ generating
 
 The application ensures that untrusted string inputs are not evaluated as Rich Text or HTML when appended to `QTextEdit` widgets (like chat history or setup logs), `QLabel` widgets (like status messages), or `QMessageBox` popups. It prevents XSS/HTML injection by using `insertPlainText()` instead of `append()` for `QTextEdit`, explicitly setting `.setTextFormat(Qt.TextFormat.PlainText)` for `QLabel` and dynamically instantiated `QMessageBox` objects (rather than using static convenience methods). When a `QLabel` requires rich text formatting (using tags like `<b>` or `<br>`), `html.escape()` is manually applied to any untrusted dynamic data injected into the HTML string.
 
+### Recent Security Updates
+- Replaced `QMessageBox` static convenience methods with explicitly instantiated `QMessageBox` objects configured with `setTextFormat(Qt.TextFormat.PlainText)` in `launcher_window.py`, `setup_dialog.py`, and `hub_dialog.py` to prevent potential HTML/Rich Text injection.
+
 ### Terminal Launch Security
 
 `terminal.launch_terminal()` must quote every dynamic value interpolated into the
@@ -99,3 +102,4 @@ out of their intended shell arguments.
 
 ### Recent Security Updates
 - Replaced `QTextEdit.append()` with safe `insertPlainText()` logic in dialog log outputs to prevent GUI spoofing and XSS vulnerabilities from untrusted subprocess logs.
+- Replaced `QMessageBox` static convenience methods with explicitly instantiated `QMessageBox` objects configured with `setTextFormat(Qt.TextFormat.PlainText)` in GUI components to prevent potential HTML/Rich Text injection.
