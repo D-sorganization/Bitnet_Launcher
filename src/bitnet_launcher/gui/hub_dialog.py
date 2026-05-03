@@ -474,8 +474,11 @@ class HubDialog(QDialog):
     def reject(self) -> None:  # type: ignore[override]
         """Block closing while a download is in progress."""
         if self._worker is not None and self._worker.isRunning():
-            QMessageBox.information(
-                self, "Download in Progress", "Please wait for the download to finish."
-            )
+            msg = QMessageBox(self)
+            msg.setIcon(QMessageBox.Icon.Information)
+            msg.setWindowTitle("Download in Progress")
+            msg.setTextFormat(Qt.TextFormat.PlainText)
+            msg.setText("Please wait for the download to finish.")
+            msg.exec()
             return
         super().reject()
