@@ -215,11 +215,14 @@ class BitNetLauncher(QMainWindow):
         except FileNotFoundError:
             cmd = build_command(self._cfg.llama_cli, model, config)
             bash_cmd = shlex.join(cmd)
-            QMessageBox.critical(
-                self,
-                "Terminal not found",
-                f"Could not launch Windows Terminal.\nRun manually:\n\n{bash_cmd}",
+            msg = QMessageBox(self)
+            msg.setIcon(QMessageBox.Icon.Critical)
+            msg.setWindowTitle("Terminal not found")
+            msg.setTextFormat(Qt.TextFormat.PlainText)
+            msg.setText(
+                f"Could not launch Windows Terminal.\nRun manually:\n\n{bash_cmd}"
             )
+            msg.exec()
 
     # ── Embedded chat ────────────────────────────────────────────────────────
 

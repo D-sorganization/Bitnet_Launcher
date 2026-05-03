@@ -15,7 +15,7 @@ import logging
 from enum import Enum, auto
 from pathlib import Path
 
-from PyQt6.QtCore import QThread, pyqtSignal
+from PyQt6.QtCore import Qt, QThread, pyqtSignal
 from PyQt6.QtGui import QTextCursor
 from PyQt6.QtWidgets import (
     QDialog,
@@ -296,26 +296,34 @@ class SetupDialog(QDialog):
     def _start_install(self) -> None:
         """Launch :func:`~bitnet_launcher.installer.install_bitnet` in a worker."""
         if self._bitnet_root.exists():
-            reply = QMessageBox.question(
-                self,
-                "Directory Exists",
+            msg = QMessageBox(self)
+            msg.setIcon(QMessageBox.Icon.Question)
+            msg.setWindowTitle("Directory Exists")
+            msg.setTextFormat(Qt.TextFormat.PlainText)
+            msg.setText(
                 f"{self._bitnet_root} already exists.\n"
-                "Continue with git clone anyway? (may fail if non-empty)",
-                QMessageBox.StandardButton.Yes | QMessageBox.StandardButton.No,
+                "Continue with git clone anyway? (may fail if non-empty)"
             )
-            if reply != QMessageBox.StandardButton.Yes:
+            msg.setStandardButtons(
+                QMessageBox.StandardButton.Yes | QMessageBox.StandardButton.No
+            )
+            reply = msg.exec()
+            if reply != QMessageBox.StandardButton.Yes.value:
                 return
         self._run_worker(_WorkerMode.INSTALL)
 
     def _start_build(self) -> None:
         """Launch :func:`~bitnet_launcher.installer.build_bitnet` in a worker."""
         if not self._bitnet_root.is_dir():
-            QMessageBox.warning(
-                self,
-                "BitNet Not Found",
+            msg = QMessageBox(self)
+            msg.setIcon(QMessageBox.Icon.Warning)
+            msg.setWindowTitle("BitNet Not Found")
+            msg.setTextFormat(Qt.TextFormat.PlainText)
+            msg.setText(
                 f"BitNet root does not exist:\n{self._bitnet_root}\n\n"
-                "Run the Install step first.",
+                "Run the Install step first."
             )
+            msg.exec()
             return
         self._run_worker(_WorkerMode.BUILD)
 
@@ -373,7 +381,12 @@ class SetupDialog(QDialog):
         self._btn_close.setEnabled(True)
         self._btn_close.setToolTip("")
         self._append_log(f"ERROR: {message}")
-        QMessageBox.critical(self, "Operation Failed", message)
+        msg = QMessageBox(self)
+        msg.setIcon(QMessageBox.Icon.Critical)
+        msg.setWindowTitle("Operation Failed")
+        msg.setTextFormat(Qt.TextFormat.PlainText)
+        msg.setText(message)
+        msg.exec()
         self._refresh_status()
         logger.error("InstallerWorker error: %s", message)
 
