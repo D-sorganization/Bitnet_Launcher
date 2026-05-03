@@ -200,7 +200,12 @@ class BitNetLauncher(QMainWindow):
     def _launch_terminal(self) -> None:
         model = self._model_panel.selected_model
         if model is None:
-            QMessageBox.warning(self, "No model", "Select a model first.")
+            msg = QMessageBox(self)
+            msg.setIcon(QMessageBox.Icon.Warning)
+            msg.setWindowTitle("No model")
+            msg.setTextFormat(Qt.TextFormat.PlainText)
+            msg.setText("Select a model first.")
+            msg.exec()
             return
         config = self._settings_panel.inference_config
         try:
@@ -229,14 +234,22 @@ class BitNetLauncher(QMainWindow):
     def _start_chat(self) -> None:
         model = self._model_panel.selected_model
         if model is None:
-            QMessageBox.warning(self, "No model", "Select a model first.")
+            msg = QMessageBox(self)
+            msg.setIcon(QMessageBox.Icon.Warning)
+            msg.setWindowTitle("No model")
+            msg.setTextFormat(Qt.TextFormat.PlainText)
+            msg.setText("Select a model first.")
+            msg.exec()
             return
         if self._process and (
             self._process.state() != QProcess.ProcessState.NotRunning
         ):
-            QMessageBox.information(
-                self, "Running", "A chat session is already active."
-            )
+            msg = QMessageBox(self)
+            msg.setIcon(QMessageBox.Icon.Information)
+            msg.setWindowTitle("Running")
+            msg.setTextFormat(Qt.TextFormat.PlainText)
+            msg.setText("A chat session is already active.")
+            msg.exec()
             return
 
         self._chat_panel.clear()

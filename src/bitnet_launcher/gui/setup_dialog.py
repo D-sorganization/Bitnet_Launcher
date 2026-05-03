@@ -393,11 +393,12 @@ class SetupDialog(QDialog):
     def reject(self) -> None:  # type: ignore[override]
         """Block closing while an operation is in progress."""
         if self._worker is not None and self._worker.isRunning():
-            QMessageBox.information(
-                self,
-                "Operation in Progress",
-                "Please wait for the current operation to finish.",
-            )
+            msg = QMessageBox(self)
+            msg.setIcon(QMessageBox.Icon.Information)
+            msg.setWindowTitle("Operation in Progress")
+            msg.setTextFormat(Qt.TextFormat.PlainText)
+            msg.setText("Please wait for the current operation to finish.")
+            msg.exec()
             return
         super().reject()
 
