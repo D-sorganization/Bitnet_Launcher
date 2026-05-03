@@ -3,7 +3,7 @@
 ## Identity
 
 - **Repository:** Bitnet_Launcher
-- **Version:** 0.1.5
+- **Version:** 0.1.6
 - **Language:** Python 3.11+
 - **License:** MIT
 
