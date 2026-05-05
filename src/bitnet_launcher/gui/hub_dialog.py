@@ -149,6 +149,12 @@ class HubDialog(QDialog):
         # ⚡ Bolt Optimization: Cache synchronous disk I/O in UI loops
         self._installed_cache: dict[str, bool] = {}
 
+        # ⚡ Bolt Optimization: Cache Qt objects to prevent instantiating them often
+        t = CatppuccinTheme
+        self._font_consolas_9 = QFont("Consolas", 9)
+        self._color_green = QColor(t.GREEN)
+        self._color_subtext = QColor(t.SUBTEXT)
+
         self.setWindowTitle("Download BitNet Models")
         self.resize(820, 640)
         self.setStyleSheet(get_hub_dialog_stylesheet())
@@ -315,7 +321,6 @@ class HubDialog(QDialog):
 
     def _refresh_table(self) -> None:
         """Repopulate the table according to current filter settings."""
-        t = CatppuccinTheme
         self._visible_models = self._filtered_models()
 
         # ⚡ Bolt Optimization: Suspend table updates during batch insertions
@@ -325,16 +330,11 @@ class HubDialog(QDialog):
         try:
             self._table.setRowCount(len(self._visible_models))
 
-            # ⚡ Bolt Optimization: Cache Qt objects outside the loop
-            font_consolas_9 = QFont("Consolas", 9)
-            color_green = QColor(t.GREEN)
-            color_subtext = QColor(t.SUBTEXT)
-
             for row, model in enumerate(self._visible_models):
                 installed = self._is_installed(model)
 
                 name_item = QTableWidgetItem(model.name)
-                name_item.setFont(font_consolas_9)
+                name_item.setFont(self._font_consolas_9)
                 self._table.setItem(row, 0, name_item)
 
                 self._table.setItem(row, 1, QTableWidgetItem(model.params))
@@ -343,9 +343,9 @@ class HubDialog(QDialog):
 
                 status_item = QTableWidgetItem("Installed" if installed else "—")
                 if installed:
-                    status_item.setForeground(color_green)
+                    status_item.setForeground(self._color_green)
                 else:
-                    status_item.setForeground(color_subtext)
+                    status_item.setForeground(self._color_subtext)
                 self._table.setItem(row, 4, status_item)
         finally:
             self._table.setUpdatesEnabled(True)
