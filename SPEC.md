@@ -93,8 +93,11 @@ out of their intended shell arguments.
 - Hub Dialog includes dynamic tooltips on the download button explaining its disabled state.
 - Dialogs use centralized, shared stylesheets when possible to enforce consistent accessibility features like `:focus` indicators.
 - Hub Dialog includes accessible names for its search input, tag filter, and log output.
+- Hub Dialog tag filter `QComboBox` is linked to a descriptive buddy label to improve keyboard navigation.
 - Chat Panel includes dynamic tooltips on the send button explaining its disabled state.
+- Chat Panel includes `:focus` stylesheet rules on read-only displays to preserve keyboard visibility.
 - Setup Dialog includes dynamic tooltips on action buttons explaining their disabled state during long-running operations.
+- Setup Dialog includes accessible names on its icon-only browse button and output log.
 - QLineEdit inputs (such as search inputs) are configured with clear buttons.
 
 ### Performance Updates

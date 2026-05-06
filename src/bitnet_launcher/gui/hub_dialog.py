@@ -172,13 +172,15 @@ class HubDialog(QDialog):
 
         # Filter row
         filter_row = QHBoxLayout()
-        filter_row.addWidget(QLabel("Filter:"))
+        lbl_filter = QLabel("Filter:")
+        filter_row.addWidget(lbl_filter)
 
         self._tag_combo = QComboBox()
         self._tag_combo.setAccessibleName("Filter by tag")
         self._tag_combo.setFixedWidth(140)
         self._tag_combo.currentIndexChanged.connect(self._refresh_table)
         filter_row.addWidget(self._tag_combo)
+        lbl_filter.setBuddy(self._tag_combo)
 
         # ⚡ Bolt Optimization: Debounce search input
         # Why: Prevents synchronous disk I/O and layout recalculations on every
@@ -251,7 +253,9 @@ class HubDialog(QDialog):
         self._log.setFont(QFont("Consolas", 9))
         self._log.setFixedHeight(120)
         self._log.setStyleSheet(
-            f"background: {t.BG}; color: {t.TEXT}; border: 1px solid {t.SURFACE};"
+            f"QTextEdit {{ background: {t.BG}; color: {t.TEXT}; "
+            f"border: 1px solid {t.SURFACE}; }} "
+            f"QTextEdit:focus {{ border: 1px solid {t.ACCENT}; }}"
         )
         log_layout.addWidget(self._log)
 

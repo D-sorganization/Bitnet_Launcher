@@ -185,6 +185,7 @@ class SetupDialog(QDialog):
         path_layout.addWidget(self._path_edit)
 
         btn_browse = QPushButton("…")
+        btn_browse.setAccessibleName("Browse for BitNet root directory")
         btn_browse.setFixedWidth(32)
         btn_browse.setToolTip("Choose BitNet root directory")
         btn_browse.clicked.connect(self._browse_path)
@@ -227,9 +228,12 @@ class SetupDialog(QDialog):
         log_layout = QVBoxLayout(log_group)
 
         self._log = QTextEdit()
+        self._log.setAccessibleName("Setup log")
         self._log.setReadOnly(True)
         self._log.setStyleSheet(
-            f"background: {t.BG}; color: {t.TEXT}; border: 1px solid {t.SURFACE};"
+            f"QTextEdit {{ background: {t.BG}; color: {t.TEXT}; "
+            f"border: 1px solid {t.SURFACE}; }} "
+            f"QTextEdit:focus {{ border: 1px solid {t.ACCENT}; }}"
         )
         log_layout.addWidget(self._log)
 
