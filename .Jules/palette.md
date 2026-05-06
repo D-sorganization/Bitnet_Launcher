@@ -23,3 +23,7 @@
 ## 2026-05-03 - Unified Dialog Stylesheet Focus Indicators
 **Learning:** In a codebase with custom stylesheets, using a centrally defined stylesheet (like `get_hub_dialog_stylesheet()`) across similar dialogs ensures consistent accessibility features like `:focus` indicators are applied everywhere, rather than relying on duplicated local definitions that might be missing them.
 **Action:** When adding or improving styles, look for opportunities to replace locally-defined stylesheets lacking accessibility with centralized, complete ones to ensure consistent behavior across the application.
+
+## $(date +%Y-%m-%d) - PyQt Inline Stylesheets Disable Global Focus Styles
+**Learning:** Using an inline `.setStyleSheet()` on a Qt widget overrides the application-level global stylesheet for that widget. If the inline stylesheet does not explicitly define a `:focus` pseudo-class rule, keyboard users will lose all visual indication when the widget receives focus.
+**Action:** When applying an inline stylesheet to an interactive or focusable widget (like `QTextEdit` or `QLineEdit`), always include a corresponding `:focus` rule (e.g., `border: 1px solid {accent_color};`) to preserve keyboard accessibility.

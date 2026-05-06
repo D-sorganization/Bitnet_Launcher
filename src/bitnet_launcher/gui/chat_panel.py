@@ -198,7 +198,9 @@ class ChatPanel(QWidget):
         self._display.setAccessibleName("Chat history")
         self._display.setFont(QFont("Consolas", 10))
         self._display.setStyleSheet(
-            f"background: {t.BG}; color: {t.TEXT}; border: 1px solid {t.SURFACE};"
+            f"QTextEdit {{ background: {t.BG}; color: {t.TEXT}; "
+            f"border: 1px solid {t.SURFACE}; }} "
+            f"QTextEdit:focus {{ border: 1px solid {t.ACCENT}; }}"
         )
         group_layout.addWidget(self._display)
 
