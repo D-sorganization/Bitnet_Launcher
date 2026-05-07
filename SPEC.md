@@ -37,7 +37,7 @@ PyQt6 desktop GUI for interacting with local BitNet LLM models. Provides:
 | `hub.py`                 | HubModel catalog (16 models) and download_model() utility    |
 | `installer.py`           | InstallStatus, check_installation(), install_bitnet(), build_bitnet() |
 | `gui/launcher_window.py` | Top-level QMainWindow — wires all panels and dialogs (with dynamic tooltips) |
-| `gui/model_panel.py`     | Scrollable model list widget (with accessible list name)     |
+| `gui/model_panel.py`     | Scrollable model list widget (with accessible list name and descriptive, unselectable empty state) |
 | `gui/settings_panel.py`  | Inference hyperparameter spinboxes (with accessible labels)  |
 | `gui/chat_panel.py`      | Chat display and user-input row (with accessible labels, cached QColor objects, and clear button on input)     |
 | `gui/hub_dialog.py`      | Model catalog browser and background download dialog (mypy-strict, accessible labels, dynamic tooltips, accessible progress bar, QTimer-debounced search, cached Qt objects, memory-cached disk I/O, and suspended QTableWidget repaints during batch refresh) |

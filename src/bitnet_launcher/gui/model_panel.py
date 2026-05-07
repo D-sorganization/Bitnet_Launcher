@@ -89,6 +89,7 @@ class ModelPanel(QWidget):
             self._list.setCurrentRow(0)
         else:
             from PyQt6.QtGui import QColor
+
             empty_item = QListWidgetItem(
                 "No models found.\nUse 'Download Models' to get started."
             )
