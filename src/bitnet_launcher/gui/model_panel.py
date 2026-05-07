@@ -88,7 +88,15 @@ class ModelPanel(QWidget):
                 self._list.addItem(item)
             self._list.setCurrentRow(0)
         else:
-            self._list.addItem("No models found")
+            from PyQt6.QtGui import QColor
+
+            empty_item = QListWidgetItem(
+                "No models found.\nUse 'Download Models' to get started."
+            )
+            empty_item.setFlags(Qt.ItemFlag.NoItemFlags)
+            empty_item.setTextAlignment(Qt.AlignmentFlag.AlignCenter)
+            empty_item.setForeground(QColor(t.SUBTEXT))
+            self._list.addItem(empty_item)
 
         group_layout.addWidget(self._list)
 

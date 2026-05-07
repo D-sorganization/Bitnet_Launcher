@@ -27,3 +27,7 @@
 ## $(date +%Y-%m-%d) - PyQt Inline Stylesheets Disable Global Focus Styles
 **Learning:** Using an inline `.setStyleSheet()` on a Qt widget overrides the application-level global stylesheet for that widget. If the inline stylesheet does not explicitly define a `:focus` pseudo-class rule, keyboard users will lose all visual indication when the widget receives focus.
 **Action:** When applying an inline stylesheet to an interactive or focusable widget (like `QTextEdit` or `QLineEdit`), always include a corresponding `:focus` rule (e.g., `border: 1px solid {accent_color};`) to preserve keyboard accessibility.
+
+## 2025-05-07 - Rich Empty States in QListWidget
+**Learning:** Adding a simple text item to an empty `QListWidget` looks like a selectable interactive element, which can confuse users.
+**Action:** When displaying an empty state in a list, add a `QListWidgetItem` but explicitly disable its selection and interaction flags (`setFlags(Qt.ItemFlag.NoItemFlags)`), center the text, and use a subdued color (`t.SUBTEXT`) to clearly communicate it is an empty state message and not data.
