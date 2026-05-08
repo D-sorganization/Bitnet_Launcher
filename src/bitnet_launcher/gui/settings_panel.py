@@ -103,6 +103,11 @@ class SettingsPanel(QWidget):
         )
         layout.addLayout(_labeled_row("Max tokens:", self._n_predict))
 
+        from bitnet_launcher.gui.wheel_event_filter import suppress_wheel_on_widgets
+        suppress_wheel_on_widgets([
+            self._threads, self._ctx_size, self._temperature, self._n_predict
+        ])
+
         layout.addSpacing(6)
         lbl_system_prompt = QLabel("System prompt:")
         layout.addWidget(lbl_system_prompt)

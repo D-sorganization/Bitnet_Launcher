@@ -182,6 +182,9 @@ class HubDialog(QDialog):
         filter_row.addWidget(self._tag_combo)
         lbl_filter.setBuddy(self._tag_combo)
 
+        from bitnet_launcher.gui.wheel_event_filter import suppress_wheel_on_widgets
+        suppress_wheel_on_widgets([self._tag_combo])
+
         # ⚡ Bolt Optimization: Debounce search input
         # Why: Prevents synchronous disk I/O and layout recalculations on every
         # keystroke, making typing in the search box significantly smoother.
