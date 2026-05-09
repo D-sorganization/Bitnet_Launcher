@@ -31,7 +31,3 @@
 ## 2025-05-07 - Rich Empty States in QListWidget
 **Learning:** Adding a simple text item to an empty `QListWidget` looks like a selectable interactive element, which can confuse users.
 **Action:** When displaying an empty state in a list, add a `QListWidgetItem` but explicitly disable its selection and interaction flags (`setFlags(Qt.ItemFlag.NoItemFlags)`), center the text, and use a subdued color (`t.SUBTEXT`) to clearly communicate it is an empty state message and not data.
-
-## $(date +%Y-%m-%d) - Contextual SpinBox Suffixes
-**Learning:** Numerical inputs like Qt's `QSpinBox` can lack immediate context, forcing users to rely on accompanying labels or tooltips to understand the unit of measurement (e.g., "tokens", "ms", "MB").
-**Action:** Always use `.setSuffix(" <unit>")` on numerical inputs where the unit is relevant to provide immediate, inline context that scales gracefully with the value.

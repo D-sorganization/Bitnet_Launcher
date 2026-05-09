@@ -3,7 +3,7 @@
 ## Identity
 
 - **Repository:** Bitnet_Launcher
-- Version: 0.1.7
+- Version: 0.1.8
 - **Language:** Python 3.11+
 - **License:** MIT
 
@@ -98,6 +98,7 @@ out of their intended shell arguments.
 - Chat Panel includes `:focus` stylesheet rules on read-only displays to preserve keyboard visibility.
 - Setup Dialog includes dynamic tooltips on action buttons explaining their disabled state during long-running operations.
 - Setup Dialog includes accessible names on its icon-only browse button and output log.
+- Inference hyperparameter inputs (QSpinBox) are configured with contextual unit suffixes (e.g. "tokens") to improve clarity.
 - QLineEdit inputs (such as search inputs) are configured with clear buttons.
 
 ### Performance Updates
