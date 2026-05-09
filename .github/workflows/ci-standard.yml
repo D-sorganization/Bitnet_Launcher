@@ -40,7 +40,7 @@ jobs:
         run: uv run pytest tests/ -v --tb=short
         env:
           QT_QPA_PLATFORM: offscreen
-# Triggering runner guard
+  # Triggering runner guard
 
   local-only-workflows:
     name: Reject hosted runner routing

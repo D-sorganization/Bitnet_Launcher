@@ -9,7 +9,6 @@ from __future__ import annotations
 from pathlib import Path
 
 import pytest
-
 from bitnet_launcher.models import (
     ModelInfo,
     _fmt_bytes,

@@ -1,6 +1,6 @@
 # BitNet Launcher
 
-A PyQt6 desktop GUI for running local BitNet LLM models.  It wraps the
+A PyQt6 desktop GUI for running local BitNet LLM models. It wraps the
 `llama-cli` binary with a model picker, inference settings panel, embedded
 chat view, Windows Terminal launch, an integrated model downloader, and a
 guided installation manager.
@@ -84,8 +84,8 @@ python3 -m bitnet_launcher.app
 
 ### Terminal Session
 
-Select a model and click **Launch in Terminal**.  A new Windows Terminal tab
-opens with `llama-cli` running interactively.  The shell remains open after the
+Select a model and click **Launch in Terminal**. A new Windows Terminal tab
+opens with `llama-cli` running interactively. The shell remains open after the
 model exits so you can inspect output or re-run.
 
 ### Download a Model
@@ -101,16 +101,16 @@ Click **Models** to open the download dialog.
 
 ### First-Time Setup
 
-Click **Setup** to open the installation dialog.  Status indicators show which
+Click **Setup** to open the installation dialog. Status indicators show which
 components are present:
 
-| Indicator | Meaning |
-|---|---|
-| BitNet directory found | `bitnet_root` exists |
-| llama-cli binary built | `build/bin/llama-cli` present |
-| Models directory exists | `models/` present |
-| Python deps (huggingface_hub) | importable |
-| setup_env.py present | download script present |
+| Indicator                     | Meaning                       |
+| ----------------------------- | ----------------------------- |
+| BitNet directory found        | `bitnet_root` exists          |
+| llama-cli binary built        | `build/bin/llama-cli` present |
+| Models directory exists       | `models/` present             |
+| Python deps (huggingface_hub) | importable                    |
+| setup_env.py present          | download script present       |
 
 Use **Browse** to point to an existing checkout or a new empty directory, then
 run **Install** (git clone) followed by **Build** (cmake).
@@ -119,21 +119,21 @@ run **Install** (git clone) followed by **Build** (cmake).
 
 ## Architecture
 
-| Module | Responsibility |
-|---|---|
-| `config.py` | `BitnetConfig` and `InferenceConfig` dataclasses with DbC |
-| `models.py` | `ModelInfo` dataclass and `discover_models()` scanner |
-| `chat_session.py` | `llama-cli` stdout state machine (Qt-free) |
-| `terminal.py` | Command building and Windows Terminal launch |
-| `theme.py` | Catppuccin Mocha palette and Qt stylesheet |
-| `hub.py` | `HubModel` catalog (16 models) and `download_model()` |
-| `installer.py` | `InstallStatus`, `check_installation()`, `install_bitnet()`, `build_bitnet()` |
-| `gui/launcher_window.py` | Top-level `QMainWindow` — wires all panels |
-| `gui/model_panel.py` | Scrollable model list with selection signal |
-| `gui/settings_panel.py` | Inference hyperparameter spinboxes |
-| `gui/chat_panel.py` | Chat display and user-input row |
-| `gui/hub_dialog.py` | Model catalog browser and download dialog |
-| `gui/setup_dialog.py` | Installation status and action dialog |
+| Module                   | Responsibility                                                                |
+| ------------------------ | ----------------------------------------------------------------------------- |
+| `config.py`              | `BitnetConfig` and `InferenceConfig` dataclasses with DbC                     |
+| `models.py`              | `ModelInfo` dataclass and `discover_models()` scanner                         |
+| `chat_session.py`        | `llama-cli` stdout state machine (Qt-free)                                    |
+| `terminal.py`            | Command building and Windows Terminal launch                                  |
+| `theme.py`               | Catppuccin Mocha palette and Qt stylesheet                                    |
+| `hub.py`                 | `HubModel` catalog (16 models) and `download_model()`                         |
+| `installer.py`           | `InstallStatus`, `check_installation()`, `install_bitnet()`, `build_bitnet()` |
+| `gui/launcher_window.py` | Top-level `QMainWindow` — wires all panels                                    |
+| `gui/model_panel.py`     | Scrollable model list with selection signal                                   |
+| `gui/settings_panel.py`  | Inference hyperparameter spinboxes                                            |
+| `gui/chat_panel.py`      | Chat display and user-input row                                               |
+| `gui/hub_dialog.py`      | Model catalog browser and download dialog                                     |
+| `gui/setup_dialog.py`    | Installation status and action dialog                                         |
 
 ---
 
