@@ -183,6 +183,7 @@ class HubDialog(QDialog):
         lbl_filter.setBuddy(self._tag_combo)
 
         from bitnet_launcher.gui.wheel_event_filter import suppress_wheel_on_widgets
+
         suppress_wheel_on_widgets([self._tag_combo])
 
         # ⚡ Bolt Optimization: Debounce search input

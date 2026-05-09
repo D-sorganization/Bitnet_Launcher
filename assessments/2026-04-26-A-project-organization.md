@@ -1,4 +1,5 @@
 # A — Project Organization
+
 - src/ directory: present
 - tests/ directory: present
 - docs/ directory: present

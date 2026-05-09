@@ -73,6 +73,7 @@ Enhancement suggestions are tracked as GitHub issues. When creating an enhanceme
 ### Contributing Code
 
 1. Create a new branch from `main`:
+
    ```bash
    git checkout -b feature/your-feature-name
    ```
@@ -82,6 +83,7 @@ Enhancement suggestions are tracked as GitHub issues. When creating an enhanceme
 3. Add tests for new functionality
 
 4. Run the test suite:
+
    ```bash
    uv run pytest
    ```
