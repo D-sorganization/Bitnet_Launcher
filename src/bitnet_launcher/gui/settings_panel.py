@@ -83,6 +83,7 @@ class SettingsPanel(QWidget):
         self._ctx_size.setRange(512, 32768)
         self._ctx_size.setSingleStep(512)
         self._ctx_size.setValue(2048)
+        self._ctx_size.setSuffix(" tokens")
         self._ctx_size.setToolTip("Context window size (tokens)")
         layout.addLayout(_labeled_row("Context size:", self._ctx_size))
 
@@ -97,6 +98,7 @@ class SettingsPanel(QWidget):
         self._n_predict = QSpinBox()
         self._n_predict.setRange(-1, 8192)
         self._n_predict.setValue(-1)
+        self._n_predict.setSuffix(" tokens")
         self._n_predict.setSpecialValueText("unlimited")
         self._n_predict.setToolTip(
             "Max tokens to generate per response (-1 = unlimited)"
