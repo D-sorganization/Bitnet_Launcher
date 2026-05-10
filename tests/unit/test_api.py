@@ -6,10 +6,9 @@ from collections.abc import AsyncGenerator
 from typing import Any
 from unittest.mock import AsyncMock, patch
 
-from fastapi.testclient import TestClient
-
 from bitnet_launcher.api import app
 from bitnet_launcher.models import ModelInfo
+from fastapi.testclient import TestClient
 
 client = TestClient(app)
 

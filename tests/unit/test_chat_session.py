@@ -9,7 +9,6 @@ from __future__ import annotations
 from unittest.mock import MagicMock
 
 import pytest
-
 from bitnet_launcher.chat_session import (
     ASSISTANT_MARKER,
     LLAMA_PROMPT,
