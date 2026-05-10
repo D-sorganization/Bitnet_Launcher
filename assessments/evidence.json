@@ -1,0 +1,87 @@
+{
+  "repo": "Bitnet_Launcher",
+  "branch": "feat/ux-qlineedit-clear-button-7870695637340805477",
+  "head_sha": "1677e61045ae0a0f802d55a70e873bb6b492bb5e",
+  "head_date": "2026-04-30",
+  "owner_repo": "D-sorganization/Bitnet_Launcher",
+  "A": {
+    "src_files": 25,
+    "test_files": 13,
+    "manifests": 1,
+    "gitignore_lines": 13,
+    "has_readme": 1,
+    "clutter_files": 9
+  },
+  "B": {
+    "readme_lines": 173,
+    "readme_headers": 19,
+    "docs_files": 0,
+    "md_files": 6
+  },
+  "C": {
+    "test_py": 13,
+    "test_rs": 0,
+    "src_py": 20,
+    "src_rs": 0,
+    "test_total": 13,
+    "src_total": 20,
+    "has_coverage": 0,
+    "has_pytest_config": 1
+  },
+  "D": {
+    "bare_except": 0,
+    "except_exception": 3,
+    "noqa_suppressions": 11
+  },
+  "E": {
+    "benchmark_files": 0,
+    "cache_decorators": 0
+  },
+  "F": {
+    "todo_fixme": 0,
+    "duplicate_risk": 0
+  },
+  "G": {
+    "req_lockfiles": 0,
+    "req_files": 1
+  },
+  "H": {
+    "secrets_raw": 0,
+    "bandit_cfg": 0,
+    "security_md": 0
+  },
+  "I": {
+    "env_example": 1,
+    "config_files": 4
+  },
+  "J": {
+    "logging_refs": 17,
+    "metrics_refs": 1
+  },
+  "K": {
+    "suppressions": 11,
+    "todo_total": 0
+  },
+  "L": {
+    "workflow_files": 3,
+    "precommit_config": 1
+  },
+  "M": {
+    "dockerfile": 0,
+    "compose_files": 0
+  },
+  "N": {
+    "license": 1,
+    "copyright_headers": 0,
+    "contributing": 1
+  },
+  "O": {
+    "claude_md": 1,
+    "agents_md": 1,
+    "claude_lines": 48,
+    "agents_lines": 85
+  },
+  "code_files": 49,
+  "src_loc": 3522,
+  "test_loc": 1246
+}

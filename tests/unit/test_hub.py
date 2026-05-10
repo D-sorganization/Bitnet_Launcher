@@ -6,6 +6,7 @@ import dataclasses
 from pathlib import Path
 
 import pytest
+
 from bitnet_launcher.hub import CATALOG, HubModel, download_model
 
 
