@@ -37,10 +37,19 @@ max-complexity = 10
 
 [tool.pytest.ini_options]
 testpaths = ["tests"]
-markers = ["headless_safe: safe to run without a display", "asyncio: mark test as async"]
 asyncio_mode = "auto"
 asyncio_default_fixture_loop_scope = "function"
-addopts = "-ra -q --strict-markers -p no:xvfb"
+addopts = "-ra -q --strict-markers --strict-config --durations=20 -m \"not slow and not live_simulation and not e2e and not requires_network and not heavy\""
+markers = [
+    "unit: Pure logic, highly isolated, execution in < 100ms",
+    "integration: Subsystem boundaries, DBs, I/O, heavy mocking",
+    "e2e: Full system boot, real networks, user workflows",
+    "slow: marks tests as slow",
+    "live_simulation: marks tests as requiring live simulation environment",
+    "requires_network: needs real outbound network",
+    "heavy: resource-intensive tests",
+    "headless_safe: safe to run without a display",
+]
 
 [tool.coverage.run]
 source = ["src"]
