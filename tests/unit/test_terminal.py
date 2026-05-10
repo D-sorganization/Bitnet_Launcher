@@ -11,6 +11,7 @@ from pathlib import Path
 from unittest.mock import MagicMock, patch
 
 import pytest
+
 from bitnet_launcher.config import InferenceConfig
 from bitnet_launcher.models import ModelInfo
 from bitnet_launcher.terminal import build_command, launch_terminal
