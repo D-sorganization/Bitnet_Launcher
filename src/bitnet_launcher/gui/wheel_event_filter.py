@@ -29,7 +29,7 @@ class WheelEventFilter(QObject):
         self.combo_box.installEventFilter(filter)
     """
 
-    def eventFilter(self, obj: QObject, event: QEvent) -> bool:
+    def eventFilter(self, obj: QObject | None, event: QEvent | None) -> bool:
         """Filter out wheel events to prevent value changes.
 
         Args:
@@ -39,6 +39,8 @@ class WheelEventFilter(QObject):
         Returns:
             True if the event should be filtered (blocked), False otherwise.
         """
+        if event is None:
+            return False
         if event.type() == QEvent.Type.Wheel:
             wheel_event = event
             if isinstance(wheel_event, QWheelEvent):
@@ -52,7 +54,7 @@ class WheelEventFilter(QObject):
 _WHEEL_FILTER_ATTR = "_wheel_event_filter"
 
 
-def suppress_wheel_on_widget(widget) -> None:
+def suppress_wheel_on_widget(widget: QObject) -> None:
     """Convenience function to install wheel event filter on a widget.
 
     The filter instance is stored as an attribute on the widget itself,
@@ -67,7 +69,7 @@ def suppress_wheel_on_widget(widget) -> None:
     widget.installEventFilter(filter_instance)
 
 
-def suppress_wheel_on_widgets(*widgets) -> None:
+def suppress_wheel_on_widgets(*widgets: QObject | list[QObject]) -> None:
     """Convenience function to install wheel event filter on multiple widgets.
 
     Each filter instance is stored as an attribute on its respective widget,
@@ -78,6 +80,8 @@ def suppress_wheel_on_widgets(*widgets) -> None:
         widgets: Variable number of widgets to suppress wheel events on.
     """
     for widget in widgets:
-        filter_instance = WheelEventFilter()
-        setattr(widget, _WHEEL_FILTER_ATTR, filter_instance)
-        widget.installEventFilter(filter_instance)
+        if isinstance(widget, list):
+            for w in widget:
+                suppress_wheel_on_widget(w)
+        else:
+            suppress_wheel_on_widget(widget)
