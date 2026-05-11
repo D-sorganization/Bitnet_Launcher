@@ -47,3 +47,8 @@
 
 **Learning:** Adding a simple text item to an empty `QListWidget` looks like a selectable interactive element, which can confuse users.
 **Action:** When displaying an empty state in a list, add a `QListWidgetItem` but explicitly disable its selection and interaction flags (`setFlags(Qt.ItemFlag.NoItemFlags)`), center the text, and use a subdued color (`t.SUBTEXT`) to clearly communicate it is an empty state message and not data.
+
+## 2025-02-13 - Stateful Tooltips Cleanup
+
+**Learning:** When conditionally disabling a button (`setEnabled(False)`) and updating its `setToolTip()` string to explain why it is unavailable, if the button is subsequently re-enabled, the tooltip persists unless explicitly cleared.
+**Action:** Explicitly clear (`setToolTip("")`) or reset the tooltip when re-enabling a conditionally disabled button to prevent stale state messages from persisting.
