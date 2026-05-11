@@ -98,6 +98,7 @@ out of their intended shell arguments.
 - Chat Panel includes dynamic tooltips on the send button explaining its disabled state.
 - Chat Panel includes `:focus` stylesheet rules on read-only displays to preserve keyboard visibility.
 - Setup Dialog includes dynamic tooltips on action buttons explaining their disabled state during long-running operations.
+- Hub Dialog includes dynamic tooltips on its close and download buttons, clearing them properly when operations finish, to explain their disabled states during downloads.
 - Setup Dialog includes accessible names on its icon-only browse button and output log.
 - Inference hyperparameter inputs (QSpinBox) are configured with contextual unit suffixes (e.g. "tokens") to improve clarity.
 - QLineEdit inputs (such as search inputs) are configured with clear buttons.
