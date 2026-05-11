@@ -428,7 +428,9 @@ class HubDialog(QDialog):
         self._log.clear()
         self._progress.setValue(0)
         self._btn_download.setEnabled(False)
+        self._btn_download.setToolTip("A download is currently in progress")
         self._btn_close.setEnabled(False)
+        self._btn_close.setToolTip("A download is currently in progress")
         self._append_log(f"Starting download: {model.name} …")
 
         self._worker = DownloadWorker(
@@ -461,6 +463,7 @@ class HubDialog(QDialog):
         self._append_log("Download complete.")
         self._worker = None
         self._btn_close.setEnabled(True)
+        self._btn_close.setToolTip("")
         self._installed_cache.clear()
         self._refresh_table()
         logger.info("Download worker finished successfully")
@@ -469,8 +472,9 @@ class HubDialog(QDialog):
         """Handle download failure."""
         self._append_log(f"ERROR: {message}")
         self._worker = None
-        self._btn_download.setEnabled(True)
         self._btn_close.setEnabled(True)
+        self._btn_close.setToolTip("")
+        self._on_selection_changed()
         msg = QMessageBox(self)
         msg.setIcon(QMessageBox.Icon.Critical)
         msg.setWindowTitle("Download Failed")
