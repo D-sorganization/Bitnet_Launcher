@@ -3,7 +3,7 @@
 ## Identity
 
 - **Repository:** Bitnet_Launcher
-- Version: 0.1.8
+- Version: 0.1.9
 - **Language:** Python 3.11+
 - **License:** MIT
 
@@ -108,6 +108,7 @@ out of their intended shell arguments.
 - Debounced search input to avoid stuttering during rapid typing
 - Cached synchronous disk I/O (`Path.exists()`) checks in `HubDialog` to prevent UI freezing during model filtering
 - Cached `QFont` and `QColor` instantiations in `HubDialog` to prevent redundant object creation during frequent UI refreshes
+- Batched updates to `QListWidget` inside `ModelPanel` using `setUpdatesEnabled(False)` to prevent synchronous layout recalculations and improve rendering performance during batch insertions.
 
 ### Recent Security Updates
 
