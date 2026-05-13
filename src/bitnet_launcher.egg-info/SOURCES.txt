@@ -26,4 +26,5 @@ src/bitnet_launcher/gui/model_panel.py
 src/bitnet_launcher/gui/settings_panel.py
 src/bitnet_launcher/gui/setup_dialog.py
 src/bitnet_launcher/gui/styles.py
+src/bitnet_launcher/gui/wheel_event_filter.py
 src/bitnet_launcher/gui/workers.py

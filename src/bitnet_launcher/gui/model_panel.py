@@ -81,22 +81,30 @@ class ModelPanel(QWidget):
         self._list.setFont(QFont("Consolas", 10))
         self._list.currentRowChanged.connect(self._on_row_changed)
 
-        if self._models:
-            for info in self._models:
-                item = QListWidgetItem(info.display_name)
-                item.setData(256, info)  # Qt.ItemDataRole.UserRole == 256
-                self._list.addItem(item)
-            self._list.setCurrentRow(0)
-        else:
-            from PyQt6.QtGui import QColor
+        # ⚡ Bolt Optimization: Suspend list updates during batch insertions
+        # Why: Prevents expensive synchronous layout recalculations and repaints
+        # for every single cell inserted, drastically improving rendering speed
+        # when dealing with a large number of models.
+        self._list.setUpdatesEnabled(False)
+        try:
+            if self._models:
+                for info in self._models:
+                    item = QListWidgetItem(info.display_name)
+                    item.setData(256, info)  # Qt.ItemDataRole.UserRole == 256
+                    self._list.addItem(item)
+                self._list.setCurrentRow(0)
+            else:
+                from PyQt6.QtGui import QColor
 
-            empty_item = QListWidgetItem(
-                "No models found.\nUse 'Download Models' to get started."
-            )
-            empty_item.setFlags(Qt.ItemFlag.NoItemFlags)
-            empty_item.setTextAlignment(Qt.AlignmentFlag.AlignCenter)
-            empty_item.setForeground(QColor(t.SUBTEXT))
-            self._list.addItem(empty_item)
+                empty_item = QListWidgetItem(
+                    "No models found.\nUse 'Download Models' to get started."
+                )
+                empty_item.setFlags(Qt.ItemFlag.NoItemFlags)
+                empty_item.setTextAlignment(Qt.AlignmentFlag.AlignCenter)
+                empty_item.setForeground(QColor(t.SUBTEXT))
+                self._list.addItem(empty_item)
+        finally:
+            self._list.setUpdatesEnabled(True)
 
         group_layout.addWidget(self._list)
 
