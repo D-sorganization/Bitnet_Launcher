@@ -101,6 +101,7 @@ out of their intended shell arguments.
 - Hub Dialog includes dynamic tooltips on its close and download buttons, clearing them properly when operations finish, to explain their disabled states during downloads.
 - Setup Dialog includes accessible names on its icon-only browse button and output log.
 - Inference hyperparameter inputs (QSpinBox) are configured with contextual unit suffixes (e.g. "tokens") to improve clarity.
+- Hub Dialog table includes a spanning empty state row with selection disabled when search/filter yields no results.
 - QLineEdit inputs (such as search inputs) are configured with clear buttons.
 
 ### Performance Updates
