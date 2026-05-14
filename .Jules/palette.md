@@ -52,3 +52,8 @@
 
 **Learning:** When conditionally disabling a button (`setEnabled(False)`) and updating its `setToolTip()` string to explain why it is unavailable, if the button is subsequently re-enabled, the tooltip persists unless explicitly cleared.
 **Action:** Explicitly clear (`setToolTip("")`) or reset the tooltip when re-enabling a conditionally disabled button to prevent stale state messages from persisting.
+
+## 2025-05-14 - Empty States in QTableWidget
+
+**Learning:** When displaying an empty state message in a `QTableWidget` by inserting a row, the message often gets cut off by columns, and users might try to select the row thinking it's interactive data.
+**Action:** When adding an empty state to a table, use `clearSpans()` and `setSpan(0, 0, 1, column_count)` to make the message span the entire width of the table. Center the text, apply a subdued color, and use `setFlags(Qt.ItemFlag.NoItemFlags)` to prevent the row from being selected or interacted with.

@@ -336,25 +336,37 @@ class HubDialog(QDialog):
         # for every single cell inserted, drastically improving rendering speed.
         self._table.setUpdatesEnabled(False)
         try:
-            self._table.setRowCount(len(self._visible_models))
+            self._table.clearSpans()
+            if not self._visible_models:
+                self._table.setRowCount(1)
+                empty_item = QTableWidgetItem("No models match your filter.")
+                empty_item.setFlags(Qt.ItemFlag.NoItemFlags)
+                empty_item.setTextAlignment(Qt.AlignmentFlag.AlignCenter)
+                empty_item.setForeground(self._color_subtext)
+                self._table.setItem(0, 0, empty_item)
+                self._table.setSpan(0, 0, 1, 5)
+            else:
+                self._table.setRowCount(len(self._visible_models))
 
-            for row, model in enumerate(self._visible_models):
-                installed = self._is_installed(model)
+                for row, model in enumerate(self._visible_models):
+                    installed = self._is_installed(model)
 
-                name_item = QTableWidgetItem(model.name)
-                name_item.setFont(self._font_consolas_9)
-                self._table.setItem(row, 0, name_item)
+                    name_item = QTableWidgetItem(model.name)
+                    name_item.setFont(self._font_consolas_9)
+                    self._table.setItem(row, 0, name_item)
 
-                self._table.setItem(row, 1, QTableWidgetItem(model.params))
-                self._table.setItem(row, 2, QTableWidgetItem(f"{model.size_gb:.1f}"))
-                self._table.setItem(row, 3, QTableWidgetItem(", ".join(model.tags)))
+                    self._table.setItem(row, 1, QTableWidgetItem(model.params))
+                    self._table.setItem(
+                        row, 2, QTableWidgetItem(f"{model.size_gb:.1f}")
+                    )
+                    self._table.setItem(row, 3, QTableWidgetItem(", ".join(model.tags)))
 
-                status_item = QTableWidgetItem("Installed" if installed else "—")
-                if installed:
-                    status_item.setForeground(self._color_green)
-                else:
-                    status_item.setForeground(self._color_subtext)
-                self._table.setItem(row, 4, status_item)
+                    status_item = QTableWidgetItem("Installed" if installed else "—")
+                    if installed:
+                        status_item.setForeground(self._color_green)
+                    else:
+                        status_item.setForeground(self._color_subtext)
+                    self._table.setItem(row, 4, status_item)
         finally:
             self._table.setUpdatesEnabled(True)
 
