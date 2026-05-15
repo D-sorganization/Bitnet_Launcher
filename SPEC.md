@@ -90,6 +90,7 @@ out of their intended shell arguments.
 
 ### UI Improvements
 
+- Chat Panel provides guidance to the user via empty-state placeholder text before a chat session is initiated.
 - Model Panel detail labels are explicitly set to `PlainText` format to prevent unintended HTML parsing of dynamically generated file paths and model names.
 - Hub Dialog includes dynamic tooltips on the download button explaining its disabled state.
 - Dialogs use centralized, shared stylesheets when possible to enforce consistent accessibility features like `:focus` indicators.
