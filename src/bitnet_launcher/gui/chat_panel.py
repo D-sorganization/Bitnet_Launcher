@@ -196,6 +196,9 @@ class ChatPanel(QWidget):
         self._display = QTextEdit()
         self._display.setReadOnly(True)
         self._display.setAccessibleName("Chat history")
+        self._display.setPlaceholderText(
+            "No active chat session.\nSelect a model and click 'Chat Here' to begin."
+        )
         self._display.setFont(QFont("Consolas", 10))
         self._display.setStyleSheet(
             f"QTextEdit {{ background: {t.BG}; color: {t.TEXT}; "

@@ -57,3 +57,6 @@
 
 **Learning:** When displaying an empty state message in a `QTableWidget` by inserting a row, the message often gets cut off by columns, and users might try to select the row thinking it's interactive data.
 **Action:** When adding an empty state to a table, use `clearSpans()` and `setSpan(0, 0, 1, column_count)` to make the message span the entire width of the table. Center the text, apply a subdued color, and use `setFlags(Qt.ItemFlag.NoItemFlags)` to prevent the row from being selected or interacted with.
+## 2025-02-12 - Empty State for Chat Window
+**Learning:** Adding `setPlaceholderText` to a `QTextEdit` that is set as read-only (`setReadOnly(True)`) provides an excellent, native way to display an empty state or call-to-action without needing complex overlay widgets or toggling text visibility when an interaction begins.
+**Action:** Use `setPlaceholderText()` on main `QTextEdit` and `QLineEdit` components to guide users when no content is present, especially when waiting for an initial interaction.
