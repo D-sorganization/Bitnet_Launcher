@@ -60,3 +60,8 @@
 ## 2025-02-12 - Empty State for Chat Window
 **Learning:** Adding `setPlaceholderText` to a `QTextEdit` that is set as read-only (`setReadOnly(True)`) provides an excellent, native way to display an empty state or call-to-action without needing complex overlay widgets or toggling text visibility when an interaction begins.
 **Action:** Use `setPlaceholderText()` on main `QTextEdit` and `QLineEdit` components to guide users when no content is present, especially when waiting for an initial interaction.
+
+## 2024-05-18 - Proactive Button Disabling Over Error Dialogs
+
+**Learning:** In PyQt applications, relying on a `QMessageBox` to tell users "Please select an item first" after they click an action button is poor UX. `LauncherWindow` used this anti-pattern while `HubDialog` proactively disabled buttons.
+**Action:** When an action button requires a selection from a list or table to function, proactively disable it (`setEnabled(False)`) when the selection is empty and provide a clear tooltip explaining why, rather than allowing the click and showing an error popup.

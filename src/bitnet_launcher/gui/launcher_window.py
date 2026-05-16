@@ -197,15 +197,38 @@ class BitNetLauncher(QMainWindow):
 
     # ── Terminal launch ──────────────────────────────────────────────────────
 
+    def _update_action_buttons(self, *args: object) -> None:
+        has_model = self._model_panel.selected_model is not None
+        is_running = (
+            self._process is not None
+            and self._process.state() != QProcess.ProcessState.NotRunning
+        )
+
+        self._btn_terminal.setEnabled(has_model)
+        self._btn_terminal.setToolTip(
+            "Open a new Windows Terminal tab running this model"
+            if has_model
+            else "Select a model from the list first"
+        )
+
+        self._btn_chat.setEnabled(has_model and not is_running)
+        if not has_model:
+            self._btn_chat.setToolTip("Select a model from the list first")
+        elif is_running:
+            self._btn_chat.setToolTip("A chat session is already running")
+        else:
+            self._btn_chat.setToolTip("Start an embedded chat session in this window")
+
+        self._btn_stop.setEnabled(is_running)
+        self._btn_stop.setToolTip(
+            "Stop the current chat session"
+            if is_running
+            else "No active chat session to stop"
+        )
+
     def _launch_terminal(self) -> None:
         model = self._model_panel.selected_model
-        if model is None:
-            msg = QMessageBox(self)
-            msg.setIcon(QMessageBox.Icon.Warning)
-            msg.setWindowTitle("No model")
-            msg.setTextFormat(Qt.TextFormat.PlainText)
-            msg.setText("Select a model first.")
-            msg.exec()
+        if not model:
             return
         config = self._settings_panel.inference_config
         try:
@@ -233,23 +256,9 @@ class BitNetLauncher(QMainWindow):
 
     def _start_chat(self) -> None:
         model = self._model_panel.selected_model
-        if model is None:
-            msg = QMessageBox(self)
-            msg.setIcon(QMessageBox.Icon.Warning)
-            msg.setWindowTitle("No model")
-            msg.setTextFormat(Qt.TextFormat.PlainText)
-            msg.setText("Select a model first.")
-            msg.exec()
-            return
-        if self._process and (
-            self._process.state() != QProcess.ProcessState.NotRunning
+        if not model or (
+            self._process and self._process.state() != QProcess.ProcessState.NotRunning
         ):
-            msg = QMessageBox(self)
-            msg.setIcon(QMessageBox.Icon.Information)
-            msg.setWindowTitle("Running")
-            msg.setTextFormat(Qt.TextFormat.PlainText)
-            msg.setText("A chat session is already active.")
-            msg.exec()
             return
 
         self._chat_panel.clear()
@@ -270,12 +279,10 @@ class BitNetLauncher(QMainWindow):
         if not self._process.waitForStarted(3000):
             self._chat_panel.append_system("Error: failed to start llama-cli.\n")
             self._session.reset()
+            self._update_action_buttons()
             return
 
-        self._btn_chat.setEnabled(False)
-        self._btn_chat.setToolTip("A chat session is already running")
-        self._btn_stop.setEnabled(True)
-        self._btn_stop.setToolTip("Stop the current chat session")
+        self._update_action_buttons()
         self._set_status(f"Running: {model.name}")
         logger.info("Chat session started for model: %s", model.name)
 
@@ -315,12 +322,10 @@ class BitNetLauncher(QMainWindow):
 
     def _on_process_finished(self, code: int, status: QProcess.ExitStatus) -> None:
         self._chat_panel.input_enabled = False
-        self._btn_chat.setEnabled(True)
-        self._btn_chat.setToolTip("Start an embedded chat session in this window")
-        self._btn_stop.setEnabled(False)
-        self._btn_stop.setToolTip("No active chat session to stop")
+        self._update_action_buttons()
         self._session.reset()
         self._chat_panel.append_system("\n--- Session ended ---\n")
+
         self._set_status("Ready.")
         logger.info("Chat process finished (code=%d)", code)
 
