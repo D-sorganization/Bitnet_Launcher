@@ -3,7 +3,7 @@
 ## Identity
 
 - **Repository:** Bitnet_Launcher
-- Version: 0.1.9
+- Version: 0.1.10
 - **Language:** Python 3.11+
 - **License:** MIT
 
@@ -116,3 +116,7 @@ out of their intended shell arguments.
 
 - Replaced `QTextEdit.append()` with safe `insertPlainText()` logic in dialog log outputs to prevent GUI spoofing and XSS vulnerabilities from untrusted subprocess logs.
 - Replaced `QMessageBox` static convenience methods with explicitly instantiated `QMessageBox` objects configured with `setTextFormat(Qt.TextFormat.PlainText)` in GUI components to prevent potential HTML/Rich Text injection.
+
+## UX Updates
+
+* Action buttons in the `LauncherWindow` ("Chat Here", "Launch in Terminal") are now proactively disabled when no model is selected from the list, providing dynamic tooltips explaining the state, rather than allowing clicks that result in error dialogs.
