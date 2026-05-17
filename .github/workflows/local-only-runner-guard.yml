@@ -10,6 +10,7 @@ on:
       - "scripts/check_local_only_workflows.py"
 jobs:
   local-only-workflows:
+    timeout-minutes: 30
     name: Reject hosted runner routing
     runs-on: ubuntu-latest
     steps:
