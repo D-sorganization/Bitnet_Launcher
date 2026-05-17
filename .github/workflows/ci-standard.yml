@@ -8,6 +8,7 @@ on:
 
 jobs:
   quality-gate:
+    timeout-minutes: 30
     runs-on: d-sorg-fleet
     steps:
       - uses: actions/checkout@v4
@@ -25,6 +26,7 @@ jobs:
         run: uv run mypy src/ --ignore-missing-imports
 
   tests:
+    timeout-minutes: 30
     runs-on: d-sorg-fleet
     steps:
       - uses: actions/checkout@v4
@@ -43,6 +45,7 @@ jobs:
   # Triggering runner guard
 
   local-only-workflows:
+    timeout-minutes: 30
     name: Reject hosted runner routing
     runs-on: ubuntu-latest
     steps:
