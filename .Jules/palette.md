@@ -65,3 +65,8 @@
 
 **Learning:** In PyQt applications, relying on a `QMessageBox` to tell users "Please select an item first" after they click an action button is poor UX. `LauncherWindow` used this anti-pattern while `HubDialog` proactively disabled buttons.
 **Action:** When an action button requires a selection from a list or table to function, proactively disable it (`setEnabled(False)`) when the selection is empty and provide a clear tooltip explaining why, rather than allowing the click and showing an error popup.
+
+## 2025-05-17 - Proactive Button Disabling for Prerequisites
+
+**Learning:** Relying on `QMessageBox` popups to inform a user that a prerequisite is missing (e.g., "BitNet not installed" when clicking Download, or "BitNet root does not exist" when clicking Build) is an interruptive anti-pattern. Users shouldn't be able to click an action that is guaranteed to fail due to a known state.
+**Action:** Extend the proactive disabling pattern (`setEnabled(False)`) to cover not just missing selections (like "No model selected") but also missing prerequisite states (like "App not installed"). Always update the `setToolTip()` to explain exactly what prerequisite must be met to enable the button.

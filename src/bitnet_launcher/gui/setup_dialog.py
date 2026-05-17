@@ -229,6 +229,7 @@ class SetupDialog(QDialog):
 
         self._log = QTextEdit()
         self._log.setAccessibleName("Setup log")
+        self._log.setPlaceholderText("Setup logs will appear here...")
         self._log.setReadOnly(True)
         self._log.setStyleSheet(
             f"QTextEdit {{ background: {t.BG}; color: {t.TEXT}; "
@@ -270,6 +271,15 @@ class SetupDialog(QDialog):
             self._lbl_setup_env, status.setup_env_exists, "setup_env.py present"
         )
         _ = t  # keep import used
+
+        if not status.root_exists:
+            self._btn_build.setEnabled(False)
+            self._btn_build.setToolTip(
+                "BitNet root does not exist. Run the Install step first."
+            )
+        elif self._worker is None:
+            self._btn_build.setEnabled(True)
+            self._btn_build.setToolTip("Compile llama-cli from source using cmake")
 
     def _apply_status_label(self, lbl: QLabel, ok: bool, text: str) -> None:
         """Set *lbl* text and colour according to *ok*."""
@@ -320,17 +330,6 @@ class SetupDialog(QDialog):
 
     def _start_build(self) -> None:
         """Launch :func:`~bitnet_launcher.installer.build_bitnet` in a worker."""
-        if not self._bitnet_root.is_dir():
-            msg = QMessageBox(self)
-            msg.setIcon(QMessageBox.Icon.Warning)
-            msg.setWindowTitle("BitNet Not Found")
-            msg.setTextFormat(Qt.TextFormat.PlainText)
-            msg.setText(
-                f"BitNet root does not exist:\n{self._bitnet_root}\n\n"
-                "Run the Install step first."
-            )
-            msg.exec()
-            return
         self._run_worker(_WorkerMode.BUILD)
 
     def _run_worker(self, mode: _WorkerMode) -> None:
@@ -367,8 +366,6 @@ class SetupDialog(QDialog):
         self._btn_install.setToolTip(
             "Clone the BitNet repository and install Python dependencies"
         )
-        self._btn_build.setEnabled(True)
-        self._btn_build.setToolTip("Compile llama-cli from source using cmake")
         self._btn_close.setEnabled(True)
         self._btn_close.setToolTip("")
         self._append_log("\n--- Done ---")
@@ -382,8 +379,6 @@ class SetupDialog(QDialog):
         self._btn_install.setToolTip(
             "Clone the BitNet repository and install Python dependencies"
         )
-        self._btn_build.setEnabled(True)
-        self._btn_build.setToolTip("Compile llama-cli from source using cmake")
         self._btn_close.setEnabled(True)
         self._btn_close.setToolTip("")
         self._append_log(f"ERROR: {message}")
