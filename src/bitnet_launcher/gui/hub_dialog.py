@@ -155,6 +155,8 @@ class HubDialog(QDialog):
         self._color_green = QColor(t.GREEN)
         self._color_subtext = QColor(t.SUBTEXT)
 
+        self._setup_env_exists = (self._bitnet_root / "setup_env.py").exists()
+
         self.setWindowTitle("Download BitNet Models")
         self.resize(820, 640)
         self.setStyleSheet(get_hub_dialog_stylesheet())
@@ -253,6 +255,7 @@ class HubDialog(QDialog):
 
         self._log = QTextEdit()
         self._log.setAccessibleName("Download log")
+        self._log.setPlaceholderText("Download logs will appear here...")
         self._log.setReadOnly(True)
         self._log.setFont(QFont("Consolas", 9))
         self._log.setFixedHeight(120)
@@ -329,6 +332,7 @@ class HubDialog(QDialog):
 
     def _refresh_table(self) -> None:
         """Repopulate the table according to current filter settings."""
+        self._setup_env_exists = (self._bitnet_root / "setup_env.py").exists()
         self._visible_models = self._filtered_models()
 
         # ⚡ Bolt Optimization: Suspend table updates during batch insertions
@@ -370,8 +374,15 @@ class HubDialog(QDialog):
         finally:
             self._table.setUpdatesEnabled(True)
 
-        self._btn_download.setEnabled(False)
-        self._btn_download.setToolTip("Select a model to download")
+        if not self._setup_env_exists:
+            self._btn_download.setEnabled(False)
+            self._btn_download.setToolTip(
+                "BitNet not installed. Use the Setup dialog first."
+            )
+        else:
+            self._btn_download.setEnabled(False)
+            self._btn_download.setToolTip("Select a model to download")
+
         self._detail_label.setText("")
 
     def _on_selection_changed(self) -> None:
@@ -379,8 +390,14 @@ class HubDialog(QDialog):
         selection_model = self._table.selectionModel()
         rows = selection_model.selectedRows() if selection_model is not None else []
         if not rows:
-            self._btn_download.setEnabled(False)
-            self._btn_download.setToolTip("Select a model to download")
+            if not self._setup_env_exists:
+                self._btn_download.setEnabled(False)
+                self._btn_download.setToolTip(
+                    "BitNet not installed. Use the Setup dialog first."
+                )
+            else:
+                self._btn_download.setEnabled(False)
+                self._btn_download.setToolTip("Select a model to download")
             self._detail_label.setText("")
             return
         row = rows[0].row()
@@ -397,13 +414,19 @@ class HubDialog(QDialog):
             f"{desc_esc}<br>"
             f"<i>HF repo: {repo_esc}</i>"
         )
-        self._btn_download.setEnabled(not installed and self._worker is None)
-        if installed:
-            self._btn_download.setToolTip("Model is already installed")
-        elif self._worker is not None:
-            self._btn_download.setToolTip("A download is already in progress")
+        if not self._setup_env_exists:
+            self._btn_download.setEnabled(False)
+            self._btn_download.setToolTip(
+                "BitNet not installed. Use the Setup dialog first."
+            )
         else:
-            self._btn_download.setToolTip("Download this model")
+            self._btn_download.setEnabled(not installed and self._worker is None)
+            if installed:
+                self._btn_download.setToolTip("Model is already installed")
+            elif self._worker is not None:
+                self._btn_download.setToolTip("A download is already in progress")
+            else:
+                self._btn_download.setToolTip("Download this model")
 
     # ── Download ─────────────────────────────────────────────────────────────
 
@@ -422,19 +445,6 @@ class HubDialog(QDialog):
         """Start a :class:`DownloadWorker` for the selected model."""
         model = self._selected_model()
         if model is None:
-            return
-
-        setup_env = self._bitnet_root / "setup_env.py"
-        if not setup_env.exists():
-            msg = QMessageBox(self)
-            msg.setIcon(QMessageBox.Icon.Critical)
-            msg.setWindowTitle("BitNet not found")
-            msg.setTextFormat(Qt.TextFormat.PlainText)
-            msg.setText(
-                f"setup_env.py not found at:\n{self._bitnet_root}\n\n"
-                "Use the Setup dialog to install BitNet first."
-            )
-            msg.exec()
             return
 
         self._log.clear()

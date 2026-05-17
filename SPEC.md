@@ -98,9 +98,10 @@ out of their intended shell arguments.
 - Hub Dialog tag filter `QComboBox` is linked to a descriptive buddy label to improve keyboard navigation.
 - Chat Panel includes dynamic tooltips on the send button explaining its disabled state.
 - Chat Panel includes `:focus` stylesheet rules on read-only displays to preserve keyboard visibility.
-- Setup Dialog includes dynamic tooltips on action buttons explaining their disabled state during long-running operations.
-- Hub Dialog includes dynamic tooltips on its close and download buttons, clearing them properly when operations finish, to explain their disabled states during downloads.
+- Setup Dialog includes dynamic tooltips on action buttons explaining their disabled state during long-running operations and when prerequisite installations are missing.
+- Hub Dialog includes dynamic tooltips on its close and download buttons, clearing them properly when operations finish, and explaining their disabled states during downloads or when prerequisite installations are missing.
 - Setup Dialog includes accessible names on its icon-only browse button and output log.
+- Hub Dialog and Setup Dialog log outputs include placeholder text to improve empty-state clarity.
 - Inference hyperparameter inputs (QSpinBox) are configured with contextual unit suffixes (e.g. "tokens") to improve clarity.
 - Hub Dialog table includes a spanning empty state row with selection disabled when search/filter yields no results.
 - QLineEdit inputs (such as search inputs) are configured with clear buttons.
