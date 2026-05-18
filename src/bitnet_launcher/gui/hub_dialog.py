@@ -291,6 +291,7 @@ class HubDialog(QDialog):
             f"QPushButton {{ color: {t.GREEN}; border-color: {t.GREEN}; }}"
             f"QPushButton:hover {{ background: #1e3a2f; }}"
             f"QPushButton:disabled {{ color: #585b70; }}"
+            f"QPushButton:focus {{ border: 1px solid {t.ACCENT}; outline: none; }}"
         )
         self._btn_download.clicked.connect(self._start_download)
         btn_row.addWidget(self._btn_download)

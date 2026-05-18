@@ -70,3 +70,7 @@
 
 **Learning:** Relying on `QMessageBox` popups to inform a user that a prerequisite is missing (e.g., "BitNet not installed" when clicking Download, or "BitNet root does not exist" when clicking Build) is an interruptive anti-pattern. Users shouldn't be able to click an action that is guaranteed to fail due to a known state.
 **Action:** Extend the proactive disabling pattern (`setEnabled(False)`) to cover not just missing selections (like "No model selected") but also missing prerequisite states (like "App not installed"). Always update the `setToolTip()` to explain exactly what prerequisite must be met to enable the button.
+## 2024-05-24 - PyQt Inline Stylesheets Disable Global Focus Styles
+
+**Learning:** Using an inline `.setStyleSheet()` on a Qt widget overrides the application-level global stylesheet for that widget. If the inline stylesheet does not explicitly define a `:focus` pseudo-class rule, keyboard users will lose all visual indication when the widget receives focus.
+**Action:** When applying an inline stylesheet to an interactive or focusable widget (like `QPushButton`, `QTextEdit`, or `QLineEdit`), always include a corresponding `:focus` rule (e.g., `border: 1px solid {accent_color}; outline: none;`) to preserve keyboard accessibility.
