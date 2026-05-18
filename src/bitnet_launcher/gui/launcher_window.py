@@ -109,6 +109,7 @@ class BitNetLauncher(QMainWindow):
         self._btn_terminal.setStyleSheet(
             f"QPushButton {{ color: {t.YELLOW}; border-color: {t.YELLOW}; }}"
             f"QPushButton:hover {{ background: #3a341e; }}"
+            f"QPushButton:focus {{ border: 1px solid {t.ACCENT}; outline: none; }}"
         )
         self._btn_terminal.clicked.connect(self._launch_terminal)
         btn_row.addWidget(self._btn_terminal)
@@ -119,6 +120,7 @@ class BitNetLauncher(QMainWindow):
         self._btn_chat.setStyleSheet(
             f"QPushButton {{ color: {t.GREEN}; border-color: {t.GREEN}; }}"
             f"QPushButton:hover {{ background: #1e3a2f; }}"
+            f"QPushButton:focus {{ border: 1px solid {t.ACCENT}; outline: none; }}"
         )
         self._btn_chat.clicked.connect(self._start_chat)
         btn_row.addWidget(self._btn_chat)
@@ -127,7 +129,10 @@ class BitNetLauncher(QMainWindow):
         self._btn_stop.setFixedHeight(36)
         self._btn_stop.setEnabled(False)
         self._btn_stop.setToolTip("No active chat session to stop")
-        self._btn_stop.setStyleSheet(f"color: {t.RED};")
+        self._btn_stop.setStyleSheet(
+            f"QPushButton {{ color: {t.RED}; }}"
+            f"QPushButton:focus {{ border: 1px solid {t.ACCENT}; outline: none; }}"
+        )
         self._btn_stop.clicked.connect(self._stop_chat)
         btn_row.addWidget(self._btn_stop)
 
@@ -146,6 +151,7 @@ class BitNetLauncher(QMainWindow):
         self._btn_download.setStyleSheet(
             f"QPushButton {{ color: {t.ACCENT}; border-color: {t.ACCENT}; }}"
             f"QPushButton:hover {{ background: #2e2342; }}"
+            f"QPushButton:focus {{ border: 1px solid {t.ACCENT}; outline: none; }}"
         )
         self._btn_download.clicked.connect(self._open_hub_dialog)
         btn_row.addWidget(self._btn_download)
@@ -158,6 +164,7 @@ class BitNetLauncher(QMainWindow):
         self._btn_setup.setStyleSheet(
             f"QPushButton {{ color: {t.YELLOW}; border-color: {t.YELLOW}; }}"
             f"QPushButton:hover {{ background: #3a341e; }}"
+            f"QPushButton:focus {{ border: 1px solid {t.ACCENT}; outline: none; }}"
         )
         self._btn_setup.clicked.connect(self._open_setup_dialog)
         btn_row.addWidget(self._btn_setup)
