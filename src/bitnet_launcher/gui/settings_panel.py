@@ -76,6 +76,7 @@ class SettingsPanel(QWidget):
         self._threads = QSpinBox()
         self._threads.setRange(1, os.cpu_count() or 8)
         self._threads.setValue(min(4, os.cpu_count() or 4))
+        self._threads.setSuffix(" threads")
         self._threads.setToolTip("CPU threads for inference")
         layout.addLayout(_labeled_row("Threads:", self._threads))
 

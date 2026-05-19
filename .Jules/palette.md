@@ -74,3 +74,6 @@
 
 **Learning:** Using an inline `.setStyleSheet()` on a Qt widget overrides the application-level global stylesheet for that widget. If the inline stylesheet does not explicitly define a `:focus` pseudo-class rule, keyboard users will lose all visual indication when the widget receives focus.
 **Action:** When applying an inline stylesheet to an interactive or focusable widget (like `QPushButton`, `QTextEdit`, or `QLineEdit`), always include a corresponding `:focus` rule (e.g., `border: 1px solid {accent_color}; outline: none;`) to preserve keyboard accessibility.
+## 2024-05-19 - QSpinBox unit context
+**Learning:** Adding a suffix to numeric inputs, like QSpinBox, provides immediate, inline context (e.g. " threads"), clarifying the unit of measurement right within the input field.
+**Action:** Use `.setSuffix(" <unit>")` on numerical inputs where the unit is relevant, such as QSpinBox and QDoubleSpinBox, for improved UX readability.
