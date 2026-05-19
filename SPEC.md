@@ -121,3 +121,4 @@ out of their intended shell arguments.
 ## UX Updates
 
 * Action buttons in the `LauncherWindow` ("Chat Here", "Launch in Terminal") are now proactively disabled when no model is selected from the list, providing dynamic tooltips explaining the state, rather than allowing clicks that result in error dialogs.
+* Added unit suffixes to numeric input fields (e.g., " threads" for CPU threads) in the settings panel to provide immediate, inline context and improve readability.
