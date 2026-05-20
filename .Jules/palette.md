@@ -77,3 +77,7 @@
 ## 2024-05-19 - QSpinBox unit context
 **Learning:** Adding a suffix to numeric inputs, like QSpinBox, provides immediate, inline context (e.g. " threads"), clarifying the unit of measurement right within the input field.
 **Action:** Use `.setSuffix(" <unit>")` on numerical inputs where the unit is relevant, such as QSpinBox and QDoubleSpinBox, for improved UX readability.
+
+## 2026-05-20 - Decorative Unicode Characters in Buttons
+**Learning:** When using decorative Unicode characters (like ▶ or ⚙) in `QPushButton` text to simulate icons without external image dependencies, screen readers announce the literal character names (e.g., "Black right-pointing triangle"), which clutters the UI and confuses users.
+**Action:** Always set `setAccessibleName()` on buttons with decorative Unicode text to provide a clean, text-only label for screen reader users.

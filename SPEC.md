@@ -3,7 +3,7 @@
 ## Identity
 
 - **Repository:** Bitnet_Launcher
-- Version: 0.1.10
+- Version: 0.1.11
 - **Language:** Python 3.11+
 - **License:** MIT
 
@@ -36,11 +36,11 @@ PyQt6 desktop GUI for interacting with local BitNet LLM models. Provides:
 | `theme.py`               | Catppuccin colour palette and Qt stylesheet                                                                                                                                                                                                                    |
 | `hub.py`                 | HubModel catalog (16 models) and download_model() utility                                                                                                                                                                                                      |
 | `installer.py`           | InstallStatus, check_installation(), install_bitnet(), build_bitnet()                                                                                                                                                                                          |
-| `gui/launcher_window.py` | Top-level QMainWindow — wires all panels and dialogs (with dynamic tooltips)                                                                                                                                                                                   |
+| `gui/launcher_window.py` | Top-level QMainWindow — wires all panels and dialogs (with dynamic tooltips and accessible names for Unicode-icon buttons)                                                                                                                                     |
 | `gui/model_panel.py`     | Scrollable model list widget (with accessible list name and descriptive, unselectable empty state)                                                                                                                                                             |
 | `gui/settings_panel.py`  | Inference hyperparameter spinboxes (with accessible labels)                                                                                                                                                                                                    |
 | `gui/chat_panel.py`      | Chat display and user-input row (with accessible labels, cached QColor objects, and clear button on input)                                                                                                                                                     |
-| `gui/hub_dialog.py`      | Model catalog browser and background download dialog (mypy-strict, accessible labels, dynamic tooltips, accessible progress bar, QTimer-debounced search, cached Qt objects, memory-cached disk I/O, and suspended QTableWidget repaints during batch refresh) |
+| `gui/hub_dialog.py`      | Model catalog browser and background download dialog (mypy-strict, accessible labels, dynamic tooltips, accessible progress bar, accessible names for Unicode-icon buttons, QTimer-debounced search, cached Qt objects, memory-cached disk I/O, suspended repaints) |
 | `gui/setup_dialog.py`    | Installation status and guided setup dialog (with accessible labels/buttons/focus states, disabled-button dynamic tooltips, clear button on path input)                                                                                                        |
 
 `installer.check_installation()` checks optional Python dependency availability
