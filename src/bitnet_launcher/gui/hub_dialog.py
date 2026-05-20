@@ -284,6 +284,7 @@ class HubDialog(QDialog):
         btn_row.addStretch()
 
         self._btn_download = QPushButton("⬇  Download Selected")
+        self._btn_download.setAccessibleName("Download Selected")
         self._btn_download.setFixedHeight(32)
         self._btn_download.setEnabled(False)
         self._btn_download.setToolTip("Select a model to download")

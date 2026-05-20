@@ -102,6 +102,7 @@ class BitNetLauncher(QMainWindow):
         btn_row.setSpacing(8)
 
         self._btn_terminal = QPushButton("\u2b1b  Launch in Terminal")
+        self._btn_terminal.setAccessibleName("Launch in Terminal")
         self._btn_terminal.setFixedHeight(36)
         self._btn_terminal.setToolTip(
             "Open a new Windows Terminal tab running this model"
@@ -115,6 +116,7 @@ class BitNetLauncher(QMainWindow):
         btn_row.addWidget(self._btn_terminal)
 
         self._btn_chat = QPushButton("\U0001f4ac  Chat Here")
+        self._btn_chat.setAccessibleName("Chat Here")
         self._btn_chat.setFixedHeight(36)
         self._btn_chat.setToolTip("Start an embedded chat session in this window")
         self._btn_chat.setStyleSheet(
@@ -126,6 +128,7 @@ class BitNetLauncher(QMainWindow):
         btn_row.addWidget(self._btn_chat)
 
         self._btn_stop = QPushButton("\u25a0  Stop")
+        self._btn_stop.setAccessibleName("Stop chat")
         self._btn_stop.setFixedHeight(36)
         self._btn_stop.setEnabled(False)
         self._btn_stop.setToolTip("No active chat session to stop")
@@ -144,6 +147,7 @@ class BitNetLauncher(QMainWindow):
         btn_row.addWidget(sep)
 
         self._btn_download = QPushButton("\u2b07  Download Models")
+        self._btn_download.setAccessibleName("Download Models")
         self._btn_download.setFixedHeight(36)
         self._btn_download.setToolTip(
             "Browse and download BitNet models from HuggingFace"
@@ -157,6 +161,7 @@ class BitNetLauncher(QMainWindow):
         btn_row.addWidget(self._btn_download)
 
         self._btn_setup = QPushButton("\u2699  Setup")
+        self._btn_setup.setAccessibleName("Setup")
         self._btn_setup.setFixedHeight(36)
         self._btn_setup.setToolTip(
             "Manage BitNet installation (git clone, cmake build)"
