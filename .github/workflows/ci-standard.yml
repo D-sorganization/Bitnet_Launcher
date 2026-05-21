@@ -51,3 +51,17 @@ jobs:
     steps:
       - name: Dummy
         run: echo "passed"
+
+  ci-complete:
+    name: CI Complete
+    needs: [local-only-workflows, quality-gate, tests]
+    runs-on: ubuntu-latest
+    if: always()
+    steps:
+      - name: Verify all jobs succeeded
+        run: |
+          if [ "${{ contains(needs.*.result, 'failure') || contains(needs.*.result, 'cancelled') }}" = "true" ]; then
+            echo "One or more required jobs failed or were cancelled."
+            exit 1
+          fi
+          echo "All jobs completed successfully."
