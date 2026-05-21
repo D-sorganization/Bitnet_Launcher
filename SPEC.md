@@ -109,7 +109,7 @@ out of their intended shell arguments.
 ### Performance Updates
 
 - Debounced search input to avoid stuttering during rapid typing
-- Cached synchronous disk I/O (`Path.exists()`) checks in `HubDialog` to prevent UI freezing during model filtering
+- Removed synchronous disk I/O (`Path.exists()`) checks from `_refresh_table` in `HubDialog` since it is already cached during `__init__`, preventing UI freezing during model filtering
 - Cached `QFont` and `QColor` instantiations in `HubDialog` to prevent redundant object creation during frequent UI refreshes
 - Batched updates to `QListWidget` inside `ModelPanel` using `setUpdatesEnabled(False)` to prevent synchronous layout recalculations and improve rendering performance during batch insertions.
 
