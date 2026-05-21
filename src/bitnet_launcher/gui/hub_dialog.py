@@ -334,7 +334,9 @@ class HubDialog(QDialog):
 
     def _refresh_table(self) -> None:
         """Repopulate the table according to current filter settings."""
-        self._setup_env_exists = (self._bitnet_root / "setup_env.py").exists()
+        # ⚡ Bolt Optimization: Removed synchronous disk I/O `Path.exists()` check.
+        # Why: Prevents UI micro-stutters on every keystroke during filtering.
+        # `_setup_env_exists` is cached during `__init__` and doesn't change here.
         self._visible_models = self._filtered_models()
 
         # ⚡ Bolt Optimization: Suspend table updates during batch insertions
