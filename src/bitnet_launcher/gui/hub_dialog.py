@@ -410,8 +410,9 @@ class HubDialog(QDialog):
         name_esc = html.escape(model.name)
         desc_esc = html.escape(model.description)
         repo_esc = html.escape(model.repo_id)
+        params_esc = html.escape(str(model.params))
         self._detail_label.setText(
-            f"<b>{name_esc}</b> — {model.params} params, "
+            f"<b>{name_esc}</b> — {params_esc} params, "
             f"{model.size_gb:.1f} GB download<br>"
             f"{desc_esc}<br>"
             f"<i>HF repo: {repo_esc}</i>"
