@@ -79,11 +79,12 @@ class ChatPanel(QWidget):
         if not isinstance(value, bool):
             raise TypeError(f"input_enabled must be bool, got {type(value).__name__}")
         self._input.setEnabled(value)
-        self._btn_send.setEnabled(value)
+
         if value:
-            self._btn_send.setToolTip("Send message")
             self._input.setFocus()
+            self._update_send_button_state()
         else:
+            self._btn_send.setEnabled(False)
             self._btn_send.setToolTip("Wait for the current response to finish")
 
     def clear(self) -> None:
@@ -216,6 +217,7 @@ class ChatPanel(QWidget):
         self._input.setEnabled(False)
         self._input.setFont(QFont("Consolas", 10))
         self._input.returnPressed.connect(self._on_submit)
+        self._input.textChanged.connect(self._update_send_button_state)
         input_row.addWidget(self._input)
 
         self._btn_send = QPushButton("Send")
@@ -230,6 +232,18 @@ class ChatPanel(QWidget):
         outer = QVBoxLayout(self)
         outer.setContentsMargins(0, 0, 0, 0)
         outer.addWidget(group)
+
+    def _update_send_button_state(self) -> None:
+        """Update the enabled state and tooltip of the Send button."""
+        if not self._input.isEnabled():
+            return
+
+        has_text = bool(self._input.text().strip())
+        self._btn_send.setEnabled(has_text)
+        if has_text:
+            self._btn_send.setToolTip("Send message")
+        else:
+            self._btn_send.setToolTip("Type a message to send")
 
     def _on_submit(self) -> None:
         text = self._input.text().strip()
