@@ -28,6 +28,7 @@ os.environ.setdefault("QT_QPA_PLATFORM", "offscreen")
 from pathlib import Path  # noqa: E402
 
 import pytest  # noqa: E402
+
 from bitnet_launcher.config import BitnetConfig, InferenceConfig  # noqa: E402
 from bitnet_launcher.models import ModelInfo  # noqa: E402
 
