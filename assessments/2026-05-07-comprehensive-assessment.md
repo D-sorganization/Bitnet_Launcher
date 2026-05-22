@@ -11,24 +11,24 @@
 
 ## Scores
 
-| Criterion | Name | Score | Weight | Weighted |
-|-----------|------|-------|--------|----------|
-| A | Project Organization | 77 | 5% | 3.85 |
-| B | Documentation | 85 | 8% | 6.80 |
-| C | Testing | 65 | 12% | 7.80 |
-| D | Error Handling | 97.4 | 10% | 9.74 |
-| E | Performance | 70 | 7% | 4.90 |
-| F | Code Quality | 90 | 10% | 9.00 |
-| G | Dependency Hygiene | 60 | 8% | 4.80 |
-| H | Security | 90 | 10% | 9.00 |
-| I | Configuration Management | 85 | 6% | 5.10 |
-| J | Observability | 55 | 7% | 3.85 |
-| K | Maintenance Debt | 94.5 | 7% | 6.62 |
-| L | CI/CD | 69 | 8% | 5.52 |
-| M | Deployment | 40 | 5% | 2.00 |
-| N | Legal & Compliance | 95 | 4% | 3.80 |
-| O | Agentic Usability | 90 | 3% | 2.70 |
-| **Total** | | | | **85.48** |
+| Criterion | Name                     | Score | Weight | Weighted  |
+| --------- | ------------------------ | ----- | ------ | --------- |
+| A         | Project Organization     | 77    | 5%     | 3.85      |
+| B         | Documentation            | 85    | 8%     | 6.80      |
+| C         | Testing                  | 65    | 12%    | 7.80      |
+| D         | Error Handling           | 97.4  | 10%    | 9.74      |
+| E         | Performance              | 70    | 7%     | 4.90      |
+| F         | Code Quality             | 90    | 10%    | 9.00      |
+| G         | Dependency Hygiene       | 60    | 8%     | 4.80      |
+| H         | Security                 | 90    | 10%    | 9.00      |
+| I         | Configuration Management | 85    | 6%     | 5.10      |
+| J         | Observability            | 55    | 7%     | 3.85      |
+| K         | Maintenance Debt         | 94.5  | 7%     | 6.62      |
+| L         | CI/CD                    | 69    | 8%     | 5.52      |
+| M         | Deployment               | 40    | 5%     | 2.00      |
+| N         | Legal & Compliance       | 95    | 4%     | 3.80      |
+| O         | Agentic Usability        | 90    | 3%     | 2.70      |
+| **Total** |                          |       |        | **85.48** |
 
 ## Findings Summary
 
@@ -39,7 +39,6 @@
 ### P1 Findings
 
 - **[G]** [Bitnet_Launcher] No dependency lockfile
-
 
 ## Full Evidence
 

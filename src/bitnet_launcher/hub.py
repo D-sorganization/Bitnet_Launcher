@@ -56,7 +56,7 @@ class HubModel:
             )
         if not isinstance(self.params, str) or not self.params.strip():
             raise ValueError("params must be a non-blank str")
-        if not isinstance(self.size_gb, (int, float)):
+        if not isinstance(self.size_gb, int | float):
             raise TypeError(
                 f"size_gb must be numeric, got {type(self.size_gb).__name__}"
             )

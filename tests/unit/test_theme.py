@@ -1,7 +1,6 @@
 import pytest
-from PyQt6.QtGui import QPalette
-
 from bitnet_launcher.theme import CatppuccinTheme, build_palette, build_stylesheet
+from PyQt6.QtGui import QPalette
 
 
 def test_catppuccin_theme_constants():

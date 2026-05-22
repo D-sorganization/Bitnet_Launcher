@@ -2,7 +2,6 @@ from pathlib import Path
 from unittest.mock import AsyncMock, MagicMock, patch
 
 import pytest
-
 from bitnet_launcher.models import ModelInfo
 from bitnet_launcher.runners import LocalLlamaRunner
 
