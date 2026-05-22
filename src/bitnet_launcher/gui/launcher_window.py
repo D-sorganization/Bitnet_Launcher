@@ -211,7 +211,7 @@ class BitNetLauncher(QMainWindow):
 
     def _update_action_buttons(self, *args: object) -> None:
         has_model = self._model_panel.selected_model is not None
-        llama_cli_exists = self._cfg.llama_cli.exists()
+        llama_cli_exists = bool(self._cfg.llama_cli and self._cfg.llama_cli.exists())
         is_running = (
             self._process is not None
             and self._process.state() != QProcess.ProcessState.NotRunning
