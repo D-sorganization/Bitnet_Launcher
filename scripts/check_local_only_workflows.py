@@ -38,12 +38,7 @@ def main() -> int:
                         f"{path}:{line_number}: banned hosted-runner token {token!r}"
                     )
     if failures:
-        print(
-            "GitHub-hosted runner routing is forbidden. Use local self-hosted runners only."
-        )
-        print("\n".join(failures))
         return 1
-    print("Workflow runner routing is local-only.")
     return 0
 
 

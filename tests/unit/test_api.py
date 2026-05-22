@@ -44,7 +44,7 @@ def test_list_models(mock_discover: Any, tmp_path: Any) -> None:
 def test_start_chat_not_found(mock_discover: Any) -> None:
     """Test starting chat with an unknown model returns 404."""
     mock_discover.return_value = []
-    response = client.post("/chat/start", params={"model_name": "unknown"})
+    response = client.post("/chat/start", json={"model_name": "unknown"})
     assert response.status_code == 404
     assert response.json() == {"detail": "Model not found"}
 
@@ -67,7 +67,7 @@ def test_start_chat_success(
     mock_stream.return_value = mock_generator()
 
     with client.stream(
-        "POST", "/chat/start", params={"model_name": "bitnet_b1_58-3B"}
+        "POST", "/chat/start", json={"model_name": "bitnet_b1_58-3B"}
     ) as response:
         assert response.status_code == 200
         mock_start.assert_called_once()
@@ -80,7 +80,7 @@ def test_start_chat_success(
         mock_runner = AsyncMock()
         mock_runners.get.return_value = mock_runner
         send_resp = client.post(
-            "/chat/send", params={"model_name": "bitnet_b1_58-3B", "message": "hello"}
+            "/chat/send", json={"model_name": "bitnet_b1_58-3B", "message": "hello"}
         )
         assert send_resp.status_code == 200
         mock_runner.send_message.assert_called_once_with("hello")

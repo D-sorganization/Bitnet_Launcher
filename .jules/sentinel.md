@@ -39,8 +39,21 @@
 **Vulnerability:** `QMessageBox` text automatically evaluates HTML by default if it looks like HTML. If user input (like error messages, shell commands, or arbitrary paths) contains HTML tags, it will be rendered as rich text. This leads to Rich Text injection or UI redressing if input is not sanitized or escaped.
 **Learning:** `QMessageBox` text should never directly concatenate untrusted input unless it's escaped or unless the dialog is explicitly configured not to interpret rich text. However, `QMessageBox.critical` and other static methods don't support passing `Qt.TextFormat`.
 **Prevention:** Instead of using the static convenience methods (`QMessageBox.critical()`, etc.), instantiate a `QMessageBox` object and explicitly call `setTextFormat(Qt.TextFormat.PlainText)` before setting the text and executing.
+
 ## 2025-03-01 - [Prevent HTML Injection in rich text QLabel using dynamic properties]
 
 **Vulnerability:** Untrusted dynamic fields (like `model.params`) from external sources were interpolated into rich text `QLabel` strings without being escaped.
 **Learning:** `QLabel` will interpret any interpolated string as HTML if tags are present. If you cannot use `Qt.TextFormat.PlainText` because the label structurally requires rich text (e.g. `<b>`, `<br>`), you must individually escape every dynamic external property.
 **Prevention:** Always use `html.escape()` on string-cast properties before inserting them into a rich text `QLabel`.
+
+## 2026-05-22 - Prevent CSRF on Local API via Pydantic Models
+
+**Vulnerability:** The FastAPI endpoints and accepted parameters (, ) via the query string. This allowed simple POST requests from any origin (e.g. via an auto-submitting HTML form), bypassing CORS preflight checks and leading to Cross-Site Request Forgery (CSRF).
+**Learning:** FastAPI treats primitive type arguments as query parameters by default. While this is convenient, it makes POST endpoints vulnerable to simple request CSRF attacks, which is especially dangerous for local services running on localhost where external websites could silently send requests.
+**Prevention:** Replace query parameters on state-changing endpoints with Pydantic request models. This forces clients to send in the request body, which triggers a CORS preflight request. If CORS is not explicitly configured to allow the origin, the browser will block the cross-origin request.
+
+## 2024-05-22 - Prevent CSRF on Local API via Pydantic Models
+
+**Vulnerability:** The FastAPI endpoints `/chat/start` and `/chat/send` accepted parameters (`model_name`, `message`) via the query string. This allowed simple POST requests from any origin (e.g. via an auto-submitting HTML form), bypassing CORS preflight checks and leading to Cross-Site Request Forgery (CSRF).
+**Learning:** FastAPI treats primitive type arguments as query parameters by default. While this is convenient, it makes POST endpoints vulnerable to simple request CSRF attacks, which is especially dangerous for local services running on localhost where external websites could silently send requests.
+**Prevention:** Replace query parameters on state-changing endpoints with Pydantic request models. This forces clients to send `Content-Type: application/json` in the request body, which triggers a CORS preflight request. If CORS is not explicitly configured to allow the origin, the browser will block the cross-origin request.

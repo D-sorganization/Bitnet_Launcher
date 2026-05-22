@@ -41,6 +41,19 @@ class ModelResponse(BaseModel):
     size_bytes: int
 
 
+class ChatStartRequest(BaseModel):
+    """Request model for starting a chat session."""
+
+    model_name: str
+
+
+class ChatSendRequest(BaseModel):
+    """Request model for sending a message."""
+
+    model_name: str
+    message: str
+
+
 @app.get("/models")
 async def list_models() -> list[ModelResponse]:
     """List all locally installed BitNet models."""
@@ -64,10 +77,10 @@ active_runners: dict[str, LocalLlamaRunner] = {}
 
 
 @app.post("/chat/start")
-async def start_chat(model_name: str) -> StreamingResponse:
+async def start_chat(request: ChatStartRequest) -> StreamingResponse:
     """Start a chat session and stream the stdout using Server-Sent Events."""
     models: list[ModelInfo] = discover_models(config.models_dir)
-    model = next((m for m in models if m.name == model_name), None)
+    model = next((m for m in models if m.name == request.model_name), None)
     if not model:
         raise HTTPException(status_code=404, detail="Model not found")
 
@@ -78,7 +91,7 @@ async def start_chat(model_name: str) -> StreamingResponse:
     # Start process with default config for API
     # You can extend this endpoint to accept config parameters
     await runner.start(model, config=InferenceConfig(n_predict=512))
-    active_runners[model_name] = runner
+    active_runners[request.model_name] = runner
 
     async def event_generator() -> AsyncGenerator[str, None]:
         try:
@@ -87,19 +100,19 @@ async def start_chat(model_name: str) -> StreamingResponse:
                 yield f"data: {chunk}\n\n"
         finally:
             await runner.stop()
-            active_runners.pop(model_name, None)
+            active_runners.pop(request.model_name, None)
 
     return StreamingResponse(event_generator(), media_type="text/event-stream")
 
 
 @app.post("/chat/send")
-async def send_chat_message(model_name: str, message: str) -> dict[str, str]:
+async def send_chat_message(request: ChatSendRequest) -> dict[str, str]:
     """Send a message to an active chat session."""
-    runner = active_runners.get(model_name)
+    runner = active_runners.get(request.model_name)
     if not runner:
         raise HTTPException(status_code=404, detail="Active chat session not found")
 
-    await runner.send_message(message)
+    await runner.send_message(request.message)
     return {"status": "success", "message": "Message sent to process stdin"}
 
 

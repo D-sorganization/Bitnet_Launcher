@@ -32,11 +32,13 @@
 
 **Learning:** In PyQt6, connecting a `QLineEdit.textChanged` signal directly to a heavy sync operation (like table clearing + disk I/O) on every keystroke causes significant main-thread lag. Dropping the text argument by connecting directly to `QTimer.start()` works seamlessly.
 **Action:** Use a single-shot `QTimer` to debounce input signals when filtering lists or executing search queries.
+
 ## 2024-05-13 - PyQt6 QListWidget bulk updates
+
 **Learning:** Adding items to a `QListWidget` in a loop inside `_build_ui` triggers synchronous layout recalculations and repaints for every cell.
 **Action:** Use `setUpdatesEnabled(False)` and `setUpdatesEnabled(True)` around `QListWidget` bulk item insertions.
 
-## 2024-05-23 - Remove synchronous Path.exists() check from _refresh_table
+## 2024-05-23 - Remove synchronous Path.exists() check from \_refresh_table
 
 **Learning:** `Path.exists()` operations running inside `_refresh_table` triggered by user keystrokes cause main thread lag and UI stutter, especially in loops or frequently called filter functions. Since the existence of an environment file `setup_env.py` is unlikely to change during the lifetime of a specific modal dialog, repeatedly checking it inside a dynamic search filter is inefficient.
 **Action:** Remove redundant `Path.exists()` checks from frequent UI callbacks if the boolean value has already been evaluated and cached during `__init__`.

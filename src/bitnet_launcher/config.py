@@ -97,7 +97,7 @@ class InferenceConfig:
         if self.ctx_size < 512:
             raise ValueError(f"ctx_size must be >= 512, got {self.ctx_size}")
 
-        if not isinstance(self.temperature, (int, float)):
+        if not isinstance(self.temperature, int | float):
             raise TypeError(
                 f"temperature must be numeric, got {type(self.temperature).__name__}"
             )
