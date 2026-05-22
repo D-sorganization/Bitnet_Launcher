@@ -211,20 +211,30 @@ class BitNetLauncher(QMainWindow):
 
     def _update_action_buttons(self, *args: object) -> None:
         has_model = self._model_panel.selected_model is not None
+        llama_cli_exists = self._cfg.llama_cli.exists()
         is_running = (
             self._process is not None
             and self._process.state() != QProcess.ProcessState.NotRunning
         )
 
-        self._btn_terminal.setEnabled(has_model)
-        self._btn_terminal.setToolTip(
-            "Open a new Windows Terminal tab running this model"
-            if has_model
-            else "Select a model from the list first"
-        )
+        self._btn_terminal.setEnabled(has_model and llama_cli_exists)
+        if not llama_cli_exists:
+            self._btn_terminal.setToolTip(
+                "BitNet llama-cli not found. Use the Setup dialog first."
+            )
+        elif not has_model:
+            self._btn_terminal.setToolTip("Select a model from the list first")
+        else:
+            self._btn_terminal.setToolTip(
+                "Open a new Windows Terminal tab running this model"
+            )
 
-        self._btn_chat.setEnabled(has_model and not is_running)
-        if not has_model:
+        self._btn_chat.setEnabled(has_model and llama_cli_exists and not is_running)
+        if not llama_cli_exists:
+            self._btn_chat.setToolTip(
+                "BitNet llama-cli not found. Use the Setup dialog first."
+            )
+        elif not has_model:
             self._btn_chat.setToolTip("Select a model from the list first")
         elif is_running:
             self._btn_chat.setToolTip("A chat session is already running")
