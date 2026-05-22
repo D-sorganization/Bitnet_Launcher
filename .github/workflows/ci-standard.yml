@@ -7,6 +7,23 @@ on:
     types: [opened, synchronize, reopened, ready_for_review]
 
 jobs:
+  quality-gate:
+    timeout-minutes: 30
+    runs-on: d-sorg-fleet
+    steps:
+      - uses: actions/checkout@v4.2.2
+      - name: Install uv
+        uses: astral-sh/setup-uv@v3
+        with:
+          version: "latest"
+      - name: Sync dependencies
+        run: uv sync --extra dev --extra hub --frozen
+      - name: Lint
+        run: uv run ruff check src/ tests/
+      - name: Format check
+        run: uv run ruff format --check src/ tests/
+      - name: Type check
+        run: uv run mypy src/ --ignore-missing-imports
 
   tests:
     timeout-minutes: 30
@@ -34,54 +51,3 @@ jobs:
     steps:
       - name: Dummy
         run: echo "passed"
-
-
-
-
-
-  quality-gate:
-    name: quality-gate
-    runs-on: d-sorg-fleet
-    timeout-minutes: 5
-    steps:
-      - name: Satisfying ruleset
-        run: echo "Satisfying ruleset on local runner"
-
-  tests-310:
-    name: tests (ubuntu-latest, 3.10)
-    runs-on: d-sorg-fleet
-    timeout-minutes: 5
-    steps:
-      - name: Satisfying ruleset
-        run: echo "Satisfying ruleset on local runner"
-
-  tests-311:
-    name: tests (ubuntu-latest, 3.11)
-    runs-on: d-sorg-fleet
-    timeout-minutes: 5
-    steps:
-      - name: Satisfying ruleset
-        run: echo "Satisfying ruleset on local runner"
-
-  tests-312:
-    name: tests (ubuntu-latest, 3.12)
-    runs-on: d-sorg-fleet
-    timeout-minutes: 5
-    steps:
-      - name: Satisfying ruleset
-        run: echo "Satisfying ruleset on local runner"
-
-  ci-complete:
-    name: CI Complete
-    needs: [local-only-workflows, quality-gate, tests, tests-310, tests-311, tests-312]
-    runs-on: d-sorg-fleet
-    timeout-minutes: 5
-    if: always()
-    steps:
-      - name: Verify all jobs succeeded
-        run: |
-          if [ "${{ contains(needs.*.result, 'failure') ||                     contains(needs.*.result, 'cancelled') }}" = "true" ]; then
-            echo "One or more required jobs failed or were cancelled."
-            exit 1
-          fi
-          echo "All jobs completed successfully."
