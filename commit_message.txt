@@ -1,6 +1,7 @@
-⚡ Bolt: [performance improvement] Use find_spec for faster module checking
+🛡️ Sentinel: [MEDIUM] Fix XSS vulnerability in setup dialog status labels
 
-💡 What: Replaced `importlib.import_module("huggingface_hub")` with `importlib.util.find_spec("huggingface_hub") is not None` in `src/bitnet_launcher/installer.py`. Also bumped SPEC.md version.
-🎯 Why: `import_module` fully loads the module and all its dependencies, which is significantly slower than `find_spec` which only checks for the module's availability. This optimizes the installation check.
-📊 Impact: The module check time drops from ~0.028s to ~0.0001s.
-🔬 Measurement: Verify by running `python -c "import time; import importlib.util; s = time.time(); importlib.util.find_spec('huggingface_hub'); print(time.time() - s)"`.
+Severity: MEDIUM
+Vulnerability: The `_apply_status_label` method in `src/bitnet_launcher/gui/setup_dialog.py` used string interpolation to insert dynamic `text` into an HTML string for a `QLabel`. `QLabel` automatically parses HTML by default, leading to potential Cross-Site Scripting (XSS) or Rich Text injection if the input text contained malicious tags.
+Impact: An attacker or untrusted data source could potentially inject HTML to alter the UI layout, spoof status messages, or execute unintended Rich Text parsing.
+Fix: Added `import html` and applied `html.escape(text)` before interpolating the dynamic string into the `QLabel`'s HTML f-string.
+Verification: Verified by passing `uv run pytest`, `uv run ruff check`, and `uv run mypy`.

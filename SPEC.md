@@ -65,6 +65,7 @@ The application ensures that untrusted string inputs are not evaluated as Rich T
 
 - Replaced `QMessageBox` static convenience methods with explicitly instantiated `QMessageBox` objects configured with `setTextFormat(Qt.TextFormat.PlainText)` in `launcher_window.py`, `setup_dialog.py`, and `hub_dialog.py` to prevent potential HTML/Rich Text injection.
 - Added `html.escape()` for string-cast `model.params` when interpolating into rich text `QLabel` strings in `hub_dialog.py` to prevent XSS/HTML injection.
+- Added `html.escape()` for `text` string when interpolating into a rich text `QLabel` in `setup_dialog.py` (`_apply_status_label`) to prevent XSS/HTML injection.
 
 ### Terminal Launch Security
 
@@ -119,6 +120,7 @@ out of their intended shell arguments.
 - Replaced `QTextEdit.append()` with safe `insertPlainText()` logic in dialog log outputs to prevent GUI spoofing and XSS vulnerabilities from untrusted subprocess logs.
 - Replaced `QMessageBox` static convenience methods with explicitly instantiated `QMessageBox` objects configured with `setTextFormat(Qt.TextFormat.PlainText)` in GUI components to prevent potential HTML/Rich Text injection.
 - Added `html.escape()` for string-cast `model.params` when interpolating into rich text `QLabel` strings in `hub_dialog.py` to prevent XSS/HTML injection.
+- Added `html.escape()` for `text` string when interpolating into a rich text `QLabel` in `setup_dialog.py` (`_apply_status_label`) to prevent XSS/HTML injection.
 
 ## UX Updates
 

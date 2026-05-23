@@ -11,6 +11,7 @@ the GUI remains responsive during long-running steps.
 
 from __future__ import annotations
 
+import html
 import logging
 from enum import Enum, auto
 from pathlib import Path
@@ -288,7 +289,8 @@ class SetupDialog(QDialog):
         t = CatppuccinTheme
         mark = _CHECK_MARK if ok else _CROSS_MARK
         colour = t.GREEN if ok else t.RED
-        lbl.setText(f'<span style="color:{colour};">{mark}</span>  {text}')
+        text_esc = html.escape(text)
+        lbl.setText(f'<span style="color:{colour};">{mark}</span>  {text_esc}')
 
     # ── Path editing ─────────────────────────────────────────────────────────
 
