@@ -107,6 +107,8 @@ out of their intended shell arguments.
 - Inference hyperparameter inputs (QSpinBox) are configured with contextual unit suffixes (e.g. "tokens") to improve clarity.
 - Hub Dialog table includes a spanning empty state row with selection disabled when search/filter yields no results.
 - QLineEdit inputs (such as search inputs) are configured with clear buttons.
+- Hub Dialog includes accessible names for its model table and download progress bar to improve screen reader context.
+- Settings Panel applies `setTabChangesFocus(True)` to the system prompt `QTextEdit` to prevent keyboard focus trapping and ensure accessibility.
 
 ### Performance Updates
 

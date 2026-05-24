@@ -119,6 +119,7 @@ class SettingsPanel(QWidget):
         self._system_prompt = QTextEdit()
         lbl_system_prompt.setBuddy(self._system_prompt)
         self._system_prompt.setPlaceholderText("You are a helpful assistant.")
+        self._system_prompt.setTabChangesFocus(True)
         self._system_prompt.setFixedHeight(80)
         self._system_prompt.setFont(QFont("Consolas", 10))
         layout.addWidget(self._system_prompt)
