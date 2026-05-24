@@ -207,6 +207,7 @@ class HubDialog(QDialog):
 
         # Model table
         self._table = QTableWidget(0, 5)
+        self._table.setAccessibleName("Available Models")
         self._table.setHorizontalHeaderLabels(
             ["Name", "Params", "Size (GB)", "Tags", "Status"]
         )
@@ -267,6 +268,7 @@ class HubDialog(QDialog):
         log_layout.addWidget(self._log)
 
         self._progress = QProgressBar()
+        self._progress.setAccessibleName("Download progress")
         self._progress.setRange(0, 100)
         self._progress.setValue(0)
         self._progress.setTextVisible(True)
