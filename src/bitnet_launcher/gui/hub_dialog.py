@@ -339,8 +339,7 @@ class HubDialog(QDialog):
                 # differently-named *tq2_0*.gguf).
                 if not installed and model_dir.is_dir():
                     installed = any(
-                        f.name.lower().endswith(".gguf")
-                        and "tq2_0" in f.name.lower()
+                        f.name.lower().endswith(".gguf") and "tq2_0" in f.name.lower()
                         for f in model_dir.iterdir()
                     )
             else:
