@@ -234,6 +234,7 @@ class SetupDialog(QDialog):
         self._log.setAccessibleName("Setup log")
         self._log.setPlaceholderText("Setup logs will appear here...")
         self._log.setReadOnly(True)
+        self._log.setTabChangesFocus(True)
         self._log.setStyleSheet(
             f"QTextEdit {{ background: {t.BG}; color: {t.TEXT}; "
             f"border: 1px solid {t.SURFACE}; }} "

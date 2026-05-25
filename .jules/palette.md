@@ -87,3 +87,7 @@
 
 **Learning:** When using decorative Unicode characters (like ▶ or ⚙) in `QPushButton` text to simulate icons without external image dependencies, screen readers announce the literal character names (e.g., "Black right-pointing triangle"), which clutters the UI and confuses users.
 **Action:** Always set `setAccessibleName()` on buttons with decorative Unicode text to provide a clean, text-only label for screen reader users.
+
+## 2024-05-18 - Fix focus trapping in read-only QTextEdit
+**Learning:** `QTextEdit` traps the Tab key by default, even when it is configured as read-only (`setReadOnly(True)`) for displaying logs or history. This breaks keyboard accessibility because users cannot tab past the widget to reach other controls.
+**Action:** Always apply `setTabChangesFocus(True)` to `QTextEdit` widgets used for displaying read-only text (like chat history or log outputs) to ensure users can navigate out of the text area using the keyboard.
