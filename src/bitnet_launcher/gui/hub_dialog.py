@@ -326,10 +326,25 @@ class HubDialog(QDialog):
         return result
 
     def _is_installed(self, model: HubModel) -> bool:
-        """Return ``True`` if the model's GGUF file already exists."""
+        """Return ``True`` if the model's GGUF file already exists.
+
+        Prebuilt-GGUF models (``gguf_file`` set) are checked against that
+        filename; setup_env.py-quantized models use ``ggml-model-i2_s.gguf``.
+        """
         if model.name not in self._installed_cache:
-            gguf = self._models_dir / model.name / "ggml-model-i2_s.gguf"
-            self._installed_cache[model.name] = gguf.exists()
+            model_dir = self._models_dir / model.name
+            if model.gguf_file is not None:
+                installed = (model_dir / model.gguf_file).exists()
+                # Tolerate filename drift (the downloader may fall back to a
+                # differently-named *tq2_0*.gguf).
+                if not installed and model_dir.is_dir():
+                    installed = any(
+                        f.name.lower().endswith(".gguf") and "tq2_0" in f.name.lower()
+                        for f in model_dir.iterdir()
+                    )
+            else:
+                installed = (model_dir / "ggml-model-i2_s.gguf").exists()
+            self._installed_cache[model.name] = installed
         return self._installed_cache[model.name]
 
     # ── Table population ─────────────────────────────────────────────────────

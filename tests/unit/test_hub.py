@@ -76,3 +76,42 @@ def test_hub_model_tags_are_strings() -> None:
     for m in CATALOG:
         for tag in m.tags:
             assert isinstance(tag, str), f"Non-string tag in {m.name}: {tag!r}"
+
+
+def test_hub_model_gguf_file_defaults_none() -> None:
+    assert CATALOG[0].gguf_file is None
+
+
+def test_hub_model_blank_gguf_file_rejected() -> None:
+    with pytest.raises(ValueError):
+        HubModel("r", "n", "d", "1B", 1.0, [], gguf_file="   ")
+
+
+def test_bitcpm_entries_are_prebuilt_gguf() -> None:
+    bitcpm = [m for m in CATALOG if "BitCPM4" in m.repo_id]
+    assert len(bitcpm) == 3, "expected 1B/3B/8B BitCPM4 entries"
+    for m in bitcpm:
+        assert m.repo_id.endswith("-gguf"), m.repo_id
+        assert m.gguf_file and m.gguf_file.endswith(".gguf"), m.gguf_file
+
+
+def test_download_model_dispatches_to_prebuilt(monkeypatch, tmp_path) -> None:
+    """download_model must route gguf_file entries to the prebuilt path."""
+    import bitnet_launcher.hub as hub
+
+    seen: dict[str, str] = {}
+
+    def fake_prebuilt(hub_model, models_dir, on_log, on_progress):  # type: ignore[no-untyped-def]
+        seen["repo_id"] = hub_model.repo_id
+        on_progress(1.0)
+        return models_dir / hub_model.name
+
+    monkeypatch.setattr(hub, "_download_prebuilt_gguf", fake_prebuilt)
+    model = next(m for m in CATALOG if m.gguf_file is not None)
+
+    out = hub.download_model(
+        model, tmp_path, tmp_path, lambda _s: None, lambda _f: None
+    )
+
+    assert seen["repo_id"] == model.repo_id
+    assert out == tmp_path / model.name

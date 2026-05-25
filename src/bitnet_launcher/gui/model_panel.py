@@ -79,7 +79,6 @@ class ModelPanel(QWidget):
         self._list = QListWidget()
         self._list.setAccessibleName("Model list")
         self._list.setFont(QFont("Consolas", 10))
-        self._list.currentRowChanged.connect(self._on_row_changed)
 
         # ⚡ Bolt Optimization: Suspend list updates during batch insertions
         # Why: Prevents expensive synchronous layout recalculations and repaints
@@ -120,6 +119,11 @@ class ModelPanel(QWidget):
 
         if self._models:
             self._update_detail(self._models[0])
+
+        # Connect only after the list is populated and self._detail exists:
+        # setCurrentRow(0) above would otherwise fire _on_row_changed ->
+        # _update_detail before self._detail is created (AttributeError).
+        self._list.currentRowChanged.connect(self._on_row_changed)
 
     def _on_row_changed(self, row: int) -> None:
         if row < 0 or row >= len(self._models):
