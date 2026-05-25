@@ -42,3 +42,8 @@
 
 **Learning:** `Path.exists()` operations running inside `_refresh_table` triggered by user keystrokes cause main thread lag and UI stutter, especially in loops or frequently called filter functions. Since the existence of an environment file `setup_env.py` is unlikely to change during the lifetime of a specific modal dialog, repeatedly checking it inside a dynamic search filter is inefficient.
 **Action:** Remove redundant `Path.exists()` checks from frequent UI callbacks if the boolean value has already been evaluated and cached during `__init__`.
+
+## 2024-05-30 - Context Managers for os.scandir()
+
+**Learning:** When using `os.scandir()` with short-circuiting iterators (like `any()` or `all()`), breaking early leaves the generator unexhausted. Relying on CPython's garbage collector to close the underlying directory file descriptor is risky and discouraged in production code.
+**Action:** Always wrap `os.scandir(path)` in a `with` context manager (e.g., `with os.scandir(path) as it:`) when the iteration might not consume all elements, ensuring explicit and safe cleanup of file handles.
