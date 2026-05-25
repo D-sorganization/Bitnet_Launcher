@@ -139,7 +139,7 @@ out of their intended shell arguments.
 - Catalog expanded to 19 models: added OpenBMB BitCPM4-CANN 1B/3B/8B (1.58-bit ternary, llama architecture).
 - `HubModel` gained an optional `gguf_file` field. When set, `download_model()` routes to `_download_prebuilt_gguf()`, which fetches the prebuilt `.gguf` directly from the model's `-gguf` HuggingFace repo via `huggingface_hub`, instead of driving `setup_env.py`. This is required for models outside BitNet `setup_env.py`'s fixed `--hf-repo` allow-list.
 - The prebuilt download disables HuggingFace Xet (`HF_HUB_DISABLE_XET`) to avoid stalls on large GGUF blobs, and resolves the target filename defensively (falls back to any `*tq2_0*.gguf` in the repo).
-- `HubDialog._is_installed()` now recognizes prebuilt-GGUF models by their `gguf_file` (or any `*tq2_0*.gguf`) in addition to `ggml-model-i2_s.gguf`.
+- `HubDialog._is_installed()` now recognizes prebuilt-GGUF models by their `gguf_file` (or any `*tq2_0*.gguf`) in addition to `ggml-model-i2_s.gguf`. This utilizes `os.scandir()` instead of `Path.iterdir()` for faster file system traversal.
 
 ### Bug Fixes
 

@@ -259,7 +259,6 @@ class HubDialog(QDialog):
         self._log.setAccessibleName("Download log")
         self._log.setPlaceholderText("Download logs will appear here...")
         self._log.setReadOnly(True)
-        self._log.setTabChangesFocus(True)
         self._log.setFont(QFont("Consolas", 9))
         self._log.setFixedHeight(120)
         self._log.setStyleSheet(
