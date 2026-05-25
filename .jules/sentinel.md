@@ -57,3 +57,9 @@
 **Vulnerability:** The FastAPI endpoints `/chat/start` and `/chat/send` accepted parameters (`model_name`, `message`) via the query string. This allowed simple POST requests from any origin (e.g. via an auto-submitting HTML form), bypassing CORS preflight checks and leading to Cross-Site Request Forgery (CSRF).
 **Learning:** FastAPI treats primitive type arguments as query parameters by default. While this is convenient, it makes POST endpoints vulnerable to simple request CSRF attacks, which is especially dangerous for local services running on localhost where external websites could silently send requests.
 **Prevention:** Replace query parameters on state-changing endpoints with Pydantic request models. This forces clients to send `Content-Type: application/json` in the request body, which triggers a CORS preflight request. If CORS is not explicitly configured to allow the origin, the browser will block the cross-origin request.
+
+## 2026-05-25 - [Prevent DoS via Input Length Limits on API Models]
+
+**Vulnerability:** The FastAPI endpoints `/chat/start` and `/chat/send` accepted arbitrary-length strings for `model_name` and `message` in their Pydantic request models (`ChatStartRequest` and `ChatSendRequest`). Without length constraints, an attacker could send disproportionately large payloads, potentially causing memory exhaustion or excessive parsing overhead (Denial of Service).
+**Learning:** By default, Pydantic `str` fields do not enforce a maximum length. For endpoints exposed on a network, this leaves the application vulnerable to basic DoS attacks through maliciously large inputs.
+**Prevention:** Always use `pydantic.Field(max_length=...)` to define reasonable upper bounds for string inputs on all FastAPI request models.

@@ -7,7 +7,7 @@ from collections.abc import AsyncGenerator
 from contextlib import asynccontextmanager
 
 from fastapi import FastAPI, HTTPException
-from pydantic import BaseModel
+from pydantic import BaseModel, Field
 
 from bitnet_launcher.config import BitnetConfig, InferenceConfig
 from bitnet_launcher.models import ModelInfo, discover_models
@@ -44,14 +44,14 @@ class ModelResponse(BaseModel):
 class ChatStartRequest(BaseModel):
     """Request model for starting a chat session."""
 
-    model_name: str
+    model_name: str = Field(max_length=128)
 
 
 class ChatSendRequest(BaseModel):
     """Request model for sending a message."""
 
-    model_name: str
-    message: str
+    model_name: str = Field(max_length=128)
+    message: str = Field(max_length=4096)
 
 
 @app.get("/models")
