@@ -144,3 +144,4 @@ out of their intended shell arguments.
 ### Bug Fixes
 
 - Fixed a startup crash in `ModelPanel`: the `currentRowChanged` signal is now connected only after the list is populated and `self._detail` exists, so the initial `setCurrentRow(0)` no longer fires `_on_row_changed` before `_detail` is created (`AttributeError: 'ModelPanel' object has no attribute '_detail'`).
+- Explicit maximum length constraints (e.g., `max_length=4096` for messages and `max_length=128` for model names) were added to Pydantic models (`ChatStartRequest` and `ChatSendRequest`) in the API to prevent Denial of Service (DoS) attacks caused by maliciously oversized JSON payloads.
