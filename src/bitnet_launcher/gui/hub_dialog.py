@@ -343,7 +343,8 @@ class HubDialog(QDialog):
                     # Path.iterdir() + glob
                     with os.scandir(model_dir) as it:
                         installed = any(
-                            f.name.lower().endswith(".gguf") and "tq2_0" in f.name.lower()
+                            f.name.lower().endswith(".gguf")
+                            and "tq2_0" in f.name.lower()
                             for f in it
                         )
 
