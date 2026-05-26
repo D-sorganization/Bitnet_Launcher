@@ -108,7 +108,7 @@ out of their intended shell arguments.
 - Hub Dialog table includes a spanning empty state row with selection disabled when search/filter yields no results.
 - QLineEdit inputs (such as search inputs) are configured with clear buttons.
 - Hub Dialog includes accessible names for its model table and download progress bar to improve screen reader context.
-- Settings Panel applies `setTabChangesFocus(True)` to the system prompt `QTextEdit` to prevent keyboard focus trapping and ensure accessibility.
+- All `QTextEdit` widgets (Settings Panel, Chat Panel, Setup Dialog log, Hub Dialog log) apply `setTabChangesFocus(True)` to prevent keyboard focus trapping and ensure accessibility.
 
 ### Performance Updates
 
