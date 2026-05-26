@@ -196,6 +196,7 @@ class ChatPanel(QWidget):
 
         self._display = QTextEdit()
         self._display.setReadOnly(True)
+        self._display.setTabChangesFocus(True)
         self._display.setAccessibleName("Chat history")
         self._display.setPlaceholderText(
             "No active chat session.\nSelect a model and click 'Chat Here' to begin."
