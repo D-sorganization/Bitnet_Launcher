@@ -78,7 +78,7 @@ class SettingsPanel(QWidget):
         self._threads.setValue(min(4, os.cpu_count() or 4))
         self._threads.setSuffix(" threads")
         self._threads.setToolTip("CPU threads for inference")
-        layout.addLayout(_labeled_row("Threads:", self._threads))
+        layout.addLayout(_labeled_row("&Threads:", self._threads))
 
         self._ctx_size = QSpinBox()
         self._ctx_size.setRange(512, 32768)
@@ -86,7 +86,7 @@ class SettingsPanel(QWidget):
         self._ctx_size.setValue(2048)
         self._ctx_size.setSuffix(" tokens")
         self._ctx_size.setToolTip("Context window size (tokens)")
-        layout.addLayout(_labeled_row("Context size:", self._ctx_size))
+        layout.addLayout(_labeled_row("&Context size:", self._ctx_size))
 
         self._temperature = QDoubleSpinBox()
         self._temperature.setRange(0.0, 2.0)
@@ -94,7 +94,7 @@ class SettingsPanel(QWidget):
         self._temperature.setValue(0.8)
         self._temperature.setDecimals(2)
         self._temperature.setToolTip("Sampling temperature (0 = deterministic)")
-        layout.addLayout(_labeled_row("Temperature:", self._temperature))
+        layout.addLayout(_labeled_row("T&emperature:", self._temperature))
 
         self._n_predict = QSpinBox()
         self._n_predict.setRange(-1, 8192)
@@ -104,7 +104,7 @@ class SettingsPanel(QWidget):
         self._n_predict.setToolTip(
             "Max tokens to generate per response (-1 = unlimited)"
         )
-        layout.addLayout(_labeled_row("Max tokens:", self._n_predict))
+        layout.addLayout(_labeled_row("&Max tokens:", self._n_predict))
 
         from bitnet_launcher.gui.wheel_event_filter import suppress_wheel_on_widgets
 
@@ -113,7 +113,7 @@ class SettingsPanel(QWidget):
         )
 
         layout.addSpacing(6)
-        lbl_system_prompt = QLabel("System prompt:")
+        lbl_system_prompt = QLabel("&System prompt:")
         layout.addWidget(lbl_system_prompt)
 
         self._system_prompt = QTextEdit()

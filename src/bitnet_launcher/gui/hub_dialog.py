@@ -175,15 +175,15 @@ class HubDialog(QDialog):
 
         # Filter row
         filter_row = QHBoxLayout()
-        lbl_filter = QLabel("Filter:")
+        lbl_filter = QLabel("&Filter:")
         filter_row.addWidget(lbl_filter)
 
         self._tag_combo = QComboBox()
         self._tag_combo.setAccessibleName("Filter by tag")
+        lbl_filter.setBuddy(self._tag_combo)
         self._tag_combo.setFixedWidth(140)
         self._tag_combo.currentIndexChanged.connect(self._refresh_table)
         filter_row.addWidget(self._tag_combo)
-        lbl_filter.setBuddy(self._tag_combo)
 
         from bitnet_launcher.gui.wheel_event_filter import suppress_wheel_on_widgets
 
