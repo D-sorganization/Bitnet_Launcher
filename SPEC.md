@@ -148,3 +148,5 @@ out of their intended shell arguments.
 
 ### Keyboard Accessibility
 - Added mnemonic ampersands (`&`) to `QLabel` text paired with `setBuddy()` to enable native Alt+Letter keyboard shortcuts for form fields in the Settings and Hub dialogs, improving keyboard accessibility.
+- Added a `QLabel` with a mnemonic ampersand (`&`) linked via `setBuddy()` to the search `QLineEdit` in the Hub Dialog, enabling Alt+S navigation.
+- Added a placeholder text to the Hub Dialog's log output `QTextEdit` to clarify its empty state.
