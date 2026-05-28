@@ -197,7 +197,11 @@ class HubDialog(QDialog):
         self._search_timer.setInterval(300)
         self._search_timer.timeout.connect(self._refresh_table)
 
+        lbl_search = QLabel("&Search:")
+        filter_row.addWidget(lbl_search)
+
         self._search = QLineEdit()
+        lbl_search.setBuddy(self._search)
         self._search.setAccessibleName("Search models")
         self._search.setPlaceholderText("Search by name…")
         self._search.setClearButtonEnabled(True)
