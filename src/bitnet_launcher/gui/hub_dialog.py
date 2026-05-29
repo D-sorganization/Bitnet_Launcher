@@ -284,14 +284,14 @@ class HubDialog(QDialog):
 
         # Button row
         btn_row = QHBoxLayout()
-        self._btn_close = QPushButton("Close")
+        self._btn_close = QPushButton("&Close")
         self._btn_close.setFixedHeight(32)
         self._btn_close.clicked.connect(self.reject)
         btn_row.addWidget(self._btn_close)
 
         btn_row.addStretch()
 
-        self._btn_download = QPushButton("⬇  Download Selected")
+        self._btn_download = QPushButton("⬇  &Download Selected")
         self._btn_download.setAccessibleName("Download Selected")
         self._btn_download.setFixedHeight(32)
         self._btn_download.setEnabled(False)
