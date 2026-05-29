@@ -87,3 +87,8 @@
 
 **Learning:** When using decorative Unicode characters (like ▶ or ⚙) in `QPushButton` text to simulate icons without external image dependencies, screen readers announce the literal character names (e.g., "Black right-pointing triangle"), which clutters the UI and confuses users.
 **Action:** Always set `setAccessibleName()` on buttons with decorative Unicode text to provide a clean, text-only label for screen reader users.
+
+## 2026-05-29 - Native Alt+Letter Shortcuts for QPushButtons
+
+**Learning:** Adding an ampersand (`&`) to `QPushButton` text automatically provides a native Alt+Letter keyboard shortcut (e.g., Alt+C for "Chat &Here") and renders a visual underline on the shortcut letter in PyQt applications. This significantly improves keyboard accessibility and power-user navigation without requiring custom key event handling.
+**Action:** Always evaluate main action buttons for native shortcut opportunities and add ampersands to their text, taking care to avoid conflicting shortcut letters within the same window context.
