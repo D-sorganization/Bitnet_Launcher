@@ -151,3 +151,7 @@ out of their intended shell arguments.
 - Added a `QLabel` with a mnemonic ampersand (`&`) linked via `setBuddy()` to the search `QLineEdit` in the Hub Dialog, enabling Alt+S navigation.
 - Added a placeholder text to the Hub Dialog's log output `QTextEdit` to clarify its empty state.
 - Added mnemonic ampersands (`&`) to `QPushButton` text across the Launcher, Hub Dialog, Setup Dialog, and Chat Panel to enable native Alt+Letter keyboard shortcuts for primary action buttons.
+
+### Accessibility
+
+- Added accessible names to the `QSpinBox`, `QDoubleSpinBox`, and `QTextEdit` input fields in the Settings panel (`self._threads`, `self._ctx_size`, `self._temperature`, `self._n_predict`, `self._system_prompt`) using `.setAccessibleName()` without shortcut indicators, ensuring proper screen reader announcements.
