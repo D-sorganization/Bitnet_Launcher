@@ -74,6 +74,7 @@ class SettingsPanel(QWidget):
         layout = QVBoxLayout(group)
 
         self._threads = QSpinBox()
+        self._threads.setAccessibleName("Threads")
         self._threads.setRange(1, os.cpu_count() or 8)
         self._threads.setValue(min(4, os.cpu_count() or 4))
         self._threads.setSuffix(" threads")
@@ -81,6 +82,7 @@ class SettingsPanel(QWidget):
         layout.addLayout(_labeled_row("&Threads:", self._threads))
 
         self._ctx_size = QSpinBox()
+        self._ctx_size.setAccessibleName("Context size")
         self._ctx_size.setRange(512, 32768)
         self._ctx_size.setSingleStep(512)
         self._ctx_size.setValue(2048)
@@ -89,6 +91,7 @@ class SettingsPanel(QWidget):
         layout.addLayout(_labeled_row("&Context size:", self._ctx_size))
 
         self._temperature = QDoubleSpinBox()
+        self._temperature.setAccessibleName("Temperature")
         self._temperature.setRange(0.0, 2.0)
         self._temperature.setSingleStep(0.05)
         self._temperature.setValue(0.8)
@@ -97,6 +100,7 @@ class SettingsPanel(QWidget):
         layout.addLayout(_labeled_row("T&emperature:", self._temperature))
 
         self._n_predict = QSpinBox()
+        self._n_predict.setAccessibleName("Max tokens")
         self._n_predict.setRange(-1, 8192)
         self._n_predict.setValue(-1)
         self._n_predict.setSuffix(" tokens")
@@ -118,6 +122,7 @@ class SettingsPanel(QWidget):
 
         self._system_prompt = QTextEdit()
         lbl_system_prompt.setBuddy(self._system_prompt)
+        self._system_prompt.setAccessibleName("System prompt")
         self._system_prompt.setPlaceholderText("You are a helpful assistant.")
         self._system_prompt.setTabChangesFocus(True)
         self._system_prompt.setFixedHeight(80)
