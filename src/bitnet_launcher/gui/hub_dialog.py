@@ -164,6 +164,7 @@ class HubDialog(QDialog):
         self._build_ui()
         self._populate_tag_filter()
         self._refresh_table()
+        self._search.setFocus()
 
     # ── UI construction ──────────────────────────────────────────────────────
 

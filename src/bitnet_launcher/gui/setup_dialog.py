@@ -143,6 +143,7 @@ class SetupDialog(QDialog):
         self.setStyleSheet(_dialog_stylesheet())
         self._build_ui()
         self._refresh_status()
+        self._path_edit.setFocus()
 
     # ── UI construction ──────────────────────────────────────────────────────
 
