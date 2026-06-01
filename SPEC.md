@@ -3,7 +3,7 @@
 ## Identity
 
 - **Repository:** Bitnet_Launcher
-- Version: 0.1.13
+- Version: 0.1.14
 - **Language:** Python 3.11+
 - **License:** MIT
 
@@ -126,6 +126,7 @@ out of their intended shell arguments.
 
 ## UX Updates
 
+- Auto-focused the primary input fields (`_search` in `HubDialog` and `_path_edit` in `SetupDialog`) immediately upon dialog initialization so that users can start typing their input immediately without needing an extra click.
 - Action buttons in the `LauncherWindow` ("Chat Here", "Launch in Terminal") are now proactively disabled when no model is selected from the list or when `llama-cli` is missing, providing dynamic tooltips explaining the state, rather than allowing clicks that result in error dialogs.
 - Added unit suffixes to numeric input fields (e.g., " threads" for CPU threads) in the settings panel to provide immediate, inline context and improve readability.
 - The "Send" button in the chat panel is now proactively disabled when the chat input is empty, and a tooltip has been added to explain that text is required to send a message.
