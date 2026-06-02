@@ -10,3 +10,7 @@
 ## 2024-05-28 - Clean accessible names in forms
 **Learning:** When adding `.setAccessibleName()` to form inputs in PyQt6 to match their visual labels, including UI punctuation (like `:`) or keyboard shortcut indicators (like `&`) in the accessible name causes screen readers to unnecessarily vocalize them, leading to a clunky UX.
 **Action:** Always strip keyboard shortcut indicators and trailing punctuation when setting `.setAccessibleName()` on form inputs based on their labels.
+
+## 2024-06-02 - List and table item double-click actions
+**Learning:** In PyQt6 desktop applications, requiring users to select an item from a list or table and then move the mouse to click a separate primary action button (like "Download" or "Chat Here") creates a disjointed interaction flow.
+**Action:** Enhance list and table interactions by connecting the `itemDoubleClicked` signal to the primary action, providing a standard desktop shortcut alongside traditional action buttons.

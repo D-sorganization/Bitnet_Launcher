@@ -3,7 +3,7 @@
 ## Identity
 
 - **Repository:** Bitnet_Launcher
-- Version: 0.1.14
+- Version: 0.1.15
 - **Language:** Python 3.11+
 - **License:** MIT
 
@@ -106,6 +106,7 @@ out of their intended shell arguments.
 - Hub Dialog and Setup Dialog log outputs include placeholder text to improve empty-state clarity.
 - Inference hyperparameter inputs (QSpinBox) are configured with contextual unit suffixes (e.g. "tokens") to improve clarity.
 - Hub Dialog table includes a spanning empty state row with selection disabled when search/filter yields no results.
+- Hub Dialog table items can be double-clicked to start a download.
 - QLineEdit inputs (such as search inputs) are configured with clear buttons.
 - Hub Dialog includes accessible names for its model table and download progress bar to improve screen reader context.
 - All `QTextEdit` widgets (Settings Panel, Chat Panel, Setup Dialog log, Hub Dialog log) apply `setTabChangesFocus(True)` to prevent keyboard focus trapping and ensure accessibility.

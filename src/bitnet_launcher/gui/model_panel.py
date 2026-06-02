@@ -36,6 +36,7 @@ class ModelPanel(QWidget):
     """
 
     model_changed = pyqtSignal(object)  # carries ModelInfo
+    model_double_clicked = pyqtSignal(object)
 
     def __init__(
         self,
@@ -124,6 +125,14 @@ class ModelPanel(QWidget):
         # setCurrentRow(0) above would otherwise fire _on_row_changed ->
         # _update_detail before self._detail is created (AttributeError).
         self._list.currentRowChanged.connect(self._on_row_changed)
+        self._list.itemDoubleClicked.connect(self._on_item_double_clicked)
+
+    def _on_item_double_clicked(self, item: QListWidgetItem) -> None:
+        row = self._list.row(item)
+        if row < 0 or row >= len(self._models):
+            return
+        info = self._models[row]
+        self.model_double_clicked.emit(info)
 
     def _on_row_changed(self, row: int) -> None:
         if row < 0 or row >= len(self._models):
