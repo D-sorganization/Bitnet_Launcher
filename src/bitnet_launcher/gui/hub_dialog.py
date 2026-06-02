@@ -241,6 +241,8 @@ class HubDialog(QDialog):
         if selection_model is not None:
             selection_model.selectionChanged.connect(self._on_selection_changed)
 
+        self._table.itemDoubleClicked.connect(self._on_item_double_clicked)
+
         root.addWidget(self._table)
 
         # Detail label
@@ -461,6 +463,11 @@ class HubDialog(QDialog):
                 self._btn_download.setToolTip("A download is already in progress")
             else:
                 self._btn_download.setToolTip("Download this model")
+
+    def _on_item_double_clicked(self) -> None:
+        """Handle double-click on a table item to start download."""
+        if self._btn_download.isEnabled():
+            self._start_download()
 
     # ── Download ─────────────────────────────────────────────────────────────
 

@@ -89,6 +89,7 @@ class BitNetLauncher(QMainWindow):
         top_splitter.setChildrenCollapsible(False)
 
         self._model_panel = ModelPanel(self._models)
+        self._model_panel.model_double_clicked.connect(self._on_model_double_clicked)
         top_splitter.addWidget(self._model_panel)
 
         self._settings_panel = SettingsPanel()
@@ -206,6 +207,10 @@ class BitNetLauncher(QMainWindow):
         dialog = SetupDialog(bitnet_root=self._cfg.bitnet_root, parent=self)
         dialog.exec()
         logger.debug("Setup dialog closed")
+
+    def _on_model_double_clicked(self) -> None:
+        if self._btn_chat.isEnabled():
+            self._start_chat()
 
     # ── Terminal launch ──────────────────────────────────────────────────────
 
