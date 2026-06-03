@@ -127,7 +127,8 @@ def build_stylesheet() -> str:
             color: {t.TEXT};
             padding: 2px 4px;
         }}
-        QLineEdit:focus, QTextEdit:focus, QSpinBox:focus, QDoubleSpinBox:focus, QComboBox:focus {{
+        QLineEdit:focus, QTextEdit:focus, QSpinBox:focus,
+        QDoubleSpinBox:focus, QComboBox:focus {{
             border: 1px solid {t.ACCENT};
         }}
         QSpinBox::up-button, QSpinBox::down-button,
