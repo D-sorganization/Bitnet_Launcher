@@ -120,14 +120,14 @@ def build_stylesheet() -> str:
         QListWidget::item:hover {{
             background: {t.OVERLAY};
         }}
-        QLineEdit, QTextEdit, QSpinBox, QDoubleSpinBox {{
+        QLineEdit, QTextEdit, QSpinBox, QDoubleSpinBox, QComboBox {{
             background: {t.SURFACE};
             border: 1px solid {t.OVERLAY};
             border-radius: 3px;
             color: {t.TEXT};
             padding: 2px 4px;
         }}
-        QLineEdit:focus, QTextEdit:focus, QSpinBox:focus, QDoubleSpinBox:focus {{
+        QLineEdit:focus, QTextEdit:focus, QSpinBox:focus, QDoubleSpinBox:focus, QComboBox:focus {{
             border: 1px solid {t.ACCENT};
         }}
         QSpinBox::up-button, QSpinBox::down-button,

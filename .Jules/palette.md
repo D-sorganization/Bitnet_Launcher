@@ -14,3 +14,7 @@
 ## 2024-06-02 - List and table item double-click actions
 **Learning:** In PyQt6 desktop applications, requiring users to select an item from a list or table and then move the mouse to click a separate primary action button (like "Download" or "Chat Here") creates a disjointed interaction flow.
 **Action:** Enhance list and table interactions by connecting the `itemDoubleClicked` signal to the primary action, providing a standard desktop shortcut alongside traditional action buttons.
+
+## 2024-06-10 - Missing focus styles on QComboBox
+**Learning:** In PyQt6 custom stylesheets, it's easy to overlook `QComboBox` when defining `:focus` styles for text inputs (`QLineEdit`, `QTextEdit`, `QSpinBox`). Without explicit `:focus` rules, `QComboBox` lacks visual indicators when receiving keyboard focus, breaking accessibility.
+**Action:** Always include `QComboBox` and `QComboBox:focus` alongside standard text input selectors in Qt stylesheets to ensure uniform keyboard navigation feedback.
