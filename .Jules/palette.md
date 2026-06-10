@@ -18,3 +18,7 @@
 ## 2024-06-10 - Missing focus styles on QComboBox
 **Learning:** In PyQt6 custom stylesheets, it's easy to overlook `QComboBox` when defining `:focus` styles for text inputs (`QLineEdit`, `QTextEdit`, `QSpinBox`). Without explicit `:focus` rules, `QComboBox` lacks visual indicators when receiving keyboard focus, breaking accessibility.
 **Action:** Always include `QComboBox` and `QComboBox:focus` alongside standard text input selectors in Qt stylesheets to ensure uniform keyboard navigation feedback.
+
+## 2024-06-11 - Keyboard activation for list and table items
+**Learning:** In PyQt6, connecting only to `itemDoubleClicked` on `QListWidget` or `QTableWidget` limits the shortcut action to mouse users. Keyboard users who navigate to an item and press Enter will not trigger the action.
+**Action:** Use the `itemActivated` signal instead of `itemDoubleClicked`. `itemActivated` is triggered by both mouse double-clicks and the Enter/Return key, ensuring feature parity and full accessibility for keyboard users.
