@@ -98,6 +98,7 @@ out of their intended shell arguments.
 - Dialogs use centralized, shared stylesheets when possible to enforce consistent accessibility features like `:focus` indicators.
 - Hub Dialog includes accessible names for its search input, tag filter, and log output.
 - Hub Dialog tag filter `QComboBox` is linked to a descriptive buddy label to improve keyboard navigation.
+- Hub Dialog table explicitly restricts selection to single-row mode (`setSelectionMode(QTableWidget.SelectionMode.SingleSelection)`) to match its single-action download constraints and prevent visual selection dissonance.
 - Chat Panel includes dynamic tooltips on the send button explaining its disabled state.
 - Chat Panel includes `:focus` stylesheet rules on read-only displays to preserve keyboard visibility.
 - Setup Dialog includes dynamic tooltips on action buttons explaining their disabled state during long-running operations and when prerequisite installations are missing.
