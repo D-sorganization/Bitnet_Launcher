@@ -92,3 +92,8 @@
 
 **Learning:** Adding an ampersand (`&`) to `QPushButton` text automatically provides a native Alt+Letter keyboard shortcut (e.g., Alt+C for "Chat &Here") and renders a visual underline on the shortcut letter in PyQt applications. This significantly improves keyboard accessibility and power-user navigation without requiring custom key event handling.
 **Action:** Always evaluate main action buttons for native shortcut opportunities and add ampersands to their text, taking care to avoid conflicting shortcut letters within the same window context.
+
+## 2025-05-18 - QTableWidget Selection Constraints
+
+**Learning:** In PyQt6, `QTableWidget` allows multi-selection by default (e.g. holding Shift/Ctrl), even when `SelectionBehavior` is set to `SelectRows`. If the intended UX only supports a single action at a time (like downloading one model, or previewing one item's details in a label), allowing multi-selection causes a confusing disconnect between the highlighted state and the actual executed action.
+**Action:** When a table's primary action only applies to one item, explicitly enforce single selection by adding `.setSelectionMode(QTableWidget.SelectionMode.SingleSelection)`.
