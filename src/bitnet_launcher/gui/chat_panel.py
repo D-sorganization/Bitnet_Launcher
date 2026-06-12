@@ -205,7 +205,7 @@ class ChatPanel(QWidget):
         self._display.setStyleSheet(
             f"QTextEdit {{ background: {t.BG}; color: {t.TEXT}; "
             f"border: 1px solid {t.SURFACE}; }} "
-            f"QTextEdit:focus {{ border: 1px solid {t.ACCENT}; }}"
+            f"QTextEdit:focus {{ border: 1px solid {t.ACCENT}; outline: none; }}"
         )
         group_layout.addWidget(self._display)
 
