@@ -97,3 +97,7 @@
 
 **Learning:** In PyQt6, `QTableWidget` allows multi-selection by default (e.g. holding Shift/Ctrl), even when `SelectionBehavior` is set to `SelectRows`. If the intended UX only supports a single action at a time (like downloading one model, or previewing one item's details in a label), allowing multi-selection causes a confusing disconnect between the highlighted state and the actual executed action.
 **Action:** When a table's primary action only applies to one item, explicitly enforce single selection by adding `.setSelectionMode(QTableWidget.SelectionMode.SingleSelection)`.
+## 2026-06-12 - Disable Native Focus Ring in Custom Stylesheets
+
+**Learning:** When applying an inline custom stylesheet to an interactive or focusable widget (like `QTextEdit`), defining a `:focus` pseudo-class with a custom border is necessary for keyboard accessibility. However, without explicitly removing the native outline, some OS environments will render a dotted native focus ring overlapping the custom border, causing visual clutter.
+**Action:** Always append `outline: none;` to the `:focus` selector rule (e.g., `border: 1px solid {t.ACCENT}; outline: none;`) in Qt stylesheets to ensure only the custom focus indicator is shown.
