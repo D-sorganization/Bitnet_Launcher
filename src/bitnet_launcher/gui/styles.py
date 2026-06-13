@@ -67,9 +67,11 @@ def get_hub_dialog_stylesheet() -> str:
         }}
         QLineEdit:focus, QComboBox:focus {{
             border: 1px solid {t.ACCENT};
+            outline: none;
         }}
         QTableWidget:focus {{
             border: 1px solid {t.ACCENT};
+            outline: none;
         }}
         QProgressBar {{
             background: {t.SURFACE};
