@@ -130,6 +130,7 @@ def build_stylesheet() -> str:
         QLineEdit:focus, QTextEdit:focus, QSpinBox:focus,
         QDoubleSpinBox:focus, QComboBox:focus {{
             border: 1px solid {t.ACCENT};
+            outline: none;
         }}
         QSpinBox::up-button, QSpinBox::down-button,
         QDoubleSpinBox::up-button, QDoubleSpinBox::down-button {{

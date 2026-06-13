@@ -461,5 +461,6 @@ def _dialog_stylesheet() -> str:
         }}
         QLineEdit:focus {{
             border: 1px solid {t.ACCENT};
+            outline: none;
         }}
     """

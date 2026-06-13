@@ -101,8 +101,7 @@ out of their intended shell arguments.
 - Hub Dialog table explicitly restricts selection to single-row mode (`setSelectionMode(QTableWidget.SelectionMode.SingleSelection)`) to match its single-action download constraints and prevent visual selection dissonance.
 - Chat Panel includes dynamic tooltips on the send button explaining its disabled state.
 - Chat Panel includes `:focus` stylesheet rules on read-only displays to preserve keyboard visibility.
-- Inline `QTextEdit:focus` styles suppress native outlines when a custom accent border
-  is present, preventing duplicate focus rings while keeping keyboard focus visible.
+- Inline `:focus` styles on interactive widgets (e.g., `QTextEdit`, `QLineEdit`, `QComboBox`, `QTableWidget`) suppress native outlines (`outline: none;`) when a custom accent border is present, preventing duplicate focus rings while keeping keyboard focus visible.
 - Setup Dialog includes dynamic tooltips on action buttons explaining their disabled state during long-running operations and when prerequisite installations are missing.
 - Hub Dialog includes dynamic tooltips on its close and download buttons, clearing them properly when operations finish, and explaining their disabled states during downloads or when prerequisite installations are missing.
 - Setup Dialog includes accessible names on its icon-only browse button and output log.
