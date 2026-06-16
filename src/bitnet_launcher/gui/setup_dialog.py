@@ -207,7 +207,7 @@ class SetupDialog(QDialog):
         self._btn_install.setStyleSheet(
             f"QPushButton {{ color: {t.ACCENT}; border-color: {t.ACCENT}; }}"
             f"QPushButton:hover {{ background: #2e2342; }}"
-            f"QPushButton:disabled {{ color: #585b70; }}"
+            f"QPushButton:disabled {{ color: #585b70; border-color: {t.OVERLAY}; }}"
             f"QPushButton:focus {{ border: 1px solid {t.ACCENT}; outline: none; }}"
         )
         self._btn_install.clicked.connect(self._start_install)
@@ -219,7 +219,7 @@ class SetupDialog(QDialog):
         self._btn_build.setStyleSheet(
             f"QPushButton {{ color: {t.YELLOW}; border-color: {t.YELLOW}; }}"
             f"QPushButton:hover {{ background: #3a341e; }}"
-            f"QPushButton:disabled {{ color: #585b70; }}"
+            f"QPushButton:disabled {{ color: #585b70; border-color: {t.OVERLAY}; }}"
             f"QPushButton:focus {{ border: 1px solid {t.ACCENT}; outline: none; }}"
         )
         self._btn_build.clicked.connect(self._start_build)

@@ -22,3 +22,7 @@
 ## 2024-06-11 - Keyboard activation for list and table items
 **Learning:** In PyQt6, connecting only to `itemDoubleClicked` on `QListWidget` or `QTableWidget` limits the shortcut action to mouse users. Keyboard users who navigate to an item and press Enter will not trigger the action.
 **Action:** Use the `itemActivated` signal instead of `itemDoubleClicked`. `itemActivated` is triggered by both mouse double-clicks and the Enter/Return key, ensuring feature parity and full accessibility for keyboard users.
+
+## 2024-06-16 - Complete disabled states in custom PyQt stylesheets
+**Learning:** When applying custom inline stylesheets to PyQt buttons to give them unique colors (like green, yellow, or mauve borders), only specifying `color` in the `:disabled` pseudo-class isn't enough. The button retains its active, brightly-colored border when disabled, which confuses users into thinking it's still interactive.
+**Action:** Always ensure that custom button stylesheets comprehensively override all visual properties in the `:disabled` state, including setting a neutral `border-color` (like `OVERLAY` or grey) alongside the disabled text color.
