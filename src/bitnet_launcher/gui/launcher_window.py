@@ -123,6 +123,7 @@ class BitNetLauncher(QMainWindow):
         self._btn_chat.setStyleSheet(
             f"QPushButton {{ color: {t.GREEN}; border-color: {t.GREEN}; }}"
             f"QPushButton:hover {{ background: #1e3a2f; }}"
+            f"QPushButton:disabled {{ color: #585b70; border-color: {t.OVERLAY}; }}"
             f"QPushButton:focus {{ border: 1px solid {t.ACCENT}; outline: none; }}"
         )
         self._btn_chat.clicked.connect(self._start_chat)
@@ -156,6 +157,7 @@ class BitNetLauncher(QMainWindow):
         self._btn_download.setStyleSheet(
             f"QPushButton {{ color: {t.ACCENT}; border-color: {t.ACCENT}; }}"
             f"QPushButton:hover {{ background: #2e2342; }}"
+            f"QPushButton:disabled {{ color: #585b70; border-color: {t.OVERLAY}; }}"
             f"QPushButton:focus {{ border: 1px solid {t.ACCENT}; outline: none; }}"
         )
         self._btn_download.clicked.connect(self._open_hub_dialog)
@@ -170,6 +172,7 @@ class BitNetLauncher(QMainWindow):
         self._btn_setup.setStyleSheet(
             f"QPushButton {{ color: {t.YELLOW}; border-color: {t.YELLOW}; }}"
             f"QPushButton:hover {{ background: #3a341e; }}"
+            f"QPushButton:disabled {{ color: #585b70; border-color: {t.OVERLAY}; }}"
             f"QPushButton:focus {{ border: 1px solid {t.ACCENT}; outline: none; }}"
         )
         self._btn_setup.clicked.connect(self._open_setup_dialog)
