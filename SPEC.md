@@ -161,3 +161,4 @@ out of their intended shell arguments.
 - Added accessible names to the `QSpinBox`, `QDoubleSpinBox`, and `QTextEdit` input fields in the Settings panel (`self._threads`, `self._ctx_size`, `self._temperature`, `self._n_predict`, `self._system_prompt`) using `.setAccessibleName()` without shortcut indicators, ensuring proper screen reader announcements.
 - Added `QComboBox` to the input elements styling block and `QComboBox:focus` to the focus styling block in the global Qt stylesheet (`theme.py`) to ensure clear visual focus indicators for keyboard navigation on dropdowns.
 - Changed list and table views to use `itemActivated` instead of `itemDoubleClicked` to natively support keyboard activation (Enter/Return) for primary actions.
+- Comprehensive disabled states including neutral border colors (`border-color: {t.OVERLAY}`) were added to the `:disabled` pseudo-class for custom-styled buttons across the UI to prevent them from looking active when disabled.
