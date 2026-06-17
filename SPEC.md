@@ -162,3 +162,4 @@ out of their intended shell arguments.
 - Added `QComboBox` to the input elements styling block and `QComboBox:focus` to the focus styling block in the global Qt stylesheet (`theme.py`) to ensure clear visual focus indicators for keyboard navigation on dropdowns.
 - Changed list and table views to use `itemActivated` instead of `itemDoubleClicked` to natively support keyboard activation (Enter/Return) for primary actions.
 - Comprehensive disabled states including neutral border colors (`border-color: {t.OVERLAY}`) were added to the `:disabled` pseudo-class for custom-styled buttons across the UI to prevent them from looking active when disabled.
+- Added `.setAccessibleName()` explicitly for buttons that use `&` mnemonics (e.g., `_btn_close`, `_btn_install`, `_btn_build`, `_btn_send`) in `hub_dialog.py`, `setup_dialog.py`, and `chat_panel.py` to prevent screen readers from reading the literal ampersand or extraneous text.
