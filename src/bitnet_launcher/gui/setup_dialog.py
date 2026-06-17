@@ -200,6 +200,7 @@ class SetupDialog(QDialog):
         actions_layout = QVBoxLayout(actions_group)
 
         self._btn_install = QPushButton("&Install BitNet (git clone + pip)")
+        self._btn_install.setAccessibleName("Install BitNet")
         self._btn_install.setFixedHeight(34)
         self._btn_install.setToolTip(
             "Clone the BitNet repository and install Python dependencies"
@@ -214,6 +215,7 @@ class SetupDialog(QDialog):
         actions_layout.addWidget(self._btn_install)
 
         self._btn_build = QPushButton("&Build BitNet (cmake)")
+        self._btn_build.setAccessibleName("Build BitNet")
         self._btn_build.setFixedHeight(34)
         self._btn_build.setToolTip("Compile llama-cli from source using cmake")
         self._btn_build.setStyleSheet(
@@ -249,6 +251,7 @@ class SetupDialog(QDialog):
         btn_row = QHBoxLayout()
         btn_row.addStretch()
         self._btn_close = QPushButton("&Close")
+        self._btn_close.setAccessibleName("Close")
         self._btn_close.setFixedHeight(32)
         self._btn_close.clicked.connect(self.reject)
         btn_row.addWidget(self._btn_close)

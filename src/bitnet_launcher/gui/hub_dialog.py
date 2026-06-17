@@ -289,6 +289,7 @@ class HubDialog(QDialog):
         # Button row
         btn_row = QHBoxLayout()
         self._btn_close = QPushButton("&Close")
+        self._btn_close.setAccessibleName("Close")
         self._btn_close.setFixedHeight(32)
         self._btn_close.clicked.connect(self.reject)
         btn_row.addWidget(self._btn_close)
