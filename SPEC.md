@@ -151,10 +151,12 @@ out of their intended shell arguments.
 - Explicit maximum length constraints (e.g., `max_length=4096` for messages and `max_length=128` for model names) were added to Pydantic models (`ChatStartRequest` and `ChatSendRequest`) in the API to prevent Denial of Service (DoS) attacks caused by maliciously oversized JSON payloads.
 
 ### Keyboard Accessibility
+
 - Added mnemonic ampersands (`&`) to `QLabel` text paired with `setBuddy()` to enable native Alt+Letter keyboard shortcuts for form fields in the Settings and Hub dialogs, improving keyboard accessibility.
 - Added a `QLabel` with a mnemonic ampersand (`&`) linked via `setBuddy()` to the search `QLineEdit` in the Hub Dialog, enabling Alt+S navigation.
 - Added a placeholder text to the Hub Dialog's log output `QTextEdit` to clarify its empty state.
 - Added mnemonic ampersands (`&`) to `QPushButton` text across the Launcher, Hub Dialog, Setup Dialog, and Chat Panel to enable native Alt+Letter keyboard shortcuts for primary action buttons.
+- Buttons that include mnemonic ampersands or shortcut text also define clean `setAccessibleName(...)` labels so screen readers announce the action without shortcut punctuation.
 
 ### Accessibility
 
