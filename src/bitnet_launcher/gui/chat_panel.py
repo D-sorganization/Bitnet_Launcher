@@ -222,6 +222,7 @@ class ChatPanel(QWidget):
         input_row.addWidget(self._input)
 
         self._btn_send = QPushButton("Se&nd")
+        self._btn_send.setAccessibleName("Send")
         self._btn_send.setFixedWidth(70)
         self._btn_send.setEnabled(False)
         self._btn_send.setToolTip("Wait for the current response to finish")
