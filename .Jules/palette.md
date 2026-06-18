@@ -1,3 +1,3 @@
-## 2024-05-17 - Clean Screen Reader Output for Buttons with Shortcuts
-**Learning:** By default, if you construct a `QPushButton` in PyQt6 with an ampersand to indicate an Alt+Key shortcut (e.g., `QPushButton("&Close")`), assistive technologies and screen readers might announce the literal ampersand or read the text awkwardly unless a clean accessible name is explicitly set. The `&` creates an underlined letter natively, but doesn't strip itself from the default accessibility tree label in some contexts.
-**Action:** Always call `.setAccessibleName("Clean Text")` on buttons that use the `&` shortcut syntax or visual icons to ensure a professional and parseable experience for screen reader users.
+## 2024-06-18 - Added Explicit border-color For Disabled QPushButtons
+**Learning:** In Qt/PyQt6, simply setting `color` on a `QPushButton:disabled` selector is insufficient if the button has custom borders. The disabled button will inherit the active-state border color, making it look interactive despite being disabled.
+**Action:** Always comprehensively override visual properties (e.g., both `color` and `border-color`) in the `:disabled` pseudo-class for buttons that have custom border styling.

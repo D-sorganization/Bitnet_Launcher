@@ -100,6 +100,7 @@ def build_stylesheet() -> str:
         }}
         QPushButton:disabled {{
             color: #585b70;
+            border-color: {t.OVERLAY};
         }}
         QPushButton:focus {{
             border: 1px solid {t.ACCENT};
