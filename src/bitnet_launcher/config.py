@@ -119,6 +119,8 @@ class InferenceConfig:
             )
         if not self.system_prompt.strip():
             raise ValueError("system_prompt must not be blank")
+        if len(self.system_prompt) > 4096:
+            raise ValueError("system_prompt must not exceed 4096 characters")
 
         logger.debug(
             "InferenceConfig validated: threads=%d ctx=%d temp=%.2f",

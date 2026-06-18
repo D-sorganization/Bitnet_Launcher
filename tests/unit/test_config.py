@@ -170,3 +170,9 @@ class TestBitnetConfig:
     def test_wt_exe_blank(self) -> None:
         with pytest.raises(ValueError, match="wt_exe must not be blank"):
             BitnetConfig(wt_exe="   ")
+
+    def test_system_prompt_too_long(self) -> None:
+        with pytest.raises(
+            ValueError, match="system_prompt must not exceed 4096 characters"
+        ):
+            InferenceConfig(system_prompt="a" * 4097)

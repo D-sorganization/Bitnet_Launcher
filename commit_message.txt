@@ -1,3 +1,5 @@
-🛡️ Sentinel: [security improvement] Add input length limits to API models
-
-Added `Field(max_length=...)` to `ChatStartRequest` and `ChatSendRequest` string fields to mitigate Denial of Service risk from overly large inputs.
+🚨 Severity: MEDIUM
+💡 Vulnerability: Missing input length limit on `system_prompt` field in `InferenceConfig` leading to potential Denial of Service (DoS) or memory exhaustion when processing excessively large text blocks from untrusted inputs.
+🎯 Impact: Attackers or users providing extremely long strings to the `system_prompt` configuration parameter could cause high parsing overhead or memory exhaustion during inference or API usage.
+🔧 Fix: Add a check inside `InferenceConfig.__post_init__` to ensure `len(self.system_prompt) <= 4096`, throwing a `ValueError` if exceeded.
+✅ Verification: Ensure the test suite runs with `uv run pytest tests/`, explicitly validating `test_system_prompt_too_long` correctly triggers the `ValueError`.
