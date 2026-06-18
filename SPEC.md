@@ -3,7 +3,7 @@
 ## Identity
 
 - **Repository:** Bitnet_Launcher
-- Version: 0.1.15
+- Version: 0.1.16
 - **Language:** Python 3.11+
 - **License:** MIT
 
@@ -137,6 +137,10 @@ out of their intended shell arguments.
 ### API Security Updates
 
 - The FastAPI endpoints `POST /chat/start` and `POST /chat/send` were updated to use Pydantic models in the request body (`ChatStartRequest` and `ChatSendRequest`) rather than accepting URL query parameters. This enforces a `Content-Type: application/json` payload requirement on clients, ensuring that modern browsers send a CORS preflight request (OPTIONS) and protecting the local endpoints from Cross-Site Request Forgery (CSRF) via simple requests.
+
+### Settings Security Updates
+
+- Added a length limitation validation in `InferenceConfig` to reject `system_prompt` values that exceed 4096 characters, mitigating potential Denial of Service (DoS) or memory exhaustion during inference or API usage.
 
 ## Model Catalog & Download Updates
 
