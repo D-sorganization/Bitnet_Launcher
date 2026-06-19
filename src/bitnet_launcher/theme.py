@@ -113,6 +113,7 @@ def build_stylesheet() -> str:
         }}
         QListWidget:focus {{
             border: 1px solid {t.ACCENT};
+            outline: none;
         }}
         QListWidget::item:selected {{
             background: {t.ACCENT};
