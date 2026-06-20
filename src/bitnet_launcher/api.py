@@ -3,14 +3,16 @@
 from __future__ import annotations
 
 import logging
-from collections.abc import AsyncGenerator
+from collections.abc import AsyncGenerator, Awaitable, Callable
 from contextlib import asynccontextmanager
 
-from fastapi import FastAPI, HTTPException
+from fastapi import FastAPI, HTTPException, Request, Response
+from fastapi.responses import StreamingResponse
 from pydantic import BaseModel, Field
 
 from bitnet_launcher.config import BitnetConfig, InferenceConfig
 from bitnet_launcher.models import ModelInfo, discover_models
+from bitnet_launcher.runners import LocalLlamaRunner
 
 logger = logging.getLogger(__name__)
 
@@ -29,6 +31,28 @@ app = FastAPI(
     version="0.1.0",
     lifespan=lifespan,
 )
+
+
+@app.middleware("http")
+async def add_security_headers(
+    request: Request, call_next: Callable[[Request], Awaitable[Response]]
+) -> Response:
+    """Add security headers to all responses."""
+    response = await call_next(request)
+    response.headers["X-Content-Type-Options"] = "nosniff"
+    response.headers["X-Frame-Options"] = "DENY"
+    response.headers["X-XSS-Protection"] = "1; mode=block"
+    response.headers["Strict-Transport-Security"] = (
+        "max-age=31536000; includeSubDomains"
+    )
+    response.headers["Content-Security-Policy"] = (
+        "default-src 'self'; "
+        "script-src 'self' 'unsafe-inline' https://cdn.jsdelivr.net; "
+        "style-src 'self' 'unsafe-inline' https://cdn.jsdelivr.net; "
+        "img-src 'self' data: https://fastapi.tiangolo.com;"
+    )
+    return response
+
 
 config = BitnetConfig()
 
@@ -67,10 +91,6 @@ async def list_models() -> list[ModelResponse]:
         for m in models
     ]
 
-
-from fastapi.responses import StreamingResponse
-
-from bitnet_launcher.runners import LocalLlamaRunner
 
 # Global registry to hold active runners (simplified for single-user local API)
 active_runners: dict[str, LocalLlamaRunner] = {}

@@ -170,3 +170,7 @@ out of their intended shell arguments.
 - Comprehensive disabled states including neutral border colors (`border-color: {t.OVERLAY}`) were added to the `:disabled` pseudo-class for custom-styled buttons across the UI to prevent them from looking active when disabled.
 - Added `.setAccessibleName()` explicitly for buttons that use `&` mnemonics (e.g., `_btn_close`, `_btn_install`, `_btn_build`, `_btn_send`) in `hub_dialog.py`, `setup_dialog.py`, and `chat_panel.py` to prevent screen readers from reading the literal ampersand or extraneous text.
 - Detail labels in the `ModelPanel` and `HubDialog` have been updated with `Qt.TextInteractionFlag.TextSelectableByMouse` and `Qt.TextInteractionFlag.LinksAccessibleByMouse` to allow users to select and copy text such as file paths and HuggingFace repo IDs.
+
+### API Security Updates
+
+- The FastAPI server (`src/bitnet_launcher/api.py`) was updated to include an HTTP middleware (`add_security_headers`) that enforces essential security headers on all responses, including `Content-Security-Policy`, `Strict-Transport-Security`, `X-Content-Type-Options`, `X-Frame-Options`, and `X-XSS-Protection`. This mitigates potential cross-site risks when the local API is running.
