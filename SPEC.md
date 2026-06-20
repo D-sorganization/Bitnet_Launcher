@@ -169,3 +169,4 @@ out of their intended shell arguments.
 - Changed list and table views to use `itemActivated` instead of `itemDoubleClicked` to natively support keyboard activation (Enter/Return) for primary actions.
 - Comprehensive disabled states including neutral border colors (`border-color: {t.OVERLAY}`) were added to the `:disabled` pseudo-class for custom-styled buttons across the UI to prevent them from looking active when disabled.
 - Added `.setAccessibleName()` explicitly for buttons that use `&` mnemonics (e.g., `_btn_close`, `_btn_install`, `_btn_build`, `_btn_send`) in `hub_dialog.py`, `setup_dialog.py`, and `chat_panel.py` to prevent screen readers from reading the literal ampersand or extraneous text.
+- Detail labels in the `ModelPanel` and `HubDialog` have been updated with `Qt.TextInteractionFlag.TextSelectableByMouse` and `Qt.TextInteractionFlag.LinksAccessibleByMouse` to allow users to select and copy text such as file paths and HuggingFace repo IDs.
