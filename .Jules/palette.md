@@ -5,3 +5,7 @@
 ## 2026-06-19 - Added outline: none; to QListWidget:focus
 **Learning:** In PyQt6, setting a custom border on an active focus element (like `QListWidget:focus`) does not automatically disable the OS's native dotted focus ring, which causes them to overlap and creates a 'double focus' effect.
 **Action:** Always include `outline: none;` in the `:focus` selector alongside any custom `border` definitions in Qt stylesheets.
+
+## 2024-06-20 - Made QLabels Selectable For Copying File Paths
+**Learning:** By default, `QLabel` in PyQt6 does not allow users to select text. For informational text such as file paths or repository IDs in detail panes, this is frustrating because users often need to copy this information.
+**Action:** Always apply `setTextInteractionFlags(Qt.TextInteractionFlag.TextSelectableByMouse | Qt.TextInteractionFlag.LinksAccessibleByMouse)` to `QLabel` widgets that display important metadata like paths, URLs, or IDs.
