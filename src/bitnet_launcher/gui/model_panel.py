@@ -111,6 +111,9 @@ class ModelPanel(QWidget):
         self._detail = QLabel()
         self._detail.setTextFormat(Qt.TextFormat.PlainText)
         self._detail.setWordWrap(True)
+        self._detail.setTextInteractionFlags(
+            Qt.TextInteractionFlag.TextSelectableByMouse
+        )
         self._detail.setStyleSheet(f"color: {t.SUBTEXT}; font-size: 10px;")
         group_layout.addWidget(self._detail)
 

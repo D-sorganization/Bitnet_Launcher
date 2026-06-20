@@ -249,6 +249,10 @@ class HubDialog(QDialog):
         # Detail label
         self._detail_label = QLabel()
         self._detail_label.setWordWrap(True)
+        self._detail_label.setTextInteractionFlags(
+            Qt.TextInteractionFlag.TextSelectableByMouse
+            | Qt.TextInteractionFlag.LinksAccessibleByMouse
+        )
         self._detail_label.setStyleSheet(
             f"color: {t.SUBTEXT}; font-size: 11px; padding: 4px;"
         )

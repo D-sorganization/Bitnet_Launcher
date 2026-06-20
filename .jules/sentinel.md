@@ -65,6 +65,7 @@
 **Prevention:** Always use `pydantic.Field(max_length=...)` to define reasonable upper bounds for string inputs on all FastAPI request models.
 
 ## 2024-06-20 - [MEDIUM] Missing Security Headers in Desktop API
+
 **Vulnerability:** The FastAPI server embedded in the desktop application lacked standard HTTP security headers (CSP, X-Content-Type-Options, etc).
 **Learning:** Even when a local API is intended to be used by a desktop frontend running on localhost, missing security headers can still expose the application to cross-site risks if a malicious site attempts to interact with the localhost API (e.g. CSRF via external origin).
 **Prevention:** Always implement a security header middleware on all FastAPI applications regardless of the expected environment (desktop/local or cloud).
