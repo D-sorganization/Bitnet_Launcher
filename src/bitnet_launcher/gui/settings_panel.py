@@ -118,7 +118,9 @@ class SettingsPanel(QWidget):
 
         layout.addSpacing(6)
         lbl_system_prompt = QLabel("&System prompt:")
-        tooltip_text = "Base instructions that define the AI's persona and overall behavior"
+        tooltip_text = (
+            "Base instructions that define the AI's persona and overall behavior"
+        )
         lbl_system_prompt.setToolTip(tooltip_text)
         layout.addWidget(lbl_system_prompt)
 
