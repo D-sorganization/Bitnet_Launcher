@@ -38,7 +38,7 @@
 **Learning:** In a codebase with custom stylesheets, using a centrally defined stylesheet (like `get_hub_dialog_stylesheet()`) across similar dialogs ensures consistent accessibility features like `:focus` indicators are applied everywhere, rather than relying on duplicated local definitions that might be missing them.
 **Action:** When adding or improving styles, look for opportunities to replace locally-defined stylesheets lacking accessibility with centralized, complete ones to ensure consistent behavior across the application.
 
-## $(date +%Y-%m-%d) - PyQt Inline Stylesheets Disable Global Focus Styles
+## 2026-06-22 - PyQt Inline Stylesheets Disable Global Focus Styles
 
 **Learning:** Using an inline `.setStyleSheet()` on a Qt widget overrides the application-level global stylesheet for that widget. If the inline stylesheet does not explicitly define a `:focus` pseudo-class rule, keyboard users will lose all visual indication when the widget receives focus.
 **Action:** When applying an inline stylesheet to an interactive or focusable widget (like `QTextEdit` or `QLineEdit`), always include a corresponding `:focus` rule (e.g., `border: 1px solid {accent_color};`) to preserve keyboard accessibility.
@@ -101,3 +101,8 @@
 
 **Learning:** When applying an inline custom stylesheet to an interactive or focusable widget (like `QTextEdit`), defining a `:focus` pseudo-class with a custom border is necessary for keyboard accessibility. However, without explicitly removing the native outline, some OS environments will render a dotted native focus ring overlapping the custom border, causing visual clutter.
 **Action:** Always append `outline: none;` to the `:focus` selector rule (e.g., `border: 1px solid {t.ACCENT}; outline: none;`) in Qt stylesheets to ensure only the custom focus indicator is shown.
+
+## 2026-06-22 - Jargon Tooltips for Form Fields
+
+**Learning:** When form fields use domain-specific jargon or technical hyperparameters (like "System Prompt", "Temperature", or "Context size"), non-technical users may not understand what they do.
+**Action:** Always add descriptive tooltips (`setToolTip()`) to both the input widget and its associated label to explain the purpose of complex settings in plain language, making the UI more intuitive for all users.

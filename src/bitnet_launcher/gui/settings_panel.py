@@ -118,12 +118,17 @@ class SettingsPanel(QWidget):
 
         layout.addSpacing(6)
         lbl_system_prompt = QLabel("&System prompt:")
+        tooltip_text = (
+            "Base instructions that define the AI's persona and overall behavior"
+        )
+        lbl_system_prompt.setToolTip(tooltip_text)
         layout.addWidget(lbl_system_prompt)
 
         self._system_prompt = QTextEdit()
         lbl_system_prompt.setBuddy(self._system_prompt)
         self._system_prompt.setAccessibleName("System prompt")
         self._system_prompt.setPlaceholderText("You are a helpful assistant.")
+        self._system_prompt.setToolTip(tooltip_text)
         self._system_prompt.setTabChangesFocus(True)
         self._system_prompt.setFixedHeight(80)
         self._system_prompt.setFont(QFont("Consolas", 10))

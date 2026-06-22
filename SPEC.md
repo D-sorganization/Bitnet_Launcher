@@ -3,7 +3,7 @@
 ## Identity
 
 - **Repository:** Bitnet_Launcher
-- Version: 0.1.16
+- Version: 0.1.17
 - **Language:** Python 3.11+
 - **License:** MIT
 
@@ -133,6 +133,7 @@ out of their intended shell arguments.
 - Action buttons in the `LauncherWindow` ("Chat Here", "Launch in Terminal") are now proactively disabled when no model is selected from the list or when `llama-cli` is missing, providing dynamic tooltips explaining the state, rather than allowing clicks that result in error dialogs.
 - Added unit suffixes to numeric input fields (e.g., " threads" for CPU threads) in the settings panel to provide immediate, inline context and improve readability.
 - The "Send" button in the chat panel is now proactively disabled when the chat input is empty, and a tooltip has been added to explain that text is required to send a message.
+- Added descriptive tooltips to the "System prompt" field and label in the Settings Panel to explain its purpose to non-technical users.
 
 ### API Security Updates
 
