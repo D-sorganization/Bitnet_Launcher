@@ -106,3 +106,7 @@
 
 **Learning:** When form fields use domain-specific jargon or technical hyperparameters (like "System Prompt", "Temperature", or "Context size"), non-technical users may not understand what they do.
 **Action:** Always add descriptive tooltips (`setToolTip()`) to both the input widget and its associated label to explain the purpose of complex settings in plain language, making the UI more intuitive for all users.
+## 2026-06-23 - Form Label Tooltips for Complex Hyperparameters
+
+**Learning:** When form fields use technical jargon (e.g., "Context size:" or "Temperature:") and have tooltips applied to the input widgets (`QSpinBox`), users might hover over the descriptive label (`QLabel`) first and miss the helpful context if the tooltip isn't duplicated there.
+**Action:** When a widget has a tooltip explaining complex jargon, always set the same tooltip text on its associated `QLabel` so users can hover either the label or the input field to get assistance.
