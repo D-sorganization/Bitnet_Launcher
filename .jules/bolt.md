@@ -47,3 +47,6 @@
 
 **Learning:** When using `os.scandir()` with short-circuiting iterators (like `any()` or `all()`), breaking early leaves the generator unexhausted. Relying on CPython's garbage collector to close the underlying directory file descriptor is risky and discouraged in production code.
 **Action:** Always wrap `os.scandir(path)` in a `with` context manager (e.g., `with os.scandir(path) as it:`) when the iteration might not consume all elements, ensuring explicit and safe cleanup of file handles.
+## 2024-06-25 - Avoid redundant string evaluations in tight loops
+**Learning:** Calling `.lower()` multiple times in a generator expression on the same string (e.g. `any(f.name.lower().endswith(".gguf") and "tq2_0" in f.name.lower())`) causes redundant string allocations and method calls per iteration.
+**Action:** Use the walrus operator (`:=`) inside generator expressions to compute the value once and reuse it: `any((lname := f.name.lower()).endswith(".gguf") and "tq2_0" in lname)`.
