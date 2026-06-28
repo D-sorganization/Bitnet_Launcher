@@ -47,3 +47,8 @@
 
 **Learning:** When using `os.scandir()` with short-circuiting iterators (like `any()` or `all()`), breaking early leaves the generator unexhausted. Relying on CPython's garbage collector to close the underlying directory file descriptor is risky and discouraged in production code.
 **Action:** Always wrap `os.scandir(path)` in a `with` context manager (e.g., `with os.scandir(path) as it:`) when the iteration might not consume all elements, ensuring explicit and safe cleanup of file handles.
+
+## 2024-05-30 - Redundant string operations in list comprehensions and generators
+
+**Learning:** In Python list comprehensions and generator expressions, performing expensive string operations (like `lower()`) multiple times on the same object within the condition can slow down execution, especially when processing large iterations.
+**Action:** Use the walrus operator (`:=`) to evaluate the operation once, assign it to a local variable, and reuse it across multiple sub-conditions.
