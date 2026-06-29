@@ -47,3 +47,8 @@
 
 **Learning:** When using `os.scandir()` with short-circuiting iterators (like `any()` or `all()`), breaking early leaves the generator unexhausted. Relying on CPython's garbage collector to close the underlying directory file descriptor is risky and discouraged in production code.
 **Action:** Always wrap `os.scandir(path)` in a `with` context manager (e.g., `with os.scandir(path) as it:`) when the iteration might not consume all elements, ensuring explicit and safe cleanup of file handles.
+
+## 2024-06-10 - Walrus operator in comprehensions
+
+**Learning:** In generator expressions or comprehensions, evaluating expensive string operations like `.lower()` multiple times in the same condition (e.g., `f.name.lower().endswith(".gguf") and "tq2_0" in f.name.lower()`) causes redundant string allocations and method calls per iteration.
+**Action:** Use the walrus operator (`:=`) to assign the result of the expensive operation to a local variable within the expression (e.g., `(fname := f.name.lower()).endswith(".gguf") and "tq2_0" in fname`). This significantly reduces redundant operations and speeds up the loop.
