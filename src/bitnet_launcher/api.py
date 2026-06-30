@@ -99,6 +99,12 @@ active_runners: dict[str, LocalLlamaRunner] = {}
 @app.post("/chat/start")
 async def start_chat(request: ChatStartRequest) -> StreamingResponse:
     """Start a chat session and stream the stdout using Server-Sent Events."""
+    if len(active_runners) > 0:
+        raise HTTPException(
+            status_code=429,
+            detail="A chat session is already active. Stop it first.",
+        )
+
     models: list[ModelInfo] = discover_models(config.models_dir)
     model = next((m for m in models if m.name == request.model_name), None)
     if not model:

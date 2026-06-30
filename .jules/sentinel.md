@@ -69,3 +69,9 @@
 **Vulnerability:** The FastAPI server embedded in the desktop application lacked standard HTTP security headers (CSP, X-Content-Type-Options, etc).
 **Learning:** Even when a local API is intended to be used by a desktop frontend running on localhost, missing security headers can still expose the application to cross-site risks if a malicious site attempts to interact with the localhost API (e.g. CSRF via external origin).
 **Prevention:** Always implement a security header middleware on all FastAPI applications regardless of the expected environment (desktop/local or cloud).
+
+## 2025-10-25 - [Prevent DoS via Resource Exhaustion from Multiple API Chat Sessions]
+
+**Vulnerability:** The `/chat/start` endpoint in `src/bitnet_launcher/api.py` allowed starting an arbitrary number of chat sessions (and consequently `llama-cli` subprocesses) by repeatedly calling the endpoint. Because model inference uses significant memory and CPU threads, an attacker could trivially cause a Denial of Service (DoS) through resource exhaustion by spawning many concurrent runners.
+**Learning:** For resource-intensive operations like running an LLM, exposing an endpoint to start the process without strict rate-limiting or concurrency bounds is highly dangerous, even for a local service. Concurrency checks must be enforced.
+**Prevention:** Always bound the number of allowed concurrent expensive processes. In this single-user API context, raise a `429 Too Many Requests` or similar error if `len(active_runners) > 0` before allowing a new session to start.
