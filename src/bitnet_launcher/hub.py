@@ -436,10 +436,11 @@ def _download_prebuilt_gguf(
 
     filename = hub_model.gguf_file
     if filename not in repo_files:
+        # ⚡ Bolt Optimization: Use walrus operator to avoid redundant string allocation
         ternary = [
             f
             for f in repo_files
-            if f.lower().endswith(".gguf") and "tq2_0" in f.lower()
+            if (fname := f.lower()).endswith(".gguf") and "tq2_0" in fname
         ]
         if not ternary:
             raise RuntimeError(
