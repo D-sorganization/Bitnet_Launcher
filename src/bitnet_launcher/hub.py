@@ -439,7 +439,7 @@ def _download_prebuilt_gguf(
         ternary = [
             f
             for f in repo_files
-            if f.lower().endswith(".gguf") and "tq2_0" in f.lower()
+            if (fname := f.lower()).endswith(".gguf") and "tq2_0" in fname
         ]
         if not ternary:
             raise RuntimeError(

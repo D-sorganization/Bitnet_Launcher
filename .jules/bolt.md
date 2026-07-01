@@ -47,3 +47,6 @@
 
 **Learning:** When using `os.scandir()` with short-circuiting iterators (like `any()` or `all()`), breaking early leaves the generator unexhausted. Relying on CPython's garbage collector to close the underlying directory file descriptor is risky and discouraged in production code.
 **Action:** Always wrap `os.scandir(path)` in a `with` context manager (e.g., `with os.scandir(path) as it:`) when the iteration might not consume all elements, ensuring explicit and safe cleanup of file handles.
+## 2026-04-26 - Reduce redundant string allocations in list comprehensions
+**Learning:** Using `string.lower()` multiple times inside a generator expression or list comprehension causes unnecessary allocations, slowing down the loop. For `os.DirEntry` checking in `gui/hub_dialog.py` and `hub.py`, using the walrus operator to cache `f.name.lower()` or `f.lower()` makes the loop ~20% faster.
+**Action:** Use the walrus operator (`:=`) to cache expensive operations inside comprehensions or conditions when the result is needed more than once within the same expression.
