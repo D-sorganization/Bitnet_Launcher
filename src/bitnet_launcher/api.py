@@ -99,6 +99,13 @@ active_runners: dict[str, LocalLlamaRunner] = {}
 @app.post("/chat/start")
 async def start_chat(request: ChatStartRequest) -> StreamingResponse:
     """Start a chat session and stream the stdout using Server-Sent Events."""
+    # Security: Strictly enforce concurrency limit to prevent CPU/memory exhaustion DoS
+    if len(active_runners) >= 1:
+        raise HTTPException(
+            status_code=429,
+            detail="Maximum number of active runners reached (limit: 1).",
+        )
+
     models: list[ModelInfo] = discover_models(config.models_dir)
     model = next((m for m in models if m.name == request.model_name), None)
     if not model:

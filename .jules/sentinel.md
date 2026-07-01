@@ -69,3 +69,8 @@
 **Vulnerability:** The FastAPI server embedded in the desktop application lacked standard HTTP security headers (CSP, X-Content-Type-Options, etc).
 **Learning:** Even when a local API is intended to be used by a desktop frontend running on localhost, missing security headers can still expose the application to cross-site risks if a malicious site attempts to interact with the localhost API (e.g. CSRF via external origin).
 **Prevention:** Always implement a security header middleware on all FastAPI applications regardless of the expected environment (desktop/local or cloud).
+## 2025-05-22 - Prevent CPU/Memory Exhaustion via Concurrency Limits
+
+**Vulnerability:** The FastAPI endpoint `/chat/start` spawned a new `LocalLlamaRunner` process for every request without checking how many runners were already active. Because LLM inference is highly resource-intensive, concurrent requests could easily cause CPU starvation or Out-Of-Memory (OOM) crashes, leading to a Denial of Service (DoS) condition.
+**Learning:** Local APIs that trigger heavy subprocesses (like model inference) must explicitly enforce concurrency limits, even if designed for single-user local use. Otherwise, rapid or automated requests can trivially overwhelm the host machine.
+**Prevention:** Introduce a check against active processes (e.g., `if len(active_runners) >= 1: raise HTTPException(status_code=429)`) at the beginning of the endpoint handler before allocating resources.
