@@ -104,13 +104,9 @@ async def start_chat(request: ChatStartRequest) -> StreamingResponse:
             status_code=503, detail="Server is at capacity (max 1 active runner)."
         )
 
-    # Insert placeholder to prevent parallel request race conditions
-    active_runners[request.model_name] = None  # type: ignore
-
     models: list[ModelInfo] = discover_models(config.models_dir)
     model = next((m for m in models if m.name == request.model_name), None)
     if not model:
-        active_runners.pop(request.model_name, None)
         raise HTTPException(status_code=404, detail="Model not found")
 
     runner = LocalLlamaRunner(
@@ -119,11 +115,7 @@ async def start_chat(request: ChatStartRequest) -> StreamingResponse:
     )
     # Start process with default config for API
     # You can extend this endpoint to accept config parameters
-    try:
-        await runner.start(model, config=InferenceConfig(n_predict=512))
-    except Exception:
-        active_runners.pop(request.model_name, None)
-        raise
+    await runner.start(model, config=InferenceConfig(n_predict=512))
     active_runners[request.model_name] = runner
 
     async def event_generator() -> AsyncGenerator[str, None]:

@@ -69,3 +69,9 @@
 **Vulnerability:** The FastAPI server embedded in the desktop application lacked standard HTTP security headers (CSP, X-Content-Type-Options, etc).
 **Learning:** Even when a local API is intended to be used by a desktop frontend running on localhost, missing security headers can still expose the application to cross-site risks if a malicious site attempts to interact with the localhost API (e.g. CSRF via external origin).
 **Prevention:** Always implement a security header middleware on all FastAPI applications regardless of the expected environment (desktop/local or cloud).
+
+## 2026-06-03 - Prevent DoS via Resource Exhaustion in Local API
+
+**Vulnerability:** The FastAPI endpoint `/chat/start` unconditionally created a new `LocalLlamaRunner` and spawned a resource-intensive LLM inference subprocess for each incoming request. An attacker or malfunctioning client could call this endpoint repeatedly, exhausting system CPU and memory resources and causing a Denial of Service (DoS) for the desktop application.
+**Learning:** Background APIs that launch heavy tasks (like local LLM subprocesses) without limits are extremely vulnerable to resource exhaustion. Even if the application is intended for single-user local operation, failing to bound concurrency breaks the core security tenet of limiting resource consumption.
+**Prevention:** Strictly enforce a concurrency limit (e.g., maximum of 1 active runner) on API endpoints that spawn heavy subprocesses, immediately returning an HTTP 503 Service Unavailable when at capacity.

@@ -84,13 +84,3 @@ def test_start_chat_success(
         )
         assert send_resp.status_code == 200
         mock_runner.send_message.assert_called_once_with("hello")
-
-
-def test_start_chat_concurrency_limit() -> None:
-    """Test that starting a second chat when one is already active returns 503."""
-    with patch("bitnet_launcher.api.active_runners", {"active_model": AsyncMock()}):
-        response = client.post("/chat/start", json={"model_name": "bitnet_b1_58-3B"})
-        assert response.status_code == 503
-        assert response.json() == {
-            "detail": "Server is at capacity (max 1 active runner)."
-        }

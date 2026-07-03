@@ -1,0 +1,14 @@
+--- src/bitnet_launcher/api.py
++++ src/bitnet_launcher/api.py
+@@ -107,7 +107,11 @@
+ @app.post("/chat/start")
+ async def start_chat(request: ChatStartRequest) -> StreamingResponse:
+     """Start a chat session and stream the stdout using Server-Sent Events."""
++    # Check concurrency before we yield to the event loop
+     if len(active_runners) >= 1:
+         raise HTTPException(status_code=503, detail="Server is at capacity (max 1 active runner).")
++
++    # Insert placeholder to prevent parallel request race conditions
++    active_runners[request.model_name] = None  # type: ignore
+
+     models: list[ModelInfo] = discover_models(config.models_dir)
