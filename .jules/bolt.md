@@ -47,3 +47,6 @@
 
 **Learning:** When using `os.scandir()` with short-circuiting iterators (like `any()` or `all()`), breaking early leaves the generator unexhausted. Relying on CPython's garbage collector to close the underlying directory file descriptor is risky and discouraged in production code.
 **Action:** Always wrap `os.scandir(path)` in a `with` context manager (e.g., `with os.scandir(path) as it:`) when the iteration might not consume all elements, ensuring explicit and safe cleanup of file handles.
+## 2024-05-30 - Optimize redundant string method calls in loops
+**Learning:** In Python generator expressions or comprehensions, repeated expensive string operations (like calling `.lower()` twice on the same variable to chain checks: `f.name.lower().endswith('.gguf') and "tq2_0" in f.name.lower()`) introduces redundant overhead.
+**Action:** Use the walrus operator (`:=`) to assign the result of the first string operation to a local variable (e.g., `(lname := f.name.lower()).endswith('.gguf') and "tq2_0" in lname`) and reuse it, avoiding evaluating it multiple times in the same iteration.
