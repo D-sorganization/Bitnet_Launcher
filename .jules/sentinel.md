@@ -69,3 +69,9 @@
 **Vulnerability:** The FastAPI server embedded in the desktop application lacked standard HTTP security headers (CSP, X-Content-Type-Options, etc).
 **Learning:** Even when a local API is intended to be used by a desktop frontend running on localhost, missing security headers can still expose the application to cross-site risks if a malicious site attempts to interact with the localhost API (e.g. CSRF via external origin).
 **Prevention:** Always implement a security header middleware on all FastAPI applications regardless of the expected environment (desktop/local or cloud).
+
+## 2026-06-15 - [Prevent DoS via Concurrent Process Spawning]
+
+**Vulnerability:** The `/chat/start` API endpoint spawned local, resource-intensive subprocesses (LLM inference) without limiting the number of active background processes. An attacker or buggy client could repeatedly hit this endpoint, launching dozens of instances and exhausting system CPU and memory, leading to a Denial of Service (DoS) attack.
+**Learning:** In local API endpoints that spawn resource-intensive subprocesses, lacking concurrency limits creates severe resource exhaustion risks. Additionally, when enforcing limits via a global dictionary, an immediate placeholder entry must be placed before any asynchronous or blocking calls to prevent race conditions during parallel requests bypassing the check.
+**Prevention:** Strictly enforce a concurrency limit (e.g., active runners ≤ 1) and insert a placeholder (e.g., `registry[key] = None`) immediately before any `await` or heavy operations to ensure atomic-like reservation.

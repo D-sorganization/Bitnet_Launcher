@@ -84,3 +84,16 @@ def test_start_chat_success(
         )
         assert send_resp.status_code == 200
         mock_runner.send_message.assert_called_once_with("hello")
+
+@patch("bitnet_launcher.api.discover_models")
+def test_start_chat_concurrency_limit(mock_discover: Any, tmp_path: Any) -> None:
+    """Test starting chat when a session is already active."""
+    model_path = tmp_path / "bitnet_b1_58-3B" / "ggml-model-i2_s.gguf"
+    mock_discover.return_value = [
+        ModelInfo(name="bitnet_b1_58-3B", path=model_path, size_bytes=1024),
+    ]
+
+    with patch("bitnet_launcher.api.active_runners", {"existing_model": None}):
+        response = client.post("/chat/start", json={"model_name": "bitnet_b1_58-3B"})
+        assert response.status_code == 429
+        assert response.json() == {"detail": "Too many concurrent chat sessions"}
