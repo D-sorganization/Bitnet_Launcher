@@ -106,3 +106,8 @@
 
 **Learning:** When form fields use domain-specific jargon or technical hyperparameters (like "System Prompt", "Temperature", or "Context size"), non-technical users may not understand what they do.
 **Action:** Always add descriptive tooltips (`setToolTip()`) to both the input widget and its associated label to explain the purpose of complex settings in plain language, making the UI more intuitive for all users.
+
+## 2023-11-09 - Copying Jargon Tooltips to Labels
+
+**Learning:** When form fields use domain-specific jargon (like "Context size"), users might hover over the label expecting an explanation, especially if the input field is small. If the tooltip is only on the input widget, discoverability suffers.
+**Action:** In PyQt6 layout helper functions that dynamically generate a `QLabel` for an input widget, programmatically copy the input's tooltip to the label (e.g., `if widget.toolTip(): lbl.setToolTip(widget.toolTip())`) so both elements display the necessary explanation on hover.
