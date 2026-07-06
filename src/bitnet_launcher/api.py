@@ -93,25 +93,56 @@ async def list_models() -> list[ModelResponse]:
 
 
 # Global registry to hold active runners (simplified for single-user local API)
-active_runners: dict[str, LocalLlamaRunner] = {}
+active_runners: dict[str, LocalLlamaRunner | None] = {}
 
 
 @app.post("/chat/start")
 async def start_chat(request: ChatStartRequest) -> StreamingResponse:
     """Start a chat session and stream the stdout using Server-Sent Events."""
+    # Prevent concurrent startups of the same model by checking if the value is None
+    if (
+        request.model_name in active_runners
+        and active_runners[request.model_name] is None
+    ):
+        raise HTTPException(
+            status_code=429, detail="Server is currently starting this model"
+        )
+
+    # Allow restarting the same model, but prevent multiple different models
+    if len(active_runners) >= 1 and request.model_name not in active_runners:
+        raise HTTPException(
+            status_code=429, detail="Server is currently processing another request"
+        )
+
+    # If the requested model is already running, pop it first to prevent
+    # concurrent stops, then stop it.
+    existing_runner = active_runners.pop(request.model_name, None)
+
+    # Immediately insert placeholder to prevent race condition during await
+    active_runners[request.model_name] = None
+
+    if existing_runner:
+        await existing_runner.stop()
+
     models: list[ModelInfo] = discover_models(config.models_dir)
     model = next((m for m in models if m.name == request.model_name), None)
     if not model:
+        active_runners.pop(request.model_name, None)
         raise HTTPException(status_code=404, detail="Model not found")
 
     runner = LocalLlamaRunner(
         llama_cli=config.llama_cli,
         bitnet_root=config.bitnet_root,
     )
-    # Start process with default config for API
-    # You can extend this endpoint to accept config parameters
-    await runner.start(model, config=InferenceConfig(n_predict=512))
-    active_runners[request.model_name] = runner
+
+    try:
+        # Start process with default config for API
+        # You can extend this endpoint to accept config parameters
+        await runner.start(model, config=InferenceConfig(n_predict=512))
+        active_runners[request.model_name] = runner
+    except Exception:
+        active_runners.pop(request.model_name, None)
+        raise
 
     async def event_generator() -> AsyncGenerator[str, None]:
         try:
