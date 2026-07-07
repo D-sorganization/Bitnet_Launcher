@@ -56,6 +56,12 @@ def test_start_chat_success(
     mock_discover: Any, mock_start: Any, mock_stream: Any, tmp_path: Any
 ) -> None:
     """Test starting chat with a valid model."""
+
+    # Ensure registry is clear before the test
+    from bitnet_launcher.api import active_runners
+
+    active_runners.clear()
+
     model_path = tmp_path / "bitnet_b1_58-3B" / "ggml-model-i2_s.gguf"
     mock_discover.return_value = [
         ModelInfo(name="bitnet_b1_58-3B", path=model_path, size_bytes=1024),
@@ -84,3 +90,31 @@ def test_start_chat_success(
         )
         assert send_resp.status_code == 200
         mock_runner.send_message.assert_called_once_with("hello")
+
+
+def test_start_chat_concurrency_limit(tmp_path: Any) -> None:
+    """Test starting multiple chats returns 429."""
+    from bitnet_launcher.api import active_runners
+
+    active_runners.clear()
+
+    # Pre-fill registry
+    active_runners["other_model"] = AsyncMock()
+
+    response = client.post("/chat/start", json={"model_name": "bitnet_b1_58-3B"})
+    assert response.status_code == 429
+    assert response.json() == {"detail": "Too many active chat sessions"}
+
+
+def test_start_chat_already_running(tmp_path: Any) -> None:
+    """Test starting same model twice returns 409."""
+    from bitnet_launcher.api import active_runners
+
+    active_runners.clear()
+
+    # Pre-fill registry with same model
+    active_runners["bitnet_b1_58-3B"] = AsyncMock()
+
+    response = client.post("/chat/start", json={"model_name": "bitnet_b1_58-3B"})
+    assert response.status_code == 409
+    assert response.json() == {"detail": "Model already running"}

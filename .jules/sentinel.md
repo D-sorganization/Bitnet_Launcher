@@ -69,3 +69,11 @@
 **Vulnerability:** The FastAPI server embedded in the desktop application lacked standard HTTP security headers (CSP, X-Content-Type-Options, etc).
 **Learning:** Even when a local API is intended to be used by a desktop frontend running on localhost, missing security headers can still expose the application to cross-site risks if a malicious site attempts to interact with the localhost API (e.g. CSRF via external origin).
 **Prevention:** Always implement a security header middleware on all FastAPI applications regardless of the expected environment (desktop/local or cloud).
+
+## 2024-07-07 - [Prevent DoS via Concurrency Limit on Global Runner Registry]
+
+**Vulnerability:** The FastAPI endpoint `/chat/start` manages long-running, resource-intensive subprocesses via `LocalLlamaRunner`. These runners are stored in a global dict `active_runners`. The code previously checked if a runner for a model already existed (`request.model_name in active_runners`) but it didn't register the runner in the dict until **after** the asynchronous `runner.start()` call had completed. Additionally, there was no limit on the number of parallel chat sessions.
+**Learning:** In async applications, asynchronous pauses (like `await runner.start()`) allow other incoming requests to be processed. If the state isn't claimed synchronously before an `await`, multiple concurrent requests can bypass the "already exists" check, leading to a race condition where multiple heavy subprocesses are spawned simultaneously for the same model, or spawning an unbounded number of processes for different models, causing CPU/Memory exhaustion (DoS).
+**Prevention:**
+1. Enforce a global limit on the number of active subprocesses (e.g. `len(active_runners) >= 1`).
+2. Claim the state synchronously by inserting a placeholder (e.g., `None` or an explicit 'pending' object) into the global registry immediately after the validation checks and before any `await` calls.
