@@ -47,3 +47,6 @@
 
 **Learning:** When using `os.scandir()` with short-circuiting iterators (like `any()` or `all()`), breaking early leaves the generator unexhausted. Relying on CPython's garbage collector to close the underlying directory file descriptor is risky and discouraged in production code.
 **Action:** Always wrap `os.scandir(path)` in a `with` context manager (e.g., `with os.scandir(path) as it:`) when the iteration might not consume all elements, ensuring explicit and safe cleanup of file handles.
+## 2024-05-30 - Offload blocking disk I/O in FastAPI endpoints
+**Learning:** In FastAPI `async def` endpoints, calling synchronous functions that perform blocking disk I/O (like `os.scandir` in `discover_models`) blocks the asyncio event loop, severely limiting the server's ability to handle concurrent requests.
+**Action:** Always wrap synchronous blocking calls in FastAPI async endpoints using `await asyncio.to_thread()` to offload the work to a separate thread pool.
