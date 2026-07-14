@@ -175,3 +175,7 @@ out of their intended shell arguments.
 ### API Security Updates
 
 - The FastAPI server (`src/bitnet_launcher/api.py`) was updated to include an HTTP middleware (`add_security_headers`) that enforces essential security headers on all responses, including `Content-Security-Policy`, `Strict-Transport-Security`, `X-Content-Type-Options`, `X-Frame-Options`, and `X-XSS-Protection`. This mitigates potential cross-site risks when the local API is running.
+
+- Implemented strict concurrency limits in the FastAPI server (`src/bitnet_launcher/api.py`) for the `/chat/start` endpoint, capping active `LocalLlamaRunner` instances to 1 to prevent resource exhaustion and DoS attacks.
+- Protected the asynchronous subprocess initialization block in `/chat/start` with a `None` placeholder lock, preventing race conditions from simultaneous requests from bypassing the concurrency check.
+- Offloaded blocking I/O calls (`discover_models`) to a background thread using `asyncio.to_thread` in the API, improving server responsiveness during long-running tasks.
