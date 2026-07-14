@@ -69,3 +69,13 @@
 **Vulnerability:** The FastAPI server embedded in the desktop application lacked standard HTTP security headers (CSP, X-Content-Type-Options, etc).
 **Learning:** Even when a local API is intended to be used by a desktop frontend running on localhost, missing security headers can still expose the application to cross-site risks if a malicious site attempts to interact with the localhost API (e.g. CSRF via external origin).
 **Prevention:** Always implement a security header middleware on all FastAPI applications regardless of the expected environment (desktop/local or cloud).
+
+## 2026-05-27 - [Prevent DoS via Missing Concurrency Limits on Resource-Intensive API Endpoints]
+
+**Vulnerability:** The FastAPI endpoint `/chat/start` spawned a resource-intensive subprocess (`LocalLlamaRunner`) for every request without any concurrency limits or protection against parallel requests. This allowed a Denial of Service (DoS) attack where an attacker could flood the endpoint with requests, causing the server to exhaust CPU and memory by spawning multiple LLM inference processes simultaneously. Furthermore, missing race-condition protections during the asynchronous initialization phase meant that multiple parallel requests could bypass simple length checks before the runner was formally registered.
+**Learning:** Local API endpoints that execute heavy computational tasks (like LLM inference) must strictly regulate how many operations can run concurrently. Because `async def` endpoints yield control during blocking operations, a fast barrage of incoming requests can slip past capacity checks unless a "pending" state or placeholder is immediately recorded in the concurrency tracking registry before any `await` calls.
+**Prevention:**
+1. Enforce a strict concurrency limit (e.g., `len(active_runners) >= 1`) on endpoints spawning heavy processes.
+2. Immediately insert a placeholder (e.g., `active_runners[key] = None`) into the registry to claim the concurrency slot before running `await asyncio.to_thread` or other asynchronous setups.
+3. Check for this placeholder (e.g., `if key in registry and registry[key] is None: raise HTTP 409`) to handle simultaneous duplicate requests gracefully.
+4. Always wrap the entire initialization block in a `try...except BaseException:` statement to guarantee the placeholder is removed if the startup fails or if the client disconnects prematurely (raising `asyncio.CancelledError`).
