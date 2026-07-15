@@ -93,12 +93,23 @@ async def list_models() -> list[ModelResponse]:
 
 
 # Global registry to hold active runners (simplified for single-user local API)
-active_runners: dict[str, LocalLlamaRunner] = {}
+active_runners: dict[str, LocalLlamaRunner | None] = {}
 
 
 @app.post("/chat/start")
 async def start_chat(request: ChatStartRequest) -> StreamingResponse:
     """Start a chat session and stream the stdout using Server-Sent Events."""
+    if len(active_runners) >= 1:
+        raise HTTPException(status_code=429, detail="Too many concurrent chat sessions")
+
+    if (
+        request.model_name in active_runners
+        and active_runners[request.model_name] is None
+    ):
+        raise HTTPException(
+            status_code=409, detail="Session for this model is already starting"
+        )
+
     models: list[ModelInfo] = discover_models(config.models_dir)
     model = next((m for m in models if m.name == request.model_name), None)
     if not model:
@@ -108,10 +119,17 @@ async def start_chat(request: ChatStartRequest) -> StreamingResponse:
         llama_cli=config.llama_cli,
         bitnet_root=config.bitnet_root,
     )
-    # Start process with default config for API
-    # You can extend this endpoint to accept config parameters
-    await runner.start(model, config=InferenceConfig(n_predict=512))
-    active_runners[request.model_name] = runner
+
+    active_runners[request.model_name] = None
+
+    try:
+        # Start process with default config for API
+        # You can extend this endpoint to accept config parameters
+        await runner.start(model, config=InferenceConfig(n_predict=512))
+        active_runners[request.model_name] = runner
+    except BaseException:
+        active_runners.pop(request.model_name, None)
+        raise
 
     async def event_generator() -> AsyncGenerator[str, None]:
         try:
