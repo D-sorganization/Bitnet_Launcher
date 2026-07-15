@@ -175,3 +175,4 @@ out of their intended shell arguments.
 ### API Security Updates
 
 - The FastAPI server (`src/bitnet_launcher/api.py`) was updated to include an HTTP middleware (`add_security_headers`) that enforces essential security headers on all responses, including `Content-Security-Policy`, `Strict-Transport-Security`, `X-Content-Type-Options`, `X-Frame-Options`, and `X-XSS-Protection`. This mitigates potential cross-site risks when the local API is running.
+- Enforced concurrency limits (maximum of 1 active session) on `LocalLlamaRunner` instances initialized via `POST /chat/start` to prevent Denial of Service (DoS) attacks causing CPU and memory exhaustion. Used a placeholder dictionary insert pattern to prevent race conditions during async initialization.
