@@ -175,3 +175,7 @@ out of their intended shell arguments.
 ### API Security Updates
 
 - The FastAPI server (`src/bitnet_launcher/api.py`) was updated to include an HTTP middleware (`add_security_headers`) that enforces essential security headers on all responses, including `Content-Security-Policy`, `Strict-Transport-Security`, `X-Content-Type-Options`, `X-Frame-Options`, and `X-XSS-Protection`. This mitigates potential cross-site risks when the local API is running.
+
+### UX Updates
+
+- Added logic to `_labeled_row` helper in `settings_panel.py` to check if an input widget has a tooltip and, if so, copy it to its associated `QLabel`.
