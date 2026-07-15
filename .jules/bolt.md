@@ -47,3 +47,18 @@
 
 **Learning:** When using `os.scandir()` with short-circuiting iterators (like `any()` or `all()`), breaking early leaves the generator unexhausted. Relying on CPython's garbage collector to close the underlying directory file descriptor is risky and discouraged in production code.
 **Action:** Always wrap `os.scandir(path)` in a `with` context manager (e.g., `with os.scandir(path) as it:`) when the iteration might not consume all elements, ensuring explicit and safe cleanup of file handles.
+
+## 2024-06-25 - FastAPI Async Endpoints and Disk I/O Blocking
+
+**Learning:** In FastAPI `async def` endpoints, directly calling synchronous functions that perform blocking disk I/O (like `os.scandir` in `discover_models`) blocks the asyncio event loop.
+**Action:** Always wrap synchronous disk I/O calls in `await asyncio.to_thread()` to offload them to a thread pool and keep the main event loop responsive.
+
+## 2024-06-25 - Concurrency Limits and Race Conditions in Async Registries
+
+**Learning:** Enforcing concurrency limits via a global registry in async FastAPI endpoints (like `active_runners`) is susceptible to race conditions. If multiple parallel requests check the limit before any of them hit an `await` (which yields control back to the event loop), they can all bypass the limit.
+**Action:** Immediately insert a placeholder entry (e.g., `registry[key] = None`) into the dictionary *after* the limit check and *before* any `await` or blocking operations to secure the concurrency slot synchronously. Furthermore, check `if registry[key] is None` to reject duplicate pending requests for the same resource.
+
+## 2024-06-25 - Clean up Async Registries with BaseException
+
+**Learning:** In modern Python (3.8+), Uvicorn raises `asyncio.CancelledError` on client disconnects, which inherits from `BaseException`, not `Exception`. If a resource initialization is cancelled and wrapped in a standard `except Exception:` block, the cleanup will be bypassed.
+**Action:** When cleaning up async state locks or placeholders (e.g., popping from `active_runners`), use `except BaseException:` or `finally` blocks to guarantee cleanup and prevent permanent resource leaks if a request is aborted.
