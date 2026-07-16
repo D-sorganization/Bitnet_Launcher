@@ -175,3 +175,7 @@ out of their intended shell arguments.
 ### API Security Updates
 
 - The FastAPI server (`src/bitnet_launcher/api.py`) was updated to include an HTTP middleware (`add_security_headers`) that enforces essential security headers on all responses, including `Content-Security-Policy`, `Strict-Transport-Security`, `X-Content-Type-Options`, `X-Frame-Options`, and `X-XSS-Protection`. This mitigates potential cross-site risks when the local API is running.
+
+- Prevented event loop blocking DoS in the local FastAPI service by wrapping synchronous disk I/O calls (`discover_models`) with `await asyncio.to_thread` in the `/chat/start` and `/models` endpoints.
+- Fixed a concurrency limit race condition in `/chat/start` by utilizing `None` placeholders inside `active_runners` dictionary, ensuring only one client can spawn a runner instance per model at a time.
+- Hardened process shutdown logic in `src/bitnet_launcher/runners.py` (`LocalLlamaRunner.stop`) and `api.py` by capturing `BaseException` during cleanup. This guarantees that spawned `llama-cli` processes are successfully `.kill()`'d and `active_runners` slots are freed even when tasks are aborted by `asyncio.CancelledError` (e.g. client disconnects).
