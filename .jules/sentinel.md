@@ -69,3 +69,15 @@
 **Vulnerability:** The FastAPI server embedded in the desktop application lacked standard HTTP security headers (CSP, X-Content-Type-Options, etc).
 **Learning:** Even when a local API is intended to be used by a desktop frontend running on localhost, missing security headers can still expose the application to cross-site risks if a malicious site attempts to interact with the localhost API (e.g. CSRF via external origin).
 **Prevention:** Always implement a security header middleware on all FastAPI applications regardless of the expected environment (desktop/local or cloud).
+
+## 2026-07-16 - [Prevent DoS via Event Loop Blocking in FastAPI]
+
+**Vulnerability:** The FastAPI endpoints `/models` and `/chat/start` directly called the synchronous function `discover_models`, which performs blocking disk I/O operations (like `os.scandir`). This blocked the main asyncio event loop, leading to Denial of Service for all other concurrent API requests while the disk I/O was executing.
+**Learning:** In FastAPI `async def` endpoints, directly executing synchronous blocking operations pauses the entire application thread, preventing other requests from being served.
+**Prevention:** Wrap synchronous I/O-bound functions using `await asyncio.to_thread()` to offload them to an underlying thread pool, keeping the main event loop free.
+
+## 2026-07-16 - [Prevent Resource Leaks/Race Conditions in Async Endpoint Cancellation]
+
+**Vulnerability:** The `/chat/start` endpoint lacked concurrency limit checks, meaning simultaneous requests could create multiple runners for the same model, overwriting the `active_runners` dictionary while stranding orphaned `llama-cli` processes. Furthermore, if a client disconnected while the runner was active or stopping, `asyncio.CancelledError` would interrupt the execution flow, bypassing `TimeoutError` cleanup logic, leading to permanently hanging processes.
+**Learning:** Async processes must handle `asyncio.CancelledError` robustly since client disconnects inject it anywhere in the async stack. Furthermore, concurrency slots must use placeholder logic (like assigning `None`) before `await`ing anything to prevent race conditions during initialization.
+**Prevention:** Catch `BaseException` (which captures `CancelledError`) in cleanup functions to guarantee child process termination, and use placeholders like `active_runners[model] = None` paired with `while ... is None: await asyncio.sleep()` to block parallel initialisation without losing the slot.
