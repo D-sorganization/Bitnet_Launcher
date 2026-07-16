@@ -1,5 +1,3 @@
-🚨 Severity: MEDIUM
-💡 Vulnerability: Missing input length limit on `system_prompt` field in `InferenceConfig` leading to potential Denial of Service (DoS) or memory exhaustion when processing excessively large text blocks from untrusted inputs.
-🎯 Impact: Attackers or users providing extremely long strings to the `system_prompt` configuration parameter could cause high parsing overhead or memory exhaustion during inference or API usage.
-🔧 Fix: Add a check inside `InferenceConfig.__post_init__` to ensure `len(self.system_prompt) <= 4096`, throwing a `ValueError` if exceeded.
-✅ Verification: Ensure the test suite runs with `uv run pytest tests/`, explicitly validating `test_system_prompt_too_long` correctly triggers the `ValueError`.
+perf: offload discover_models to thread pool in FastAPI endpoints
+
+Wrap synchronous blocking `discover_models` calls with `asyncio.to_thread()` in the `/models` and `/chat/start` API endpoints. This prevents the synchronous disk I/O of `os.scandir` from blocking the main asyncio event loop, significantly improving concurrent request handling.

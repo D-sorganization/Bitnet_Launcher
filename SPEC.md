@@ -175,3 +175,7 @@ out of their intended shell arguments.
 ### API Security Updates
 
 - The FastAPI server (`src/bitnet_launcher/api.py`) was updated to include an HTTP middleware (`add_security_headers`) that enforces essential security headers on all responses, including `Content-Security-Policy`, `Strict-Transport-Security`, `X-Content-Type-Options`, `X-Frame-Options`, and `X-XSS-Protection`. This mitigates potential cross-site risks when the local API is running.
+
+### Performance Updates
+
+- Offloaded synchronous `discover_models` calls (which use disk I/O via `os.scandir`) to a background thread pool using `asyncio.to_thread()` in FastAPI endpoints (`/models`, `/chat/start`) to prevent blocking the asyncio event loop and improve concurrency.
