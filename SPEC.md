@@ -134,6 +134,7 @@ out of their intended shell arguments.
 - Added unit suffixes to numeric input fields (e.g., " threads" for CPU threads) in the settings panel to provide immediate, inline context and improve readability.
 - The "Send" button in the chat panel is now proactively disabled when the chat input is empty, and a tooltip has been added to explain that text is required to send a message.
 - Added descriptive tooltips to the "System prompt" field and label in the Settings Panel to explain its purpose to non-technical users.
+- Propagated tooltips from input widgets to their corresponding labels in the Settings Panel to increase the hover target area, improving discoverability of jargon explanations.
 
 ### API Security Updates
 
