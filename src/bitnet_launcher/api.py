@@ -2,6 +2,7 @@
 
 from __future__ import annotations
 
+import asyncio
 import logging
 from collections.abc import AsyncGenerator, Awaitable, Callable
 from contextlib import asynccontextmanager
@@ -81,7 +82,11 @@ class ChatSendRequest(BaseModel):
 @app.get("/models")
 async def list_models() -> list[ModelResponse]:
     """List all locally installed BitNet models."""
-    models: list[ModelInfo] = discover_models(config.models_dir)
+    # ⚡ Bolt Optimization: Offload blocking os.scandir disk I/O to a thread
+    # pool to prevent blocking the asyncio event loop during API requests.
+    models: list[ModelInfo] = await asyncio.to_thread(
+        discover_models, config.models_dir
+    )
     return [
         ModelResponse(
             name=m.name,
@@ -99,7 +104,10 @@ active_runners: dict[str, LocalLlamaRunner] = {}
 @app.post("/chat/start")
 async def start_chat(request: ChatStartRequest) -> StreamingResponse:
     """Start a chat session and stream the stdout using Server-Sent Events."""
-    models: list[ModelInfo] = discover_models(config.models_dir)
+    # ⚡ Bolt Optimization: Offload blocking os.scandir disk I/O to a thread pool
+    models: list[ModelInfo] = await asyncio.to_thread(
+        discover_models, config.models_dir
+    )
     model = next((m for m in models if m.name == request.model_name), None)
     if not model:
         raise HTTPException(status_code=404, detail="Model not found")
