@@ -69,3 +69,7 @@
 **Vulnerability:** The FastAPI server embedded in the desktop application lacked standard HTTP security headers (CSP, X-Content-Type-Options, etc).
 **Learning:** Even when a local API is intended to be used by a desktop frontend running on localhost, missing security headers can still expose the application to cross-site risks if a malicious site attempts to interact with the localhost API (e.g. CSRF via external origin).
 **Prevention:** Always implement a security header middleware on all FastAPI applications regardless of the expected environment (desktop/local or cloud).
+## 2024-05-24 - DoS Risk & Race Conditions in Async Python API State
+**Vulnerability:** Fast API global registry dictionaries lacking a pre-allocation placeholder allowed race conditions on concurrent API endpoints, bypassing single-instance checks and instantiating multiple external processes simultaneously. The endpoints also invoked blocking disk I/O synchronously.
+**Learning:** Checking for state then doing `await` without pre-reserving the dictionary key allows other requests to slip past. Asyncio endpoints must use `await asyncio.to_thread()` for blocking disk I/O, otherwise they stall the whole event loop.
+**Prevention:** Insert a `None` placeholder in the active state registry before `await`ing any setup operation. Catch initialization errors in `BaseException` blocks to safely cleanup state, and offload CPU or disk intensive tasks to threads using `asyncio.to_thread`.
