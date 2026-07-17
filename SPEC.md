@@ -175,3 +175,5 @@ out of their intended shell arguments.
 ### API Security Updates
 
 - The FastAPI server (`src/bitnet_launcher/api.py`) was updated to include an HTTP middleware (`add_security_headers`) that enforces essential security headers on all responses, including `Content-Security-Policy`, `Strict-Transport-Security`, `X-Content-Type-Options`, `X-Frame-Options`, and `X-XSS-Protection`. This mitigates potential cross-site risks when the local API is running.
+### API Performance Updates
+- Wrapped synchronous `discover_models` disk I/O in `await asyncio.to_thread(...)` within the FastAPI endpoints (`/models` and `/chat/start`) in `api.py`. This prevents the blocking `os.scandir` operations from halting the Uvicorn asyncio event loop, drastically improving concurrent request handling and overall API responsiveness.
