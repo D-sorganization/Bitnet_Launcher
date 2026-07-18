@@ -9,6 +9,10 @@ on:
 env:
   UV_HTTP_TIMEOUT: "120"
 
+concurrency:
+  group: ${{ github.workflow }}-${{ github.ref }}
+  cancel-in-progress: true
+
 jobs:
   quality-gate:
     timeout-minutes: 30
