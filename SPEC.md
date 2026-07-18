@@ -175,3 +175,4 @@ out of their intended shell arguments.
 ### API Security Updates
 
 - The FastAPI server (`src/bitnet_launcher/api.py`) was updated to include an HTTP middleware (`add_security_headers`) that enforces essential security headers on all responses, including `Content-Security-Policy`, `Strict-Transport-Security`, `X-Content-Type-Options`, `X-Frame-Options`, and `X-XSS-Protection`. This mitigates potential cross-site risks when the local API is running.
+- Refactored `api.py` endpoints to mitigate a Denial of Service (DoS) and race condition vulnerability. The file scanning step `discover_models` was wrapped in `asyncio.to_thread()` to unblock the event loop, and a global dictionary lock utilizing `None` as a placeholder was applied to `active_runners` to reject concurrent duplicates properly.
