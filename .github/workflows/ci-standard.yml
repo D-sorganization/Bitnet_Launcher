@@ -18,6 +18,8 @@ jobs:
           version: "latest"
       - name: Sync dependencies
         run: uv sync --extra dev --extra hub --frozen
+        env:
+          UV_HTTP_TIMEOUT: 120
       - name: Lint
         run: uv run ruff check src/ tests/
       - name: Format check
@@ -37,6 +39,8 @@ jobs:
         run: sudo apt-get install -y --no-install-recommends libgles2 libegl1 libgl1
       - name: Sync dependencies
         run: uv sync --extra dev --extra hub --frozen
+        env:
+          UV_HTTP_TIMEOUT: 120
       - name: Run tests
         shell: bash
         run: uv run pytest tests/ -v --tb=short
