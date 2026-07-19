@@ -174,4 +174,6 @@ out of their intended shell arguments.
 
 ### API Security Updates
 
+- The FastAPI endpoints `POST /chat/start` and `POST /chat/send` were updated to use Pydantic models in the request body (`ChatStartRequest` and `ChatSendRequest`) rather than accepting URL query parameters. This enforces a `Content-Type: application/json` payload requirement on clients, ensuring that modern browsers send a CORS preflight request (OPTIONS) and protecting the local endpoints from Cross-Site Request Forgery (CSRF) via simple requests.
 - The FastAPI server (`src/bitnet_launcher/api.py`) was updated to include an HTTP middleware (`add_security_headers`) that enforces essential security headers on all responses, including `Content-Security-Policy`, `Strict-Transport-Security`, `X-Content-Type-Options`, `X-Frame-Options`, and `X-XSS-Protection`. This mitigates potential cross-site risks when the local API is running.
+- Fixed a concurrency Denial of Service (DoS) vulnerability in the `/chat/start` FastAPI endpoint where concurrent parallel requests for the same model could bypass implicit limits and instantiate duplicate `llama-cli` processes, leading to Out of Memory (OOM) errors. This was resolved by implementing an async spin-lock mechanism using a `None` placeholder in the `active_runners` registry during initialization, properly ensuring error-path cleanup of the lock.
