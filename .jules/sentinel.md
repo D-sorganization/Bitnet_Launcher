@@ -69,3 +69,9 @@
 **Vulnerability:** The FastAPI server embedded in the desktop application lacked standard HTTP security headers (CSP, X-Content-Type-Options, etc).
 **Learning:** Even when a local API is intended to be used by a desktop frontend running on localhost, missing security headers can still expose the application to cross-site risks if a malicious site attempts to interact with the localhost API (e.g. CSRF via external origin).
 **Prevention:** Always implement a security header middleware on all FastAPI applications regardless of the expected environment (desktop/local or cloud).
+
+## 2026-06-15 - Prevent Concurrent Resource Exhaustion in Async APIs
+
+**Vulnerability:** The FastAPI endpoint `/chat/start` initialized expensive local runner processes dynamically without concurrency limits or locks. Because `active_runners[request.model_name] = runner` was assigned *after* `await runner.start()`, parallel requests for the same model could bypass checks and spin up multiple concurrent runners, leading to Out Of Memory (OOM) errors and race conditions.
+**Learning:** In async state registries where creation takes time (via `await`), subsequent parallel requests will not see the resource until the `await` returns. Setting a registry key *after* an async initialization causes a race condition where multiple requests initialize duplicate resources.
+**Prevention:** Immediately insert a pending placeholder (e.g., `None`) into the registry before `await`ing initialization. Any concurrent requests must check for this placeholder and `await asyncio.sleep(...)` until it resolves, and if an existing resource is replaced, it must be removed or set to `None` *before* `await old_runner.stop()` to prevent the context switch from admitting duplicate initializations.
