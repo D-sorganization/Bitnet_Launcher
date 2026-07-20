@@ -106,3 +106,8 @@
 
 **Learning:** When form fields use domain-specific jargon or technical hyperparameters (like "System Prompt", "Temperature", or "Context size"), non-technical users may not understand what they do.
 **Action:** Always add descriptive tooltips (`setToolTip()`) to both the input widget and its associated label to explain the purpose of complex settings in plain language, making the UI more intuitive for all users.
+
+## 2026-06-23 - Jargon Tooltips Propagation in Layout Helpers
+
+**Learning:** When form fields use domain-specific jargon or technical hyperparameters (like "System Prompt", "Temperature", or "Context size"), non-technical users may not understand what they do. While it is good practice to add tooltips to the input widgets, when using layout helper functions (like `_labeled_row`) that dynamically generate a `QLabel` for an input widget, the tooltip on the input widget is not automatically applied to the label. This means hovering over the label text won't show the explanation.
+**Action:** In PyQt6 layout helper functions that dynamically generate a `QLabel` for an input widget, programmatically copy the input's tooltip to the label (e.g., `if widget.toolTip(): lbl.setToolTip(widget.toolTip())`) so both elements display necessary jargon explanations on hover.
