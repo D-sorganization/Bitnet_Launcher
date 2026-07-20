@@ -114,6 +114,7 @@ out of their intended shell arguments.
 - All `QTextEdit` widgets (Settings Panel, Chat Panel, Setup Dialog log, Hub Dialog log) apply `setTabChangesFocus(True)` to prevent keyboard focus trapping and ensure accessibility.
 
 ### Performance Updates
+- Offloaded blocking disk I/O (`os.scandir`) to a thread pool via `asyncio.to_thread` in FastAPI endpoints (`/models` and `/chat/start`) to prevent blocking the asyncio event loop and improve API concurrency.
 
 - Debounced search input to avoid stuttering during rapid typing
 - Removed synchronous disk I/O (`Path.exists()`) checks from `_refresh_table` in `HubDialog` since it is already cached during `__init__`, preventing UI freezing during model filtering
