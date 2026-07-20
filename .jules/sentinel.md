@@ -69,3 +69,8 @@
 **Vulnerability:** The FastAPI server embedded in the desktop application lacked standard HTTP security headers (CSP, X-Content-Type-Options, etc).
 **Learning:** Even when a local API is intended to be used by a desktop frontend running on localhost, missing security headers can still expose the application to cross-site risks if a malicious site attempts to interact with the localhost API (e.g. CSRF via external origin).
 **Prevention:** Always implement a security header middleware on all FastAPI applications regardless of the expected environment (desktop/local or cloud).
+
+## 2024-05-27 - [API Concurrency and Blocking Event Loop]
+**Vulnerability:** The API had two denial of service (DoS) vulnerabilities: `discover_models` (which blocks on disk I/O) was being called synchronously in async endpoints blocking the event loop for all clients, and the `start_chat` endpoint lacked a concurrency lock, which allowed concurrent requests for the same model to bypass cleanup and leak overlapping memory allocation for runner processes.
+**Learning:** In `FastAPI` async endpoints, synchronous disk operations block the main thread and degrade throughput. Additionally, async state registries that manage heavy resources must explicitly handle concurrent overlapping initialization to prevent race conditions during `await` context switches.
+**Prevention:** Wrap synchronous blocking calls in `await asyncio.to_thread()` and use explicit state spin-locks (e.g. `None` placeholder) with strict error-handling (`try/except/finally`) for concurrent resource management.
