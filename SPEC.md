@@ -175,3 +175,5 @@ out of their intended shell arguments.
 ### API Security Updates
 
 - The FastAPI server (`src/bitnet_launcher/api.py`) was updated to include an HTTP middleware (`add_security_headers`) that enforces essential security headers on all responses, including `Content-Security-Policy`, `Strict-Transport-Security`, `X-Content-Type-Options`, `X-Frame-Options`, and `X-XSS-Protection`. This mitigates potential cross-site risks when the local API is running.
+
+- Modified the `_labeled_row` layout helper in `src/bitnet_launcher/gui/settings_panel.py` to automatically copy tooltips from the input widget to the generated label, improving discoverability of jargon explanations for non-technical users.
