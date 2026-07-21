@@ -119,6 +119,7 @@ out of their intended shell arguments.
 - Removed synchronous disk I/O (`Path.exists()`) checks from `_refresh_table` in `HubDialog` since it is already cached during `__init__`, preventing UI freezing during model filtering
 - Cached `QFont` and `QColor` instantiations in `HubDialog` to prevent redundant object creation during frequent UI refreshes
 - Batched updates to `QListWidget` inside `ModelPanel` using `setUpdatesEnabled(False)` to prevent synchronous layout recalculations and improve rendering performance during batch insertions.
+- Offloaded synchronous disk I/O (`os.scandir`) in the FastAPI endpoints to a thread pool using `asyncio.to_thread` to prevent blocking the asyncio event loop and improve API concurrency.
 
 ### Recent Security Updates
 
