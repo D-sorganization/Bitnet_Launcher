@@ -52,3 +52,7 @@
 
 **Learning:** In FastAPI, calling synchronous functions that perform disk I/O (like `os.scandir` in `discover_models`) inside an `async def` endpoint blocks the entire event loop, severely degrading API performance. Additionally, limiting concurrency by just checking a global registry (`active_runners`) before making async calls introduces race conditions, allowing parallel requests to bypass limits and cause OOM.
 **Action:** Wrap blocking I/O calls with `await asyncio.to_thread()` to offload them. For concurrency limits, insert a placeholder (`None`) in the registry immediately after the capacity check, before any `await` statements, and use `BaseException` to ensure placeholders are cleaned up on cancellation.
+
+## 2024-06-25 - Avoid redundant string evaluations in tight loops
+**Learning:** Calling `.lower()` multiple times in a generator expression on the same string (e.g. `any(f.name.lower().endswith(".gguf") and "tq2_0" in f.name.lower())`) causes redundant string allocations and method calls per iteration.
+**Action:** Use the walrus operator (`:=`) inside generator expressions to compute the value once and reuse it: `any((lname := f.name.lower()).endswith(".gguf") and "tq2_0" in lname)`.
