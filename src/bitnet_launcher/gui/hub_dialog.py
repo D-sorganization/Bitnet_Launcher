@@ -18,6 +18,7 @@ from pathlib import Path
 from PyQt6.QtCore import Qt, QThread, QTimer, pyqtSignal
 from PyQt6.QtGui import QColor, QFont, QTextCursor
 from PyQt6.QtWidgets import (
+    QAbstractItemView,
     QComboBox,
     QDialog,
     QFrame,
@@ -214,6 +215,7 @@ class HubDialog(QDialog):
         # Model table
         self._table = QTableWidget(0, 5)
         self._table.setAccessibleName("Available Models")
+        self._table.setSelectionMode(QAbstractItemView.SelectionMode.SingleSelection)
         self._table.setHorizontalHeaderLabels(
             ["Name", "Params", "Size (GB)", "Tags", "Status"]
         )
@@ -357,8 +359,8 @@ class HubDialog(QDialog):
                     # Path.iterdir() + glob
                     with os.scandir(model_dir) as it:
                         installed = any(
-                            f.name.lower().endswith(".gguf")
-                            and "tq2_0" in f.name.lower()
+                            (lname := f.name.lower()).endswith(".gguf")
+                            and "tq2_0" in lname
                             for f in it
                         )
 

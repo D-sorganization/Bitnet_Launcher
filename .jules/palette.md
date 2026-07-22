@@ -110,3 +110,17 @@
 
 **Learning:** When using layout helper functions (like `_labeled_row`) to dynamically generate `QLabel` instances for associated input widgets, the tooltips explicitly set on the input widgets (e.g., explaining domain-specific jargon) are only visible when hovering the input field itself. This misses an opportunity to increase the interactive hover area for helpful context.
 **Action:** In layout helper functions that pair a label with an input widget, always programmatically copy the input's tooltip to the label (e.g., `if widget.toolTip(): lbl.setToolTip(widget.toolTip())`) so both elements display the necessary explanations on hover, making the UI more intuitive.
+
+## 2024-07-07 - Propagating Input Tooltips to Jargon Labels
+
+**Learning:** When creating form layouts with helper functions (like `_labeled_row`) that associate a `QLabel` with an input widget containing domain-specific jargon (like "Temperature" or "Context size"), the input widget often has a helpful tooltip explaining the jargon. However, users might hover over the text label first, expecting an explanation. If the tooltip isn't duplicated on the label, they miss the context.
+**Action:** In PyQt6 layout helper functions that dynamically generate a `QLabel` for an input widget, programmatically copy the input's tooltip to the label (e.g., `if widget.toolTip(): lbl.setToolTip(widget.toolTip())`) so both elements display necessary jargon explanations on hover, increasing the tooltip discoverability.
+
+## 2026-06-23 - Shared Tooltips for Generated Labels
+
+**Learning:** When layout helper functions dynamically generate a `QLabel` for an input widget, the label often lacks the necessary domain-specific jargon explanations on hover, making it confusing for non-technical users.
+**Action:** In PyQt6 layout helper functions that dynamically generate a `QLabel` for an input widget, programmatically copy the input's tooltip to the label (e.g., `if widget.toolTip(): lbl.setToolTip(widget.toolTip())`) so both elements display necessary jargon explanations on hover.
+
+## 2024-05-14 - Tooltip Accessibility on Dynamic QLabels
+**Learning:** In PyQt6 layouts where helper functions generate a `QLabel` for an input widget, tooltips on the input widget are not automatically transferred to the `QLabel`. This creates an inconsistent experience where hovering over the descriptive label provides no explanation, while hovering over the input widget does. This is particularly problematic for jargon-heavy inputs (like inference hyperparameters).
+**Action:** When dynamically generating a `QLabel` paired with an input widget in a helper function, programmatically copy the input's tooltip to the label (e.g., `if widget.toolTip(): lbl.setToolTip(widget.toolTip())`). This ensures both elements display the necessary explanation on hover.

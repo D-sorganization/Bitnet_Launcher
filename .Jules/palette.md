@@ -9,3 +9,7 @@
 ## 2024-06-20 - Made QLabels Selectable For Copying File Paths
 **Learning:** By default, `QLabel` in PyQt6 does not allow users to select text. For informational text such as file paths or repository IDs in detail panes, this is frustrating because users often need to copy this information.
 **Action:** Always apply `setTextInteractionFlags(Qt.TextInteractionFlag.TextSelectableByMouse | Qt.TextInteractionFlag.LinksAccessibleByMouse)` to `QLabel` widgets that display important metadata like paths, URLs, or IDs.
+
+## 2026-06-21 - Enforced SingleSelection for Tables with Single-Target Actions
+**Learning:** In PyQt6 `QTableWidget`s, if the primary action (like downloading a model or editing a single entry) only supports operating on one item at a time, allowing multiple selection (the default) confuses users. They might select multiple rows and wonder why only one was affected.
+**Action:** Always explicitly restrict tables to single-row selection using `setSelectionMode(QTableWidget.SelectionMode.SingleSelection)` when the associated action does not support bulk operations.
