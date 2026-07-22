@@ -69,3 +69,9 @@
 **Vulnerability:** The FastAPI server embedded in the desktop application lacked standard HTTP security headers (CSP, X-Content-Type-Options, etc).
 **Learning:** Even when a local API is intended to be used by a desktop frontend running on localhost, missing security headers can still expose the application to cross-site risks if a malicious site attempts to interact with the localhost API (e.g. CSRF via external origin).
 **Prevention:** Always implement a security header middleware on all FastAPI applications regardless of the expected environment (desktop/local or cloud).
+
+## 2024-06-25 - [Prevent DoS via Event Loop Blocking and Async State Registry Race Conditions]
+
+**Vulnerability:** The FastAPI endpoints `/models` and `/chat/start` performed synchronous disk I/O (`os.scandir`) directly on the asyncio event loop, causing it to block and degrade concurrency. Furthermore, in `/chat/start`, multiple concurrent requests for the same `model_name` would silently overwrite the `LocalLlamaRunner` entry in the `active_runners` global registry without stopping the previous process, leading to a permanent process/memory leak (Denial of Service).
+**Learning:** In async applications, synchronous blocking operations must be offloaded to a thread pool, and when managing a global state registry of long-running resources (like processes), concurrent requests must be synchronized using spin-locks and explicitly cleaned up to prevent overlapping allocations and resource exhaustion.
+**Prevention:** Always wrap blocking calls with `await asyncio.to_thread()`. In async state registries, immediately insert a placeholder entry (e.g., `registry[key] = None`) to block concurrent duplicate requests, explicitly remove and `await old.stop()` the old resource before replacing it, and use a `try...except BaseException:` or `finally` block to remove the placeholder if an exception occurs.

@@ -2,6 +2,7 @@
 
 from __future__ import annotations
 
+import asyncio
 import logging
 from collections.abc import AsyncGenerator, Awaitable, Callable
 from contextlib import asynccontextmanager
@@ -81,7 +82,9 @@ class ChatSendRequest(BaseModel):
 @app.get("/models")
 async def list_models() -> list[ModelResponse]:
     """List all locally installed BitNet models."""
-    models: list[ModelInfo] = discover_models(config.models_dir)
+    models: list[ModelInfo] = await asyncio.to_thread(
+        discover_models, config.models_dir
+    )
     return [
         ModelResponse(
             name=m.name,
@@ -93,25 +96,46 @@ async def list_models() -> list[ModelResponse]:
 
 
 # Global registry to hold active runners (simplified for single-user local API)
-active_runners: dict[str, LocalLlamaRunner] = {}
+active_runners: dict[str, LocalLlamaRunner | None] = {}
 
 
 @app.post("/chat/start")
 async def start_chat(request: ChatStartRequest) -> StreamingResponse:
     """Start a chat session and stream the stdout using Server-Sent Events."""
-    models: list[ModelInfo] = discover_models(config.models_dir)
-    model = next((m for m in models if m.name == request.model_name), None)
-    if not model:
-        raise HTTPException(status_code=404, detail="Model not found")
+    # Spin-lock until any pending initialization for the same model completes
+    while (
+        request.model_name in active_runners
+        and active_runners[request.model_name] is None
+    ):
+        await asyncio.sleep(0.1)
 
-    runner = LocalLlamaRunner(
-        llama_cli=config.llama_cli,
-        bitnet_root=config.bitnet_root,
-    )
-    # Start process with default config for API
-    # You can extend this endpoint to accept config parameters
-    await runner.start(model, config=InferenceConfig(n_predict=512))
-    active_runners[request.model_name] = runner
+    # Secure the initialization slot
+    old_runner = active_runners.get(request.model_name)
+    active_runners[request.model_name] = None
+
+    try:
+        if old_runner is not None:
+            await old_runner.stop()
+
+        models: list[ModelInfo] = await asyncio.to_thread(
+            discover_models, config.models_dir
+        )
+        model = next((m for m in models if m.name == request.model_name), None)
+        if not model:
+            raise HTTPException(status_code=404, detail="Model not found")
+
+        runner = LocalLlamaRunner(
+            llama_cli=config.llama_cli,
+            bitnet_root=config.bitnet_root,
+        )
+        # Start process with default config for API
+        # You can extend this endpoint to accept config parameters
+        await runner.start(model, config=InferenceConfig(n_predict=512))
+        active_runners[request.model_name] = runner
+    except BaseException:
+        if active_runners.get(request.model_name) is None:
+            active_runners.pop(request.model_name, None)
+        raise
 
     async def event_generator() -> AsyncGenerator[str, None]:
         try:
@@ -119,8 +143,9 @@ async def start_chat(request: ChatStartRequest) -> StreamingResponse:
                 # Server-Sent Events format
                 yield f"data: {chunk}\n\n"
         finally:
+            if active_runners.get(request.model_name) is runner:
+                active_runners.pop(request.model_name, None)
             await runner.stop()
-            active_runners.pop(request.model_name, None)
 
     return StreamingResponse(event_generator(), media_type="text/event-stream")
 
