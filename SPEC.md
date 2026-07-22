@@ -115,6 +115,7 @@ out of their intended shell arguments.
 
 ### Performance Updates
 
+- Wrapped synchronous disk I/O operations (`discover_models`) inside FastAPI `async def` endpoints with `await asyncio.to_thread()` to prevent blocking the event loop and improve concurrent request throughput
 - Debounced search input to avoid stuttering during rapid typing
 - Removed synchronous disk I/O (`Path.exists()`) checks from `_refresh_table` in `HubDialog` since it is already cached during `__init__`, preventing UI freezing during model filtering
 - Cached `QFont` and `QColor` instantiations in `HubDialog` to prevent redundant object creation during frequent UI refreshes
