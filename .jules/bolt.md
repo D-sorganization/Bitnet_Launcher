@@ -47,3 +47,8 @@
 
 **Learning:** When using `os.scandir()` with short-circuiting iterators (like `any()` or `all()`), breaking early leaves the generator unexhausted. Relying on CPython's garbage collector to close the underlying directory file descriptor is risky and discouraged in production code.
 **Action:** Always wrap `os.scandir(path)` in a `with` context manager (e.g., `with os.scandir(path) as it:`) when the iteration might not consume all elements, ensuring explicit and safe cleanup of file handles.
+
+## 2024-06-25 - Async Event Loop Blocking & Concurrency Race Conditions
+
+**Learning:** In FastAPI, calling synchronous functions that perform disk I/O (like `os.scandir` in `discover_models`) inside an `async def` endpoint blocks the entire event loop, severely degrading API performance. Additionally, limiting concurrency by just checking a global registry (`active_runners`) before making async calls introduces race conditions, allowing parallel requests to bypass limits and cause OOM.
+**Action:** Wrap blocking I/O calls with `await asyncio.to_thread()` to offload them. For concurrency limits, insert a placeholder (`None`) in the registry immediately after the capacity check, before any `await` statements, and use `BaseException` to ensure placeholders are cleaned up on cancellation.

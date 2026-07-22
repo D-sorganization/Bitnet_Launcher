@@ -33,6 +33,8 @@ def _labeled_row(label: str, widget: QWidget) -> QHBoxLayout:
     lbl = QLabel(label)
     lbl.setFixedWidth(120)
     lbl.setBuddy(widget)
+    if widget.toolTip():
+        lbl.setToolTip(widget.toolTip())
     row.addWidget(lbl)
     row.addWidget(widget)
     return row

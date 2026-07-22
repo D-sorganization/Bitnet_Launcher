@@ -134,6 +134,7 @@ out of their intended shell arguments.
 - Added unit suffixes to numeric input fields (e.g., " threads" for CPU threads) in the settings panel to provide immediate, inline context and improve readability.
 - The "Send" button in the chat panel is now proactively disabled when the chat input is empty, and a tooltip has been added to explain that text is required to send a message.
 - Added descriptive tooltips to the "System prompt" field and label in the Settings Panel to explain its purpose to non-technical users.
+- Programmatically copied tooltips from input widgets to their generated buddy labels in the Settings Panel to increase the interactive hover area for jargon explanations.
 
 ### API Security Updates
 
@@ -175,3 +176,8 @@ out of their intended shell arguments.
 ### API Security Updates
 
 - The FastAPI server (`src/bitnet_launcher/api.py`) was updated to include an HTTP middleware (`add_security_headers`) that enforces essential security headers on all responses, including `Content-Security-Policy`, `Strict-Transport-Security`, `X-Content-Type-Options`, `X-Frame-Options`, and `X-XSS-Protection`. This mitigates potential cross-site risks when the local API is running.
+
+### Performance Updates
+
+- Offloaded synchronous `discover_models` disk I/O in the FastAPI `/models` and `/chat/start` endpoints to a background thread (`asyncio.to_thread`) to prevent blocking the async event loop and degrading server responsiveness.
+- Added a strict concurrency limit (max 1 active runner) to the `/chat/start` API endpoint to mitigate DoS risks from CPU and memory exhaustion (OOM), managed safely with `None` placeholders to prevent initialization race conditions.
