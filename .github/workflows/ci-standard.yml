@@ -7,7 +7,7 @@ on:
     types: [opened, synchronize, reopened, ready_for_review]
 
 env:
-  UV_HTTP_TIMEOUT: "120"
+  UV_HTTP_TIMEOUT: "300"
 
 concurrency:
   group: ${{ github.workflow }}-${{ github.ref }}
@@ -18,11 +18,12 @@ jobs:
     timeout-minutes: 30
     runs-on: d-sorg-fleet
     steps:
-      - uses: actions/checkout@v4.2.2
+      - uses: actions/checkout@v4
       - name: Install uv
         uses: astral-sh/setup-uv@v3
         with:
           version: "latest"
+          github-token: ${{ secrets.GITHUB_TOKEN }}
       - name: Sync dependencies
         run: uv sync --extra dev --extra hub --frozen
       - name: Lint
@@ -36,9 +37,11 @@ jobs:
     timeout-minutes: 30
     runs-on: d-sorg-fleet
     steps:
-      - uses: actions/checkout@v4.2.2
+      - uses: actions/checkout@v4
       - name: Install uv
         uses: astral-sh/setup-uv@v3
+        with:
+          github-token: ${{ secrets.GITHUB_TOKEN }}
       # Install Qt system libraries required by PyQt6 on headless CI
       - name: Install Qt system deps
         run: sudo apt-get install -y --no-install-recommends libgles2 libegl1 libgl1
