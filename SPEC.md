@@ -139,6 +139,8 @@ out of their intended shell arguments.
 
 ### API Security Updates
 
+- To provide defense-in-depth for the local FastAPI server, sensitive endpoints (e.g., `/chat/start`, `/chat/send`, `/models`) now implement opt-in authentication requiring an `X-API-Key` header if the `BITNET_API_KEY` environment variable is set.
+
 - The FastAPI endpoints `POST /chat/start` and `POST /chat/send` were updated to use Pydantic models in the request body (`ChatStartRequest` and `ChatSendRequest`) rather than accepting URL query parameters. This enforces a `Content-Type: application/json` payload requirement on clients, ensuring that modern browsers send a CORS preflight request (OPTIONS) and protecting the local endpoints from Cross-Site Request Forgery (CSRF) via simple requests.
 
 ### Settings Security Updates
@@ -175,6 +177,8 @@ out of their intended shell arguments.
 - Detail labels in the `ModelPanel` and `HubDialog` have been updated with `Qt.TextInteractionFlag.TextSelectableByMouse` and `Qt.TextInteractionFlag.LinksAccessibleByMouse` to allow users to select and copy text such as file paths and HuggingFace repo IDs.
 
 ### API Security Updates
+
+- To provide defense-in-depth for the local FastAPI server, sensitive endpoints (e.g., `/chat/start`, `/chat/send`, `/models`) now implement opt-in authentication requiring an `X-API-Key` header if the `BITNET_API_KEY` environment variable is set.
 
 - The FastAPI server (`src/bitnet_launcher/api.py`) was updated to include an HTTP middleware (`add_security_headers`) that enforces essential security headers on all responses, including `Content-Security-Policy`, `Strict-Transport-Security`, `X-Content-Type-Options`, `X-Frame-Options`, and `X-XSS-Protection`. This mitigates potential cross-site risks when the local API is running.
 
