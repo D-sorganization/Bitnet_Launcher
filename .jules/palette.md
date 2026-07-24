@@ -124,3 +124,7 @@
 ## 2024-05-14 - Tooltip Accessibility on Dynamic QLabels
 **Learning:** In PyQt6 layouts where helper functions generate a `QLabel` for an input widget, tooltips on the input widget are not automatically transferred to the `QLabel`. This creates an inconsistent experience where hovering over the descriptive label provides no explanation, while hovering over the input widget does. This is particularly problematic for jargon-heavy inputs (like inference hyperparameters).
 **Action:** When dynamically generating a `QLabel` paired with an input widget in a helper function, programmatically copy the input's tooltip to the label (e.g., `if widget.toolTip(): lbl.setToolTip(widget.toolTip())`). This ensures both elements display the necessary explanation on hover.
+
+## 2024-06-25 - Async Button Loading States in PyQt6
+**Learning:** PyQt doesn't offer built-in "loading" states for `QPushButton` like web frameworks do. Disabling the button during an async task (like downloading or building) prevents double-clicks, but providing immediate visual feedback by updating the button text (e.g. to `"⏳ Downloading..."`) greatly improves UX. However, updating the text also modifies how screen readers announce the button.
+**Action:** When temporarily changing a `QPushButton`'s text to include decorative emojis for a loading state, also update `setAccessibleName` to a clean, text-only equivalent (e.g. `"Downloading..."`). Always ensure the text and accessible name are restored in the success and error handlers (e.g. `finally:` block or completion signals).
