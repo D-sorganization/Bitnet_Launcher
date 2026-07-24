@@ -75,4 +75,8 @@ class LocalLlamaRunner:
                 await asyncio.wait_for(self._process.wait(), timeout=5.0)
             except TimeoutError:
                 self._process.kill()
-            self._process = None
+            except BaseException:
+                self._process.kill()
+                raise
+            finally:
+                self._process = None
