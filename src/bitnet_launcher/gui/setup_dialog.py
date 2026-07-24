@@ -345,8 +345,14 @@ class SetupDialog(QDialog):
         """Create and start an :class:`InstallerWorker`."""
         self._log.clear()
         self._btn_install.setEnabled(False)
+        if mode == _WorkerMode.INSTALL:
+            self._btn_install.setText("⏳ Installing...")
+            self._btn_install.setAccessibleName("Installing...")
         self._btn_install.setToolTip("An operation is currently in progress")
         self._btn_build.setEnabled(False)
+        if mode == _WorkerMode.BUILD:
+            self._btn_build.setText("⏳ Building...")
+            self._btn_build.setAccessibleName("Building...")
         self._btn_build.setToolTip("An operation is currently in progress")
         self._btn_close.setEnabled(False)
         self._btn_close.setToolTip("An operation is currently in progress")
@@ -371,10 +377,14 @@ class SetupDialog(QDialog):
     def _on_worker_finished(self) -> None:
         """Re-enable controls and refresh status after a successful run."""
         self._worker = None
+        self._btn_install.setText("&Install BitNet (git clone + pip)")
+        self._btn_install.setAccessibleName("Install BitNet")
         self._btn_install.setEnabled(True)
         self._btn_install.setToolTip(
             "Clone the BitNet repository and install Python dependencies"
         )
+        self._btn_build.setText("&Build BitNet (cmake)")
+        self._btn_build.setAccessibleName("Build BitNet")
         self._btn_close.setEnabled(True)
         self._btn_close.setToolTip("")
         self._append_log("\n--- Done ---")
@@ -384,10 +394,14 @@ class SetupDialog(QDialog):
     def _on_worker_error(self, message: str) -> None:
         """Handle worker failure."""
         self._worker = None
+        self._btn_install.setText("&Install BitNet (git clone + pip)")
+        self._btn_install.setAccessibleName("Install BitNet")
         self._btn_install.setEnabled(True)
         self._btn_install.setToolTip(
             "Clone the BitNet repository and install Python dependencies"
         )
+        self._btn_build.setText("&Build BitNet (cmake)")
+        self._btn_build.setAccessibleName("Build BitNet")
         self._btn_close.setEnabled(True)
         self._btn_close.setToolTip("")
         self._append_log(f"ERROR: {message}")
