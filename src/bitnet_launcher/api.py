@@ -3,11 +3,13 @@
 from __future__ import annotations
 
 import logging
+import os
 from collections.abc import AsyncGenerator, Awaitable, Callable
 from contextlib import asynccontextmanager
 
-from fastapi import FastAPI, HTTPException, Request, Response
+from fastapi import Depends, FastAPI, HTTPException, Request, Response, Security
 from fastapi.responses import StreamingResponse
+from fastapi.security.api_key import APIKeyHeader
 from pydantic import BaseModel, Field
 
 from bitnet_launcher.config import BitnetConfig, InferenceConfig
@@ -54,6 +56,19 @@ async def add_security_headers(
     return response
 
 
+api_key_header = APIKeyHeader(name="X-API-Key", auto_error=False)
+
+
+async def verify_api_key(api_key: str = Security(api_key_header)) -> None:
+    """Verify the API key if one is configured in the environment."""
+    expected_key = os.environ.get("BITNET_API_KEY")
+    if expected_key and api_key != expected_key:
+        raise HTTPException(
+            status_code=401,
+            detail="Invalid or missing API Key",
+        )
+
+
 import asyncio
 
 config = BitnetConfig()
@@ -80,7 +95,7 @@ class ChatSendRequest(BaseModel):
     message: str = Field(max_length=4096)
 
 
-@app.get("/models")
+@app.get("/models", dependencies=[Depends(verify_api_key)])
 async def list_models() -> list[ModelResponse]:
     """List all locally installed BitNet models."""
     models: list[ModelInfo] = await asyncio.to_thread(
@@ -100,7 +115,7 @@ async def list_models() -> list[ModelResponse]:
 active_runners: dict[str, LocalLlamaRunner] = {}
 
 
-@app.post("/chat/start")
+@app.post("/chat/start", dependencies=[Depends(verify_api_key)])
 async def start_chat(request: ChatStartRequest) -> StreamingResponse:
     """Start a chat session and stream the stdout using Server-Sent Events."""
     # ⚡ Bolt Optimization: Enforce concurrency limit to prevent DoS via CPU/memory
@@ -150,7 +165,7 @@ async def start_chat(request: ChatStartRequest) -> StreamingResponse:
     return StreamingResponse(event_generator(), media_type="text/event-stream")
 
 
-@app.post("/chat/send")
+@app.post("/chat/send", dependencies=[Depends(verify_api_key)])
 async def send_chat_message(request: ChatSendRequest) -> dict[str, str]:
     """Send a message to an active chat session."""
     runner = active_runners.get(request.model_name)

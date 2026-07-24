@@ -69,3 +69,9 @@
 **Vulnerability:** The FastAPI server embedded in the desktop application lacked standard HTTP security headers (CSP, X-Content-Type-Options, etc).
 **Learning:** Even when a local API is intended to be used by a desktop frontend running on localhost, missing security headers can still expose the application to cross-site risks if a malicious site attempts to interact with the localhost API (e.g. CSRF via external origin).
 **Prevention:** Always implement a security header middleware on all FastAPI applications regardless of the expected environment (desktop/local or cloud).
+
+## 2024-05-27 - [SECURITY ENHANCEMENT] API Key Authentication for Local API
+
+**Vulnerability:** The local FastAPI server (`/chat/start`, `/chat/send`, `/models`) had no authentication mechanism. While running on localhost, lacking authentication can expose the system if a local process or a cross-origin vulnerability bypasses CORS, allowing unauthorized interaction with the BitNet LLM processes.
+**Learning:** Adding an opt-in API Key verification ensures defense-in-depth for local APIs without breaking out-of-the-box developer experience. If `BITNET_API_KEY` is present in the environment, endpoints require the `X-API-Key` header.
+**Prevention:** Implement `fastapi.security.APIKeyHeader` as a dependency on sensitive endpoints. Using `auto_error=False` allows handling logic where authentication might be optional or conditionally enforced based on environment variables.
