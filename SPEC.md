@@ -187,3 +187,9 @@ out of their intended shell arguments.
 - Offloaded synchronous `discover_models` disk I/O in the FastAPI `/models` and `/chat/start` endpoints to a background thread (`asyncio.to_thread`) to prevent blocking the async event loop and degrading server responsiveness.
 - Added a strict concurrency limit (max 1 active runner) to the `/chat/start` API endpoint to mitigate DoS risks from CPU and memory exhaustion (OOM), managed safely with `None` placeholders to prevent initialization race conditions.
 - Replaced the text on the download, install, and build buttons with a temporary loading state (including an hourglass emoji) and updated the accessible name for screen readers while background worker tasks are running, restoring them once the tasks complete or fail.
+
+### UX Updates
+
+- Added a `QLabel` with a native keyboard shortcut (`&Directory:`) for the `BitNet Root` path input in `SetupDialog`, linked via `setBuddy` for improved keyboard navigation.
+- Added descriptive tooltips to the tag filter `QComboBox` and search `QLineEdit` in `HubDialog`.
+- Propagated tooltips from input elements to their corresponding buddy labels in `SetupDialog` and `HubDialog` to ensure hover context is always discoverable.
