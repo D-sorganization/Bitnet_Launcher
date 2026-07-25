@@ -183,6 +183,11 @@ class HubDialog(QDialog):
         self._tag_combo = QComboBox()
         self._tag_combo.setAccessibleName("Filter by tag")
         lbl_filter.setBuddy(self._tag_combo)
+        self._tag_combo.setToolTip(
+            "Filter the model list by specific capabilities or sizes"
+        )
+        if self._tag_combo.toolTip():
+            lbl_filter.setToolTip(self._tag_combo.toolTip())
         self._tag_combo.setFixedWidth(140)
         self._tag_combo.currentIndexChanged.connect(self._refresh_table)
         filter_row.addWidget(self._tag_combo)
@@ -206,6 +211,9 @@ class HubDialog(QDialog):
         lbl_search.setBuddy(self._search)
         self._search.setAccessibleName("Search models")
         self._search.setPlaceholderText("Search by name…")
+        self._search.setToolTip("Filter models by name")
+        if self._search.toolTip():
+            lbl_search.setToolTip(self._search.toolTip())
         self._search.setClearButtonEnabled(True)
         self._search.textChanged.connect(self._search_timer.start)
         filter_row.addWidget(self._search)

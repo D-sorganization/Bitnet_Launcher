@@ -128,3 +128,7 @@
 ## 2024-06-25 - Async Button Loading States in PyQt6
 **Learning:** PyQt doesn't offer built-in "loading" states for `QPushButton` like web frameworks do. Disabling the button during an async task (like downloading or building) prevents double-clicks, but providing immediate visual feedback by updating the button text (e.g. to `"⏳ Downloading..."`) greatly improves UX. However, updating the text also modifies how screen readers announce the button.
 **Action:** When temporarily changing a `QPushButton`'s text to include decorative emojis for a loading state, also update `setAccessibleName` to a clean, text-only equivalent (e.g. `"Downloading..."`). Always ensure the text and accessible name are restored in the success and error handlers (e.g. `finally:` block or completion signals).
+## 2025-06-25 - Form Labels and Tooltips
+
+**Learning:** When using horizontal layouts without a helper function (like in `SetupDialog` and `HubDialog`), `QLineEdit` and `QComboBox` inputs often lack associated descriptive `QLabel` components with proper keyboard shortcuts (`setBuddy`), and their tooltips are not shared. This reduces accessibility for screen reader and keyboard users and makes context less discoverable.
+**Action:** Always wrap standard form inputs with a `QLabel` containing an access key (e.g., `QLabel("&Directory:")`), explicitly link them using `lbl.setBuddy(input_widget)`, add a descriptive tooltip to the input, and ensure the tooltip is copied to the label (`lbl.setToolTip(input.toolTip())`).
