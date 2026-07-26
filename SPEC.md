@@ -140,6 +140,7 @@ out of their intended shell arguments.
 ### API Security Updates
 
 - To provide defense-in-depth for the local FastAPI server, sensitive endpoints (e.g., `/chat/start`, `/chat/send`, `/models`) now implement opt-in authentication requiring an `X-API-Key` header if the `BITNET_API_KEY` environment variable is set.
+- API key verification now uses a constant-time comparison (`secrets.compare_digest`) with UTF-8 encoded strings to prevent timing attacks against the authentication mechanism.
 
 - The FastAPI endpoints `POST /chat/start` and `POST /chat/send` were updated to use Pydantic models in the request body (`ChatStartRequest` and `ChatSendRequest`) rather than accepting URL query parameters. This enforces a `Content-Type: application/json` payload requirement on clients, ensuring that modern browsers send a CORS preflight request (OPTIONS) and protecting the local endpoints from Cross-Site Request Forgery (CSRF) via simple requests.
 
