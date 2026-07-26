@@ -75,3 +75,9 @@
 **Vulnerability:** The local FastAPI server (`/chat/start`, `/chat/send`, `/models`) had no authentication mechanism. While running on localhost, lacking authentication can expose the system if a local process or a cross-origin vulnerability bypasses CORS, allowing unauthorized interaction with the BitNet LLM processes.
 **Learning:** Adding an opt-in API Key verification ensures defense-in-depth for local APIs without breaking out-of-the-box developer experience. If `BITNET_API_KEY` is present in the environment, endpoints require the `X-API-Key` header.
 **Prevention:** Implement `fastapi.security.APIKeyHeader` as a dependency on sensitive endpoints. Using `auto_error=False` allows handling logic where authentication might be optional or conditionally enforced based on environment variables.
+
+## 2026-06-15 - [Prevent Timing Attacks on API Key Verification]
+
+**Vulnerability:** The `verify_api_key` function in `src/bitnet_launcher/api.py` compared the provided API key to the expected key using the `!=` operator. This simple equality check is vulnerable to timing attacks, where an attacker could theoretically infer the correct API key by measuring the response time, which varies depending on how many leading characters match.
+**Learning:** Security-sensitive string comparisons, such as passwords or API keys, should never use standard equality operators (`==` or `!=`). They must use a constant-time comparison function to prevent leaking information through execution time. Since `secrets.compare_digest` throws a TypeError if non-ASCII strings are provided, ensure values are encoded to bytes first.
+**Prevention:** Always use `secrets.compare_digest(val1.encode("utf-8"), val2.encode("utf-8"))` or `hmac.compare_digest` for cryptographic string comparisons.

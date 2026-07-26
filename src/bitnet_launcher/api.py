@@ -4,6 +4,7 @@ from __future__ import annotations
 
 import logging
 import os
+import secrets
 from collections.abc import AsyncGenerator, Awaitable, Callable
 from contextlib import asynccontextmanager
 
@@ -59,14 +60,17 @@ async def add_security_headers(
 api_key_header = APIKeyHeader(name="X-API-Key", auto_error=False)
 
 
-async def verify_api_key(api_key: str = Security(api_key_header)) -> None:
+async def verify_api_key(api_key: str | None = Security(api_key_header)) -> None:
     """Verify the API key if one is configured in the environment."""
     expected_key = os.environ.get("BITNET_API_KEY")
-    if expected_key and api_key != expected_key:
-        raise HTTPException(
-            status_code=401,
-            detail="Invalid or missing API Key",
-        )
+    if expected_key:
+        if api_key is None or not secrets.compare_digest(
+            api_key.encode("utf-8"), expected_key.encode("utf-8")
+        ):
+            raise HTTPException(
+                status_code=401,
+                detail="Invalid or missing API Key",
+            )
 
 
 import asyncio
