@@ -60,3 +60,7 @@
 ## 2024-07-23 - Avoid redundant string evaluations in list comprehensions
 **Learning:** Calling `.lower()` multiple times in a list comprehension on the same string (e.g. `[f for f in repo_files if f.lower().endswith(".gguf") and "tq2_0" in f.lower()]`) causes redundant string allocations and method calls per iteration, unlike generator expressions with `any()` where short-circuiting might avoid it.
 **Action:** Use the walrus operator (`:=`) inside list comprehensions to compute the value once and reuse it: `[f for f in repo_files if (lname := f.lower()).endswith(".gguf") and "tq2_0" in lname]`.
+## 2024-07-28 - Context Managers for os.scandir()
+
+**Learning:** `os.scandir()` returns a context manager that must be explicitly closed, otherwise underlying file descriptors may leak until CPython's garbage collector runs. Relying on garbage collection for unexhausted iterators or even fully exhausted ones is risky in performance-critical loops or servers.
+**Action:** Always wrap `os.scandir(path)` in a `with` context manager (e.g., `with os.scandir(path) as it:`) to ensure explicit and immediate cleanup of directory file descriptors.

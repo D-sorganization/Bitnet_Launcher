@@ -116,31 +116,38 @@ def discover_models(models_dir: Path) -> list[ModelInfo]:
 
     # ⚡ Bolt Optimization: os.scandir is ~4-5x faster than Path.iterdir() + glob
     # because it caches stat() results (like is_dir and file size) in the DirEntry
-    for model_entry in sorted(os.scandir(models_dir), key=lambda e: e.name):
-        if not model_entry.is_dir():
-            continue
+    with os.scandir(models_dir) as models_it:
+        for model_entry in sorted(models_it, key=lambda e: e.name):
+            if not model_entry.is_dir():
+                continue
 
-        candidates = []
-        for file_entry in os.scandir(model_entry.path):
-            if file_entry.name.lower().endswith(".gguf") and file_entry.is_file():
-                candidates.append(file_entry)
+            candidates = []
+            with os.scandir(model_entry.path) as file_it:
+                for file_entry in file_it:
+                    if (
+                        file_entry.name.lower().endswith(".gguf")
+                        and file_entry.is_file()
+                    ):
+                        candidates.append(file_entry)
 
-        if not candidates:
-            logger.debug("No .gguf files in %s — skipping", model_entry.path)
-            continue
+            if not candidates:
+                logger.debug("No .gguf files in %s — skipping", model_entry.path)
+                continue
 
-        candidates.sort(key=lambda e: e.name)
-        preferred = [f for f in candidates if "i2_s" in f.name]
-        chosen_entry = preferred[0] if preferred else candidates[0]
+            candidates.sort(key=lambda e: e.name)
+            preferred = [f for f in candidates if "i2_s" in f.name]
+            chosen_entry = preferred[0] if preferred else candidates[0]
 
-        size = chosen_entry.stat().st_size
-        if size < MIN_MODEL_BYTES:
-            logger.debug("Skipping %s — too small (%d bytes)", chosen_entry.name, size)
-            continue
+            size = chosen_entry.stat().st_size
+            if size < MIN_MODEL_BYTES:
+                logger.debug(
+                    "Skipping %s — too small (%d bytes)", chosen_entry.name, size
+                )
+                continue
 
-        chosen_path = Path(chosen_entry.path)
-        info = ModelInfo(name=model_entry.name, path=chosen_path, size_bytes=size)
-        found.append(info)
-        logger.debug("Discovered model: %s (%s)", info.name, _fmt_bytes(size))
+            chosen_path = Path(chosen_entry.path)
+            info = ModelInfo(name=model_entry.name, path=chosen_path, size_bytes=size)
+            found.append(info)
+            logger.debug("Discovered model: %s (%s)", info.name, _fmt_bytes(size))
 
     return found
