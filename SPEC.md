@@ -120,6 +120,7 @@ out of their intended shell arguments.
 - Cached `QFont` and `QColor` instantiations in `HubDialog` to prevent redundant object creation during frequent UI refreshes
 - Batched updates to `QListWidget` inside `ModelPanel` using `setUpdatesEnabled(False)` to prevent synchronous layout recalculations and improve rendering performance during batch insertions.
 - Used the walrus operator to avoid redundant string evaluations during model file filtering in the Hub.
+- Model discovery wraps `os.scandir()` calls in context managers so directory iterators close promptly after scanning for `.gguf` model files.
 
 ### Recent Security Updates
 
@@ -188,3 +189,4 @@ out of their intended shell arguments.
 - Offloaded synchronous `discover_models` disk I/O in the FastAPI `/models` and `/chat/start` endpoints to a background thread (`asyncio.to_thread`) to prevent blocking the async event loop and degrading server responsiveness.
 - Added a strict concurrency limit (max 1 active runner) to the `/chat/start` API endpoint to mitigate DoS risks from CPU and memory exhaustion (OOM), managed safely with `None` placeholders to prevent initialization race conditions.
 - Replaced the text on the download, install, and build buttons with a temporary loading state (including an hourglass emoji) and updated the accessible name for screen readers while background worker tasks are running, restoring them once the tasks complete or fail.
+- Wrapped `os.scandir` calls in `src/bitnet_launcher/models.py` with `with` context managers to guarantee proper file descriptor closure and prevent resource leaks.
