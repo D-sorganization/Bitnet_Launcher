@@ -120,6 +120,7 @@ out of their intended shell arguments.
 - Cached `QFont` and `QColor` instantiations in `HubDialog` to prevent redundant object creation during frequent UI refreshes
 - Batched updates to `QListWidget` inside `ModelPanel` using `setUpdatesEnabled(False)` to prevent synchronous layout recalculations and improve rendering performance during batch insertions.
 - Used the walrus operator to avoid redundant string evaluations during model file filtering in the Hub.
+- Model discovery wraps `os.scandir()` calls in context managers so directory iterators close promptly after scanning for `.gguf` model files.
 
 ### Recent Security Updates
 
