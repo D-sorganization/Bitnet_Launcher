@@ -161,7 +161,9 @@ async def start_chat(request: ChatStartRequest) -> StreamingResponse:
         try:
             async for chunk in runner.stream_stdout():
                 # Server-Sent Events format
-                yield f"data: {chunk}\n\n"
+                # Sentinel Fix: Prevent SSE injection from multi-line output
+                sanitized_chunk = chunk.replace("\n", "\ndata: ")
+                yield f"data: {sanitized_chunk}\n\n"
         finally:
             await runner.stop()
             active_runners.pop(request.model_name, None)

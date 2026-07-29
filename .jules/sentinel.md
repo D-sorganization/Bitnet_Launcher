@@ -81,3 +81,8 @@
 **Vulnerability:** The `verify_api_key` function in `src/bitnet_launcher/api.py` compared the provided API key to the expected key using the `!=` operator. This simple equality check is vulnerable to timing attacks, where an attacker could theoretically infer the correct API key by measuring the response time, which varies depending on how many leading characters match.
 **Learning:** Security-sensitive string comparisons, such as passwords or API keys, should never use standard equality operators (`==` or `!=`). They must use a constant-time comparison function to prevent leaking information through execution time. Since `secrets.compare_digest` throws a TypeError if non-ASCII strings are provided, ensure values are encoded to bytes first.
 **Prevention:** Always use `secrets.compare_digest(val1.encode("utf-8"), val2.encode("utf-8"))` or `hmac.compare_digest` for cryptographic string comparisons.
+
+## 2026-06-25 - [Prevent SSE Injection from Multi-line output]
+**Vulnerability:** Untrusted string output generated from the AI model was sent directly in a Server-Sent Events (SSE) stream using `f"data: {chunk}\n\n"`. Since the chunk contained literal newline characters, this allowed arbitrary fields (like `event: malicious`) to be injected into the SSE response stream if the generated text was manipulated.
+**Learning:** The Server-Sent Events specification splits fields on `\n`. Any multiline string emitted over SSE without encoding must have every new line prefixed with `data: ` to prevent the newlines from being interpreted as the end of the field or event.
+**Prevention:** Sanitize untrusted chunks that are intended for SSE streams by explicitly replacing `\n` with `\ndata: ` before yielding them.
