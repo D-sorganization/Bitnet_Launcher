@@ -97,6 +97,7 @@
 
 **Learning:** In PyQt6, `QTableWidget` allows multi-selection by default (e.g. holding Shift/Ctrl), even when `SelectionBehavior` is set to `SelectRows`. If the intended UX only supports a single action at a time (like downloading one model, or previewing one item's details in a label), allowing multi-selection causes a confusing disconnect between the highlighted state and the actual executed action.
 **Action:** When a table's primary action only applies to one item, explicitly enforce single selection by adding `.setSelectionMode(QTableWidget.SelectionMode.SingleSelection)`.
+
 ## 2026-06-12 - Disable Native Focus Ring in Custom Stylesheets
 
 **Learning:** When applying an inline custom stylesheet to an interactive or focusable widget (like `QTextEdit`), defining a `:focus` pseudo-class with a custom border is necessary for keyboard accessibility. However, without explicitly removing the native outline, some OS environments will render a dotted native focus ring overlapping the custom border, causing visual clutter.
@@ -106,6 +107,7 @@
 
 **Learning:** When form fields use domain-specific jargon or technical hyperparameters (like "System Prompt", "Temperature", or "Context size"), non-technical users may not understand what they do.
 **Action:** Always add descriptive tooltips (`setToolTip()`) to both the input widget and its associated label to explain the purpose of complex settings in plain language, making the UI more intuitive for all users.
+
 ## 2026-07-18 - Copying Input Tooltips to Helper Labels
 
 **Learning:** When using layout helper functions (like `_labeled_row`) to dynamically generate `QLabel` instances for associated input widgets, the tooltips explicitly set on the input widgets (e.g., explaining domain-specific jargon) are only visible when hovering the input field itself. This misses an opportunity to increase the interactive hover area for helpful context.
@@ -122,12 +124,15 @@
 **Action:** In PyQt6 layout helper functions that dynamically generate a `QLabel` for an input widget, programmatically copy the input's tooltip to the label (e.g., `if widget.toolTip(): lbl.setToolTip(widget.toolTip())`) so both elements display necessary jargon explanations on hover.
 
 ## 2024-05-14 - Tooltip Accessibility on Dynamic QLabels
+
 **Learning:** In PyQt6 layouts where helper functions generate a `QLabel` for an input widget, tooltips on the input widget are not automatically transferred to the `QLabel`. This creates an inconsistent experience where hovering over the descriptive label provides no explanation, while hovering over the input widget does. This is particularly problematic for jargon-heavy inputs (like inference hyperparameters).
 **Action:** When dynamically generating a `QLabel` paired with an input widget in a helper function, programmatically copy the input's tooltip to the label (e.g., `if widget.toolTip(): lbl.setToolTip(widget.toolTip())`). This ensures both elements display the necessary explanation on hover.
 
 ## 2024-06-25 - Async Button Loading States in PyQt6
+
 **Learning:** PyQt doesn't offer built-in "loading" states for `QPushButton` like web frameworks do. Disabling the button during an async task (like downloading or building) prevents double-clicks, but providing immediate visual feedback by updating the button text (e.g. to `"⏳ Downloading..."`) greatly improves UX. However, updating the text also modifies how screen readers announce the button.
 **Action:** When temporarily changing a `QPushButton`'s text to include decorative emojis for a loading state, also update `setAccessibleName` to a clean, text-only equivalent (e.g. `"Downloading..."`). Always ensure the text and accessible name are restored in the success and error handlers (e.g. `finally:` block or completion signals).
+
 ## 2025-06-25 - Form Labels and Tooltips
 
 **Learning:** When using horizontal layouts without a helper function (like in `SetupDialog` and `HubDialog`), `QLineEdit` and `QComboBox` inputs often lack associated descriptive `QLabel` components with proper keyboard shortcuts (`setBuddy`), and their tooltips are not shared. This reduces accessibility for screen reader and keyboard users and makes context less discoverable.

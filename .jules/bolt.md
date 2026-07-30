@@ -54,12 +54,15 @@
 **Action:** Wrap blocking I/O calls with `await asyncio.to_thread()` to offload them. For concurrency limits, insert a placeholder (`None`) in the registry immediately after the capacity check, before any `await` statements, and use `BaseException` to ensure placeholders are cleaned up on cancellation.
 
 ## 2024-06-25 - Avoid redundant string evaluations in tight loops
+
 **Learning:** Calling `.lower()` multiple times in a generator expression on the same string (e.g. `any(f.name.lower().endswith(".gguf") and "tq2_0" in f.name.lower())`) causes redundant string allocations and method calls per iteration.
 **Action:** Use the walrus operator (`:=`) inside generator expressions to compute the value once and reuse it: `any((lname := f.name.lower()).endswith(".gguf") and "tq2_0" in lname)`.
 
 ## 2024-07-23 - Avoid redundant string evaluations in list comprehensions
+
 **Learning:** Calling `.lower()` multiple times in a list comprehension on the same string (e.g. `[f for f in repo_files if f.lower().endswith(".gguf") and "tq2_0" in f.lower()]`) causes redundant string allocations and method calls per iteration, unlike generator expressions with `any()` where short-circuiting might avoid it.
 **Action:** Use the walrus operator (`:=`) inside list comprehensions to compute the value once and reuse it: `[f for f in repo_files if (lname := f.lower()).endswith(".gguf") and "tq2_0" in lname]`.
+
 ## 2024-07-28 - Context Managers for os.scandir()
 
 **Learning:** `os.scandir()` returns a context manager that must be explicitly closed, otherwise underlying file descriptors may leak until CPython's garbage collector runs. Relying on garbage collection for unexhausted iterators or even fully exhausted ones is risky in performance-critical loops or servers.
