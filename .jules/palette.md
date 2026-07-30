@@ -140,5 +140,5 @@
 
 ## 2026-10-24 - Dynamic Tooltips for Disabled Text Inputs
 
-**Learning:** We often add dynamic tooltips explaining *why* an action button is disabled during an async operation, but we forget to apply the same explanatory tooltips to the associated text inputs (like chat input fields) that are also disabled. Without this, users hovering over the disabled input field receive no context or are shown stale "active" state tooltips.
+**Learning:** We often add dynamic tooltips explaining _why_ an action button is disabled during an async operation, but we forget to apply the same explanatory tooltips to the associated text inputs (like chat input fields) that are also disabled. Without this, users hovering over the disabled input field receive no context or are shown stale "active" state tooltips.
 **Action:** When conditionally disabling an input field (e.g. `QLineEdit`) during an operation, update its tooltip to explain the disabled state (e.g. "Wait for the current response to finish"), and clear or restore it when the field is re-enabled.
