@@ -247,6 +247,7 @@ class HubDialog(QDialog):
         self._table.setSelectionMode(QTableWidget.SelectionMode.SingleSelection)
         self._table.setEditTriggers(QTableWidget.EditTrigger.NoEditTriggers)
         self._table.setAlternatingRowColors(True)
+        self._table.setToolTip("Double-click a model to download it")
 
         selection_model = self._table.selectionModel()
         if selection_model is not None:

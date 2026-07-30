@@ -137,3 +137,8 @@
 
 **Learning:** We often add dynamic tooltips explaining *why* an action button is disabled during an async operation, but we forget to apply the same explanatory tooltips to the associated text inputs (like chat input fields) that are also disabled. Without this, users hovering over the disabled input field receive no context or are shown stale "active" state tooltips.
 **Action:** When conditionally disabling an input field (e.g. `QLineEdit`) during an operation, update its tooltip to explain the disabled state (e.g. "Wait for the current response to finish"), and clear or restore it when the field is re-enabled.
+
+## 2026-10-25 - Double-Click Discoverability in Lists/Tables
+
+**Learning:** Hidden interactions like double-clicking a table row or list item to perform a primary action are often undiscoverable to new users, even if they are standard desktop patterns (via `itemActivated`).
+**Action:** When a `QTableWidget` or `QListWidget` supports `itemActivated` (e.g., double-click or Enter) for a primary action, always add a descriptive tooltip (`setToolTip`) to the widget hinting at this functionality to improve discoverability.
