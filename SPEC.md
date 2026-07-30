@@ -190,3 +190,4 @@ out of their intended shell arguments.
 - Added a strict concurrency limit (max 1 active runner) to the `/chat/start` API endpoint to mitigate DoS risks from CPU and memory exhaustion (OOM), managed safely with `None` placeholders to prevent initialization race conditions.
 - Replaced the text on the download, install, and build buttons with a temporary loading state (including an hourglass emoji) and updated the accessible name for screen readers while background worker tasks are running, restoring them once the tasks complete or fail.
 - Wrapped `os.scandir` calls in `src/bitnet_launcher/models.py` with `with` context managers to guarantee proper file descriptor closure and prevent resource leaks.
+- Added a tooltip to the model table in `HubDialog` hinting that double-clicking a row downloads the model, improving the discoverability of this interaction.
