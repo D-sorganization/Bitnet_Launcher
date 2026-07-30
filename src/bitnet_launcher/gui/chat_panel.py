@@ -81,9 +81,11 @@ class ChatPanel(QWidget):
         self._input.setEnabled(value)
 
         if value:
+            self._input.setToolTip("")
             self._input.setFocus()
             self._update_send_button_state()
         else:
+            self._input.setToolTip("Wait for the current response to finish")
             self._btn_send.setEnabled(False)
             self._btn_send.setToolTip("Wait for the current response to finish")
 
@@ -216,6 +218,7 @@ class ChatPanel(QWidget):
         self._input.setAccessibleName("Message input")
         self._input.setClearButtonEnabled(True)
         self._input.setEnabled(False)
+        self._input.setToolTip("Start a chat session to begin typing")
         self._input.setFont(QFont("Consolas", 10))
         self._input.returnPressed.connect(self._on_submit)
         self._input.textChanged.connect(self._update_send_button_state)
@@ -225,7 +228,7 @@ class ChatPanel(QWidget):
         self._btn_send.setAccessibleName("Send")
         self._btn_send.setFixedWidth(70)
         self._btn_send.setEnabled(False)
-        self._btn_send.setToolTip("Wait for the current response to finish")
+        self._btn_send.setToolTip("Start a chat session to send messages")
         self._btn_send.clicked.connect(self._on_submit)
         input_row.addWidget(self._btn_send)
 

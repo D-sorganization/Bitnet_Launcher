@@ -136,7 +136,8 @@ class BitNetLauncher(QMainWindow):
         self._btn_stop.setEnabled(False)
         self._btn_stop.setToolTip("No active chat session to stop")
         self._btn_stop.setStyleSheet(
-            f"QPushButton {{ color: {t.RED}; }}"
+            f"QPushButton {{ color: {t.RED}; border-color: {t.RED}; }}"
+            f"QPushButton:hover {{ background: #3a1e28; }}"
             f"QPushButton:disabled {{ color: #585b70; border-color: {t.OVERLAY}; }}"
             f"QPushButton:focus {{ border: 1px solid {t.ACCENT}; outline: none; }}"
         )
