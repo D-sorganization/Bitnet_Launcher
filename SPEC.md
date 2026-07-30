@@ -184,6 +184,8 @@ out of their intended shell arguments.
 
 - The FastAPI server (`src/bitnet_launcher/api.py`) was updated to include an HTTP middleware (`add_security_headers`) that enforces essential security headers on all responses, including `Content-Security-Policy`, `Strict-Transport-Security`, `X-Content-Type-Options`, `X-Frame-Options`, and `X-XSS-Protection`. This mitigates potential cross-site risks when the local API is running.
 
+- Replaced newlines with `\ndata: ` in FastAPI Server-Sent Events output chunks to prevent SSE injection vulnerabilities when streaming multiline untrusted data (e.g., AI model output).
+
 ### Performance Updates
 
 - Offloaded synchronous `discover_models` disk I/O in the FastAPI `/models` and `/chat/start` endpoints to a background thread (`asyncio.to_thread`) to prevent blocking the async event loop and degrading server responsiveness.
