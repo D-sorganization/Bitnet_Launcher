@@ -223,6 +223,7 @@ class HubDialog(QDialog):
         # Model table
         self._table = QTableWidget(0, 5)
         self._table.setAccessibleName("Available Models")
+        self._table.setToolTip("Double-click or press Enter to download model")
         self._table.setSelectionMode(QAbstractItemView.SelectionMode.SingleSelection)
         self._table.setHorizontalHeaderLabels(
             ["Name", "Params", "Size (GB)", "Tags", "Status"]

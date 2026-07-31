@@ -142,3 +142,7 @@
 
 **Learning:** We often add dynamic tooltips explaining _why_ an action button is disabled during an async operation, but we forget to apply the same explanatory tooltips to the associated text inputs (like chat input fields) that are also disabled. Without this, users hovering over the disabled input field receive no context or are shown stale "active" state tooltips.
 **Action:** When conditionally disabling an input field (e.g. `QLineEdit`) during an operation, update its tooltip to explain the disabled state (e.g. "Wait for the current response to finish"), and clear or restore it when the field is re-enabled.
+
+## 2026-07-31 - Adding Tooltips for Item Activation
+**Learning:** In PyQt applications, when a `QTableWidget` or `QListWidget` uses `itemActivated` (e.g., for double-click or Enter key actions) to perform a primary action, it is not inherently obvious to the user.
+**Action:** Always add a descriptive tooltip (`setToolTip`) to the widget to explicitly hint at this functionality (e.g., "Double-click or press Enter to download model") and improve user discoverability.

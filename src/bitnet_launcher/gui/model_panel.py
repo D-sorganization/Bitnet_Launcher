@@ -79,6 +79,7 @@ class ModelPanel(QWidget):
 
         self._list = QListWidget()
         self._list.setAccessibleName("Model list")
+        self._list.setToolTip("Double-click or press Enter to start chat")
         self._list.setFont(QFont("Consolas", 10))
 
         # ⚡ Bolt Optimization: Suspend list updates during batch insertions
