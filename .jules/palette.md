@@ -142,3 +142,7 @@
 
 **Learning:** We often add dynamic tooltips explaining _why_ an action button is disabled during an async operation, but we forget to apply the same explanatory tooltips to the associated text inputs (like chat input fields) that are also disabled. Without this, users hovering over the disabled input field receive no context or are shown stale "active" state tooltips.
 **Action:** When conditionally disabling an input field (e.g. `QLineEdit`) during an operation, update its tooltip to explain the disabled state (e.g. "Wait for the current response to finish"), and clear or restore it when the field is re-enabled.
+
+## 2026-08-01 - Item Activation Tooltips
+**Learning:** Using `itemActivated` for primary actions needs a descriptive tooltip to improve discoverability.
+**Action:** Always add a descriptive tooltip (`setToolTip`) to widgets utilizing `itemActivated`.
