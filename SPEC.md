@@ -137,6 +137,7 @@ out of their intended shell arguments.
 - The "Send" button in the chat panel is now proactively disabled when the chat input is empty, and a tooltip has been added to explain that text is required to send a message.
 - Added descriptive tooltips to the "System prompt" field and label in the Settings Panel to explain its purpose to non-technical users.
 - Programmatically copied tooltips from input widgets to their generated buddy labels in the Settings Panel to increase the interactive hover area for jargon explanations.
+- Added tooltips to the Hub dialog's model table and Launcher window's model list to explicitly inform users that double-clicking or pressing Enter triggers a primary action (downloading or starting a chat).
 
 ### API Security Updates
 
