@@ -129,6 +129,7 @@ class ModelPanel(QWidget):
         # _update_detail before self._detail is created (AttributeError).
         self._list.currentRowChanged.connect(self._on_row_changed)
         self._list.itemActivated.connect(self._on_item_activated)
+        self._list.setToolTip("Double-click or press Enter to load model")
 
     def _on_item_activated(self, item: QListWidgetItem) -> None:
         row = self._list.row(item)

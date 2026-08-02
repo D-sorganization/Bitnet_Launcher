@@ -253,6 +253,7 @@ class HubDialog(QDialog):
             selection_model.selectionChanged.connect(self._on_selection_changed)
 
         self._table.itemActivated.connect(self._on_item_activated)
+        self._table.setToolTip("Double-click or press Enter to download")
 
         root.addWidget(self._table)
 
