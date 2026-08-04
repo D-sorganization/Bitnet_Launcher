@@ -193,12 +193,12 @@ class SetupDialog(QDialog):
         self._path_edit.editingFinished.connect(self._on_path_edited)
         path_layout.addWidget(self._path_edit)
 
-        btn_browse = QPushButton("…")
-        btn_browse.setAccessibleName("Browse for BitNet root directory")
-        btn_browse.setFixedWidth(32)
-        btn_browse.setToolTip("Choose BitNet root directory")
-        btn_browse.clicked.connect(self._browse_path)
-        path_layout.addWidget(btn_browse)
+        self._btn_browse = QPushButton("…")
+        self._btn_browse.setAccessibleName("Browse for BitNet root directory")
+        self._btn_browse.setFixedWidth(32)
+        self._btn_browse.setToolTip("Choose BitNet root directory")
+        self._btn_browse.clicked.connect(self._browse_path)
+        path_layout.addWidget(self._btn_browse)
 
         root.addWidget(path_group)
 
@@ -351,6 +351,10 @@ class SetupDialog(QDialog):
     def _run_worker(self, mode: _WorkerMode) -> None:
         """Create and start an :class:`InstallerWorker`."""
         self._log.clear()
+        self._path_edit.setEnabled(False)
+        self._path_edit.setToolTip("An operation is currently in progress")
+        self._btn_browse.setEnabled(False)
+        self._btn_browse.setToolTip("An operation is currently in progress")
         self._btn_install.setEnabled(False)
         if mode == _WorkerMode.INSTALL:
             self._btn_install.setText("⏳ Installing...")
@@ -384,6 +388,10 @@ class SetupDialog(QDialog):
     def _on_worker_finished(self) -> None:
         """Re-enable controls and refresh status after a successful run."""
         self._worker = None
+        self._path_edit.setEnabled(True)
+        self._path_edit.setToolTip("Absolute path to the BitNet installation directory")
+        self._btn_browse.setEnabled(True)
+        self._btn_browse.setToolTip("Choose BitNet root directory")
         self._btn_install.setText("&Install BitNet (git clone + pip)")
         self._btn_install.setAccessibleName("Install BitNet")
         self._btn_install.setEnabled(True)
@@ -401,6 +409,10 @@ class SetupDialog(QDialog):
     def _on_worker_error(self, message: str) -> None:
         """Handle worker failure."""
         self._worker = None
+        self._path_edit.setEnabled(True)
+        self._path_edit.setToolTip("Absolute path to the BitNet installation directory")
+        self._btn_browse.setEnabled(True)
+        self._btn_browse.setToolTip("Choose BitNet root directory")
         self._btn_install.setText("&Install BitNet (git clone + pip)")
         self._btn_install.setAccessibleName("Install BitNet")
         self._btn_install.setEnabled(True)
