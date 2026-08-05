@@ -196,3 +196,7 @@ out of their intended shell arguments.
 
 - Added explicit `.setToolTip()` instructions ("Double-click or press Enter...") to the `QTableWidget` in `HubDialog` and `QListWidget` in `ModelPanel` to improve the discoverability of the `itemActivated` primary actions (downloading or loading a model) for all users, including keyboard-only navigators.
 - In `SetupDialog`, disabled related configuration inputs (`_path_edit` and `_btn_browse`) and added explanatory tooltips while the background installation/build worker is running, preventing state inconsistencies mid-operation.
+
+### UX Updates
+
+- Disabled the search bar, tag filter, and model table in the Hub Dialog while a download is in progress to prevent unexpected state changes or user confusion. Tooltips were also added to explain the disabled state and restored upon completion.
