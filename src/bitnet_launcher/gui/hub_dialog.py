@@ -513,6 +513,13 @@ class HubDialog(QDialog):
         self._btn_download.setToolTip("A download is currently in progress")
         self._btn_close.setEnabled(False)
         self._btn_close.setToolTip("A download is currently in progress")
+
+        self._search.setEnabled(False)
+        self._search.setToolTip("An operation is currently in progress")
+        self._tag_combo.setEnabled(False)
+        self._tag_combo.setToolTip("An operation is currently in progress")
+        self._table.setEnabled(False)
+        self._table.setToolTip("An operation is currently in progress")
         self._append_log(f"Starting download: {model.name} …")
 
         self._worker = DownloadWorker(
@@ -548,6 +555,16 @@ class HubDialog(QDialog):
         self._btn_download.setAccessibleName("Download Selected")
         self._btn_close.setEnabled(True)
         self._btn_close.setToolTip("")
+
+        self._search.setEnabled(True)
+        self._search.setToolTip("Filter models by name")
+        self._tag_combo.setEnabled(True)
+        self._tag_combo.setToolTip(
+            "Filter the model list by specific capabilities or sizes"
+        )
+        self._table.setEnabled(True)
+        self._table.setToolTip("Double-click or press Enter to download")
+
         self._installed_cache.clear()
         self._refresh_table()
         logger.info("Download worker finished successfully")
@@ -560,6 +577,16 @@ class HubDialog(QDialog):
         self._btn_download.setAccessibleName("Download Selected")
         self._btn_close.setEnabled(True)
         self._btn_close.setToolTip("")
+
+        self._search.setEnabled(True)
+        self._search.setToolTip("Filter models by name")
+        self._tag_combo.setEnabled(True)
+        self._tag_combo.setToolTip(
+            "Filter the model list by specific capabilities or sizes"
+        )
+        self._table.setEnabled(True)
+        self._table.setToolTip("Double-click or press Enter to download")
+
         self._on_selection_changed()
         msg = QMessageBox(self)
         msg.setIcon(QMessageBox.Icon.Critical)
