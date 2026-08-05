@@ -196,3 +196,6 @@ out of their intended shell arguments.
 
 - Added explicit `.setToolTip()` instructions ("Double-click or press Enter...") to the `QTableWidget` in `HubDialog` and `QListWidget` in `ModelPanel` to improve the discoverability of the `itemActivated` primary actions (downloading or loading a model) for all users, including keyboard-only navigators.
 - In `SetupDialog`, disabled related configuration inputs (`_path_edit` and `_btn_browse`) and added explanatory tooltips while the background installation/build worker is running, preventing state inconsistencies mid-operation.
+
+### UI Security Updates
+- Added `setAcceptRichText(False)` to `QTextEdit` widgets across the application (chat panel, setup logs, hub dialog logs, and settings prompt). By default, `QTextEdit` accepts HTML (via drag/drop or copy/paste), which could be leveraged to inject unexpected rich text UI elements or load external images if not strictly handling plain text.
