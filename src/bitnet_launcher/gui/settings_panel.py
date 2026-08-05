@@ -128,6 +128,7 @@ class SettingsPanel(QWidget):
 
         self._system_prompt = QTextEdit()
         lbl_system_prompt.setBuddy(self._system_prompt)
+        self._system_prompt.setAcceptRichText(False)
         self._system_prompt.setAccessibleName("System prompt")
         self._system_prompt.setPlaceholderText("You are a helpful assistant.")
         self._system_prompt.setToolTip(tooltip_text)
