@@ -241,6 +241,7 @@ class SetupDialog(QDialog):
         log_layout = QVBoxLayout(log_group)
 
         self._log = QTextEdit()
+        self._log.setAcceptRichText(False)
         self._log.setAccessibleName("Setup log")
         self._log.setPlaceholderText("Setup logs will appear here...")
         self._log.setReadOnly(True)
