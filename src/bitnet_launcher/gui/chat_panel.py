@@ -197,6 +197,7 @@ class ChatPanel(QWidget):
         group_layout = QVBoxLayout(group)
 
         self._display = QTextEdit()
+        self._display.setAcceptRichText(False)
         self._display.setReadOnly(True)
         self._display.setTabChangesFocus(True)
         self._display.setAccessibleName("Chat history")
