@@ -87,3 +87,9 @@
 **Vulnerability:** Untrusted string output generated from the AI model was sent directly in a Server-Sent Events (SSE) stream using `f"data: {chunk}\n\n"`. Since the chunk contained literal newline characters, this allowed arbitrary fields (like `event: malicious`) to be injected into the SSE response stream if the generated text was manipulated.
 **Learning:** The Server-Sent Events specification splits fields on `\n`. Any multiline string emitted over SSE without encoding must have every new line prefixed with `data: ` to prevent the newlines from being interpreted as the end of the field or event.
 **Prevention:** Sanitize untrusted chunks that are intended for SSE streams by explicitly replacing `\n` with `\ndata: ` before yielding them.
+
+## 2025-03-01 - Prevent HTML Injection in QTextEdit
+
+**Vulnerability:** `QTextEdit` accepts rich text (HTML) by default, meaning that any text resembling HTML pasted or programmatically inserted into it can be rendered as rich text. This opens up possibilities for HTML injection or UI redressing via pasted content or unchecked external data.
+**Learning:** In PyQt6, `QTextEdit` widgets expose a rich text functionality by default. To enforce plain text input or display (especially when handling user input like a chat box or system prompt), it is critical to explicitly disable the rich text feature.
+**Prevention:** Always apply `.setAcceptRichText(False)` to `QTextEdit` instances to prevent HTML injection unless rich text functionality is actively required and the input is sanitized.
