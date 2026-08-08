@@ -279,6 +279,7 @@ class HubDialog(QDialog):
         log_layout = QVBoxLayout(log_group)
 
         self._log = QTextEdit()
+        self._log.setAcceptRichText(False)
         self._log.setAccessibleName("Download log")
         self._log.setPlaceholderText("Download logs will appear here...")
         self._log.setReadOnly(True)
