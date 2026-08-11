@@ -197,6 +197,8 @@ class ChatPanel(QWidget):
         group_layout = QVBoxLayout(group)
 
         self._display = QTextEdit()
+        # Security: Prevent HTML injection/UI redressing from generated text or logs
+        self._display.setAcceptRichText(False)
         self._display.setReadOnly(True)
         self._display.setAcceptRichText(False)
         self._display.setTabChangesFocus(True)

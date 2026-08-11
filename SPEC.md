@@ -124,6 +124,7 @@ out of their intended shell arguments.
 
 ### Recent Security Updates
 
+- Explicitly set `.setAcceptRichText(False)` on `QTextEdit` instances in `setup_dialog.py`, `hub_dialog.py`, `chat_panel.py`, and `settings_panel.py` to prevent HTML injection via pasted prompts or unintended rich text rendering.
 - Replaced `QTextEdit.append()` with safe `insertPlainText()` logic in dialog log outputs to prevent GUI spoofing and XSS vulnerabilities from untrusted subprocess logs.
 - Replaced `QMessageBox` static convenience methods with explicitly instantiated `QMessageBox` objects configured with `setTextFormat(Qt.TextFormat.PlainText)` in GUI components to prevent potential HTML/Rich Text injection.
 - Added `html.escape()` for string-cast `model.params` when interpolating into rich text `QLabel` strings in `hub_dialog.py` to prevent XSS/HTML injection.

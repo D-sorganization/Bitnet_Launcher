@@ -279,6 +279,8 @@ class HubDialog(QDialog):
         log_layout = QVBoxLayout(log_group)
 
         self._log = QTextEdit()
+        # Security: Prevent HTML injection/UI redressing from log outputs
+        self._log.setAcceptRichText(False)
         self._log.setAccessibleName("Download log")
         self._log.setAcceptRichText(False)
         self._log.setPlaceholderText("Download logs will appear here...")

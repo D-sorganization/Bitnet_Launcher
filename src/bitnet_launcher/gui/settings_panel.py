@@ -127,6 +127,8 @@ class SettingsPanel(QWidget):
         layout.addWidget(lbl_system_prompt)
 
         self._system_prompt = QTextEdit()
+        # Security: Prevent HTML injection/UI redressing from pasted prompts
+        self._system_prompt.setAcceptRichText(False)
         lbl_system_prompt.setBuddy(self._system_prompt)
         self._system_prompt.setAccessibleName("System prompt")
         self._system_prompt.setAcceptRichText(False)
