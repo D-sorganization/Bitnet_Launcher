@@ -280,6 +280,7 @@ class HubDialog(QDialog):
 
         self._log = QTextEdit()
         self._log.setAccessibleName("Download log")
+        self._log.setAcceptRichText(False)
         self._log.setPlaceholderText("Download logs will appear here...")
         self._log.setReadOnly(True)
         self._log.setTabChangesFocus(True)

@@ -242,6 +242,7 @@ class SetupDialog(QDialog):
 
         self._log = QTextEdit()
         self._log.setAccessibleName("Setup log")
+        self._log.setAcceptRichText(False)
         self._log.setPlaceholderText("Setup logs will appear here...")
         self._log.setReadOnly(True)
         self._log.setTabChangesFocus(True)

@@ -200,3 +200,7 @@ out of their intended shell arguments.
 ### UX Updates
 
 - Disabled the search bar, tag filter, and model table in the Hub Dialog while a download is in progress to prevent unexpected state changes or user confusion. Tooltips were also added to explain the disabled state and restored upon completion.
+
+## UX Updates
+
+- Added `setAcceptRichText(False)` to `QTextEdit` widgets (system prompt, chat history, and logs) to enforce plain text pasting and prevent unwanted rich text/HTML styling from being introduced into the application via clipboard.
