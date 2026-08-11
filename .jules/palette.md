@@ -151,3 +151,8 @@
 
 **Learning:** When starting an async operation (like a download or installation), it's standard practice to disable the primary action buttons to prevent duplicate submissions. However, failing to also disable the associated configuration inputs (like path selectors or combo boxes) creates a confusing UX where the user thinks they can change parameters while an operation is already underway, leading to state inconsistencies.
 **Action:** When conditionally disabling action buttons during an async operation, always disable all related configuration input widgets (e.g., text fields, browse buttons, dropdowns) in the same dialog, and update their tooltips to explain the disabled state. Restore their original state and tooltips when the operation completes.
+
+## 2026-11-20 - Enforcing Plain Text in QTextEdit
+
+**Learning:** In PyQt6 applications, `QTextEdit` widgets accept rich text (HTML) by default. This means that if a user pastes text from a webpage or a formatted document into a `QTextEdit` (like a system prompt input or a chat display), the text will retain unwanted fonts, sizes, background colors, and styling, ruining the application's clean aesthetic.
+**Action:** Always apply `.setAcceptRichText(False)` to `QTextEdit` instances where only plain text is intended, to prevent HTML injection via user-initiated insertions (e.g., pasting or drag-and-drop) and ensure a consistent UX.
