@@ -156,3 +156,7 @@
 
 **Learning:** In PyQt6 applications, `QTextEdit` widgets accept rich text (HTML) by default. This means that if a user pastes text from a webpage or a formatted document into a `QTextEdit` (like a system prompt input or a chat display), the text will retain unwanted fonts, sizes, background colors, and styling, ruining the application's clean aesthetic.
 **Action:** Always apply `.setAcceptRichText(False)` to `QTextEdit` instances where only plain text is intended, to prevent HTML injection via user-initiated insertions (e.g., pasting or drag-and-drop) and ensure a consistent UX.
+## 2026-12-05 - Action Button State Synchronization
+
+**Learning:** When primary action buttons (like "Chat Here" or "Launch in Terminal") depend on the currently selected item in a list or table, they can easily become desynchronized if their enabled state is only evaluated upon user interaction or initialization. This leads to a confusing UX where users might attempt actions on an invalid or unselected state, resulting in unexpected errors.
+**Action:** Always proactively synchronize action button states by connecting selection change signals (like `model_changed` or `selectionChanged`) to a dedicated `_update_action_buttons` method. Additionally, ensure this method is called during `__init__` to establish the correct initial state.

@@ -68,6 +68,7 @@ class BitNetLauncher(QMainWindow):
         self.resize(900, 680)
         self._build_ui()
         self.setStyleSheet(build_stylesheet())
+        self._update_action_buttons()
 
     # ── UI construction ─────────────────────────────────────────────────────
 
@@ -90,6 +91,7 @@ class BitNetLauncher(QMainWindow):
 
         self._model_panel = ModelPanel(self._models)
         self._model_panel.model_activated.connect(self._on_model_activated)
+        self._model_panel.model_changed.connect(self._update_action_buttons)
         top_splitter.addWidget(self._model_panel)
 
         self._settings_panel = SettingsPanel()

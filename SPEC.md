@@ -205,3 +205,7 @@ out of their intended shell arguments.
 ## UX Updates
 
 - Added `setAcceptRichText(False)` to `QTextEdit` widgets (system prompt, chat history, and logs) to enforce plain text pasting and prevent unwanted rich text/HTML styling from being introduced into the application via clipboard.
+
+## UX Updates
+
+- Synchronized primary action buttons ("Launch in Terminal", "Chat Here") with the currently selected model by connecting `model_changed` to `_update_action_buttons` and executing it on startup in `launcher_window.py`. This ensures users cannot click actions that would lead to an error dialog when an invalid or unselected state occurs.
