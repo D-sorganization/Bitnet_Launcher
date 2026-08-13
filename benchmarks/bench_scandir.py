@@ -58,8 +58,12 @@ def main():
         it_time, it_count = bench_iterdir(tmp_path)
         sc_time, sc_count = bench_scandir(tmp_path)
 
-        print(f"Path.iterdir() + glob: {it_time:.6f}s ({it_count} models)")  # noqa: T201
-        print(f"os.scandir():           {sc_time:.6f}s ({sc_count} models)")  # noqa: T201
+        print(
+            f"Path.iterdir() + glob: {it_time:.6f}s ({it_count} models)"
+        )  # noqa: T201
+        print(
+            f"os.scandir():           {sc_time:.6f}s ({sc_count} models)"
+        )  # noqa: T201
         print(f"Speedup: {it_time / sc_time:.2f}x")  # noqa: T201
 
 
