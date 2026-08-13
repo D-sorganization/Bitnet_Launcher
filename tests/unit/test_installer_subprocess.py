@@ -163,9 +163,9 @@ def test_build_bitnet_raises_on_configure_failure(fake_popen, tmp_path: Path) ->
     with pytest.raises(RuntimeError, match="cmake configure failed"):
         build_bitnet(tmp_path, lambda _s: None)
 
-    assert len(_FakePopen.instances) == 1, (
-        "build step must not run after configure fail"
-    )
+    assert (
+        len(_FakePopen.instances) == 1
+    ), "build step must not run after configure fail"
 
 
 def test_build_bitnet_value_error_on_missing_root(tmp_path: Path) -> None:
