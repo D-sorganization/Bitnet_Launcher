@@ -67,3 +67,8 @@
 
 **Learning:** `os.scandir()` returns a context manager that must be explicitly closed, otherwise underlying file descriptors may leak until CPython's garbage collector runs. Relying on garbage collection for unexhausted iterators or even fully exhausted ones is risky in performance-critical loops or servers.
 **Action:** Always wrap `os.scandir(path)` in a `with` context manager (e.g., `with os.scandir(path) as it:`) to ensure explicit and immediate cleanup of directory file descriptors.
+
+## 2026-08-14 - Optimize PyQt6 QTextEdit text streaming
+
+**Learning:** Calling methods like `setTextColor`, `insertPlainText`, and `moveCursor` directly on a `QTextEdit` instance during high-frequency text streaming causes severe main-thread UI stuttering due to repeated layout recalculations and repaints.
+**Action:** For high-frequency text insertion, use `QTextCursor.insertText(text, format)` with cached `QTextCharFormat` objects. Reapplying the cursor via `setTextCursor` triggers a single efficient update and implicitly handles scrolling to the bottom.
