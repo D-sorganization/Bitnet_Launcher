@@ -261,6 +261,18 @@ class BitNetLauncher(QMainWindow):
             else "No active chat session to stop"
         )
 
+        self._model_panel.setEnabled(not is_running)
+        self._model_panel.setToolTip(
+            "Stop the active chat session to change models" if is_running else ""
+        )
+
+        self._settings_panel.setEnabled(not is_running)
+        self._settings_panel.setToolTip(
+            "Stop the active chat session to modify inference settings"
+            if is_running
+            else ""
+        )
+
     def _launch_terminal(self) -> None:
         model = self._model_panel.selected_model
         if not model:

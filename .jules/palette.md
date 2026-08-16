@@ -160,3 +160,8 @@
 
 **Learning:** When primary action buttons (like "Chat Here" or "Launch in Terminal") depend on the currently selected item in a list or table, they can easily become desynchronized if their enabled state is only evaluated upon user interaction or initialization. This leads to a confusing UX where users might attempt actions on an invalid or unselected state, resulting in unexpected errors.
 **Action:** Always proactively synchronize action button states by connecting selection change signals (like `model_changed` or `selectionChanged`) to a dedicated `_update_action_buttons` method. Additionally, ensure this method is called during `__init__` to establish the correct initial state.
+
+## 2026-08-16 - Disabling Configuration Panels During Interactive Sessions
+
+**Learning:** While it is standard practice to disable action buttons during an async operation to prevent duplicate submissions, interactive processes (like a running chat session) present a similar challenge. If configuration panels (like model selection or inference hyperparameter inputs) remain enabled while an interactive session is actively running, users might assume that changing these inputs will dynamically update the running process, leading to a state inconsistency UX when those settings only apply at startup.
+**Action:** When conditionally disabling start/launch action buttons during an active interactive session, always disable all related configuration input panels (e.g., model selectors, hyperparameter settings) in the same window, and update their tooltips to explain that the session must be stopped before parameters can be modified. Restore their original state and tooltips when the session ends.
