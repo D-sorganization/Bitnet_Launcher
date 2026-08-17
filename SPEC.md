@@ -210,3 +210,7 @@ out of their intended shell arguments.
 
 - Synchronized primary action buttons ("Launch in Terminal", "Chat Here") with the currently selected model by connecting `model_changed` to `_update_action_buttons` and executing it on startup in `launcher_window.py`. This ensures users cannot click actions that would lead to an error dialog when an invalid or unselected state occurs.
 - Refactored `ChatPanel` append methods (`append_user`, `append_assistant`, `append_system`, `append_dim`) to use `QTextCursor.insertText(text, format)` with cached `QTextCharFormat` objects. This prevents excessive layout recalculations and UI stuttering during high-frequency text streaming.
+
+### UX Updates
+
+- Prevented action-oriented tooltips (like "Double-click to download") from appearing when `QListWidget` or `QTableWidget` displays an empty state. Tooltips are now conditionally set and cleared based on data availability, improving clarity and avoiding false interactivity hints.
