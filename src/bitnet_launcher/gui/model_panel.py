@@ -91,6 +91,7 @@ class ModelPanel(QWidget):
                 for info in self._models:
                     item = QListWidgetItem(info.display_name)
                     item.setData(256, info)  # Qt.ItemDataRole.UserRole == 256
+                    item.setToolTip("Double-click or press Enter to load model")
                     self._list.addItem(item)
                 self._list.setCurrentRow(0)
             else:
@@ -129,7 +130,9 @@ class ModelPanel(QWidget):
         # _update_detail before self._detail is created (AttributeError).
         self._list.currentRowChanged.connect(self._on_row_changed)
         self._list.itemActivated.connect(self._on_item_activated)
-        self._list.setToolTip("Double-click or press Enter to load model")
+        self._list.setToolTip(
+            "Double-click or press Enter to load model" if self._models else ""
+        )
 
     def _on_item_activated(self, item: QListWidgetItem) -> None:
         row = self._list.row(item)

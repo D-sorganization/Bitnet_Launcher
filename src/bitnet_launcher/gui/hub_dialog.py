@@ -253,7 +253,6 @@ class HubDialog(QDialog):
             selection_model.selectionChanged.connect(self._on_selection_changed)
 
         self._table.itemActivated.connect(self._on_item_activated)
-        self._table.setToolTip("Double-click or press Enter to download")
 
         root.addWidget(self._table)
 
@@ -397,6 +396,7 @@ class HubDialog(QDialog):
         try:
             self._table.clearSpans()
             if not self._visible_models:
+                self._table.setToolTip("")
                 self._table.setRowCount(1)
                 empty_item = QTableWidgetItem("No models match your filter.")
                 empty_item.setFlags(Qt.ItemFlag.NoItemFlags)
@@ -405,6 +405,7 @@ class HubDialog(QDialog):
                 self._table.setItem(0, 0, empty_item)
                 self._table.setSpan(0, 0, 1, 5)
             else:
+                self._table.setToolTip("Double-click or press Enter to download")
                 self._table.setRowCount(len(self._visible_models))
 
                 for row, model in enumerate(self._visible_models):
@@ -566,7 +567,9 @@ class HubDialog(QDialog):
             "Filter the model list by specific capabilities or sizes"
         )
         self._table.setEnabled(True)
-        self._table.setToolTip("Double-click or press Enter to download")
+        self._table.setToolTip(
+            "Double-click or press Enter to download" if self._visible_models else ""
+        )
 
         self._installed_cache.clear()
         self._refresh_table()
@@ -588,7 +591,9 @@ class HubDialog(QDialog):
             "Filter the model list by specific capabilities or sizes"
         )
         self._table.setEnabled(True)
-        self._table.setToolTip("Double-click or press Enter to download")
+        self._table.setToolTip(
+            "Double-click or press Enter to download" if self._visible_models else ""
+        )
 
         self._on_selection_changed()
         msg = QMessageBox(self)

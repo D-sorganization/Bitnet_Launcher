@@ -165,3 +165,8 @@
 
 **Learning:** While it is standard practice to disable action buttons during an async operation to prevent duplicate submissions, interactive processes (like a running chat session) present a similar challenge. If configuration panels (like model selection or inference hyperparameter inputs) remain enabled while an interactive session is actively running, users might assume that changing these inputs will dynamically update the running process, leading to a state inconsistency UX when those settings only apply at startup.
 **Action:** When conditionally disabling start/launch action buttons during an active interactive session, always disable all related configuration input panels (e.g., model selectors, hyperparameter settings) in the same window, and update their tooltips to explain that the session must be stopped before parameters can be modified. Restore their original state and tooltips when the session ends.
+
+## 2026-12-06 - Empty State Tooltips on Lists
+
+**Learning:** When list or table widgets display a non-interactive empty state message (like "No models found"), statically setting a primary action tooltip (like "Double-click to load") makes users incorrectly think they can interact with the empty state message.
+**Action:** Conditionally apply item-activation tooltips to QListWidget or QTableWidget only when they are populated with actual data, and clear the tooltip (setToolTip("")) when showing an empty state.
