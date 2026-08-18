@@ -162,7 +162,7 @@ async def start_chat(request: ChatStartRequest) -> StreamingResponse:
             async for chunk in runner.stream_stdout():
                 # Server-Sent Events format
                 # Sentinel Fix: Prevent SSE injection from multi-line output
-                sanitized_chunk = chunk.replace("\n", "\ndata: ")
+                sanitized_chunk = chunk.replace("\r", "").replace("\n", "\ndata: ")
                 yield f"data: {sanitized_chunk}\n\n"
         finally:
             await runner.stop()
