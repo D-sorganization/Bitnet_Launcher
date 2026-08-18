@@ -93,3 +93,8 @@
 **Vulnerability:** In PyQt6 applications, `QTextEdit` widgets accept rich text (HTML) by default. If untrusted log output, generated model text, or pasted user input contains HTML tags, the widget will render them. This introduces a risk of HTML injection or UI redressing, allowing attackers to maliciously format text, inject links, or break the intended display layout.
 **Learning:** Even if `QTextEdit` is set to read-only or intended for plain text configuration (like a system prompt), it will heuristically parse pasted or programmatically inserted text as HTML unless explicitly instructed otherwise.
 **Prevention:** Always apply `.setAcceptRichText(False)` to `QTextEdit` instances to enforce plain text input and display, unless rich text editing is explicitly required by the feature.
+
+## 2024-05-24 - [Server-Sent Events (SSE) injection risk from carriage returns]
+**Vulnerability:** SSE endpoints that sanitize only `\n` can still be vulnerable to injection if payloads contain `\r\n` or `\r`, which can split events in some parsers.
+**Learning:** It is insufficient to only escape `\n` when streaming output in an SSE format; carriage returns must also be handled to fully prevent attackers from injecting arbitrary fields.
+**Prevention:** When sanitizing output for SSE, always remove or sanitize `\r` characters as well, e.g., `chunk.replace("\r", "").replace("\n", "\ndata: ")`.
