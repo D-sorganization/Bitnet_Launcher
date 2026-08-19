@@ -72,3 +72,8 @@
 
 **Learning:** Calling methods like `setTextColor`, `insertPlainText`, and `moveCursor` directly on a `QTextEdit` instance during high-frequency text streaming causes severe main-thread UI stuttering due to repeated layout recalculations and repaints.
 **Action:** For high-frequency text insertion, use `QTextCursor.insertText(text, format)` with cached `QTextCharFormat` objects. Reapplying the cursor via `setTextCursor` triggers a single efficient update and implicitly handles scrolling to the bottom.
+
+## 2026-08-19 - Optimize QTextEdit plain text appending
+
+**Learning:** Calling `insertPlainText` directly on a `QTextEdit` instance, along with frequent `setTextCursor` calls for every line, causes layout recalculations and UI stuttering during high-frequency log updates (like streaming subprocess output).
+**Action:** For high-frequency plain text appending, use `QTextCursor.insertText(text)` instead, and only reapply the cursor via `setTextCursor` at the end. This triggers a single efficient update and reduces main-thread lag.
