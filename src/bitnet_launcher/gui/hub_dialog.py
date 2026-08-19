@@ -540,11 +540,12 @@ class HubDialog(QDialog):
         """Append *line* to the log text area."""
         cursor = self._log.textCursor()
         cursor.movePosition(QTextCursor.MoveOperation.End)
-        self._log.setTextCursor(cursor)
+
         doc = self._log.document()
-        if doc is not None and not doc.isEmpty():
-            self._log.insertPlainText("\n")
-        self._log.insertPlainText(line)
+        prefix = "\n" if doc is not None and not doc.isEmpty() else ""
+        cursor.insertText(f"{prefix}{line}")
+
+        self._log.setTextCursor(cursor)
 
     def _on_progress(self, value: float) -> None:
         """Update the progress bar (0.0–1.0)."""
