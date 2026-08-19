@@ -22,6 +22,10 @@ name: Local-Only Workflow Runner Guard
 # it is the required status check for the `block-hosted-runner-merge` ruleset.
 
 on:
+  push:
+    branches:
+      - main
+      - master
   pull_request:
     paths:
       - ".github/workflows/**"
@@ -43,12 +47,14 @@ jobs:
     runs-on: ubuntu-latest
     timeout-minutes: 5
     steps:
-      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+      - uses: actions/checkout@v7
 
       - name: Set up Python
-        uses: actions/setup-python@5fda3b95a4ea91299a34e894583c3862153e4b97 # v7.0.0
+        uses: actions/setup-python@v5
         with:
           python-version: "3.12"
+        env:
+          AGENT_TOOLSDIRECTORY: ${{ runner.temp }}/_tool_cache
 
       - name: Install PyYAML
         run: pip install --disable-pip-version-check pyyaml==6.0.2
