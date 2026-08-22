@@ -290,12 +290,36 @@ class SetupDialog(QDialog):
         )
         _ = t  # keep import used
 
-        if not status.root_exists:
+        if not self._bitnet_root.is_absolute():
+            self._btn_install.setEnabled(False)
+            self._btn_install.setToolTip(
+                "Enter an absolute directory path to install BitNet"
+            )
+            self._btn_build.setEnabled(False)
+            self._btn_build.setToolTip(
+                "Enter an absolute directory path to build BitNet"
+            )
+        elif not status.root_exists:
+            self._btn_install.setEnabled(self._worker is None)
+            self._btn_install.setToolTip(
+                "Clone the BitNet repository and install dependencies"
+            )
             self._btn_build.setEnabled(False)
             self._btn_build.setToolTip(
                 "BitNet root does not exist. Run the Install step first."
             )
+        elif not status.setup_env_exists:
+            self._btn_install.setEnabled(self._worker is None)
+            self._btn_install.setToolTip(
+                "Clone the BitNet repository into this directory"
+            )
+            self._btn_build.setEnabled(False)
+            self._btn_build.setToolTip(
+                "BitNet must be installed before it can be built"
+            )
         elif self._worker is None:
+            self._btn_install.setEnabled(True)
+            self._btn_install.setToolTip("Reinstall or update Python dependencies")
             self._btn_build.setEnabled(True)
             self._btn_build.setToolTip("Compile llama-cli from source using cmake")
 
