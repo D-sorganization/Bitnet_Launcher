@@ -170,3 +170,8 @@
 
 **Learning:** When list or table widgets display a non-interactive empty state message (like "No models found"), statically setting a primary action tooltip (like "Double-click to load") makes users incorrectly think they can interact with the empty state message.
 **Action:** Conditionally apply item-activation tooltips to QListWidget or QTableWidget only when they are populated with actual data, and clear the tooltip (setToolTip("")) when showing an empty state.
+
+## 2024-12-14 - Dynamic Tooltips for Form Validation States
+
+**Learning:** When action buttons (like "Install" or "Build") are disabled because form inputs fail validation (e.g., an invalid path), leaving the default "active" tooltip (e.g., "Compile the engine") is confusing. Users need to know *why* the action is disabled.
+**Action:** In form validation methods (like `_refresh_status`), always update the tooltips of dependent action buttons to explicitly explain the validation failure when they are disabled, and restore their descriptive tooltips when they become enabled.
