@@ -214,3 +214,7 @@ out of their intended shell arguments.
 ### UX Updates
 
 - Prevented action-oriented tooltips (like "Double-click to download") from appearing when `QListWidget` or `QTableWidget` displays an empty state. Tooltips are now conditionally set and cleared based on data availability, improving clarity and avoiding false interactivity hints.
+
+### UX Updates
+
+- Added dynamic tooltips to the "Install" and "Build" action buttons in the Setup Dialog to explicitly explain why they are disabled based on form validation states (e.g., "Enter an absolute directory path to install BitNet").
