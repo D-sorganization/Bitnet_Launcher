@@ -218,3 +218,11 @@ out of their intended shell arguments.
 ### UX Updates
 
 - Added dynamic tooltips to the "Install" and "Build" action buttons in the Setup Dialog to explicitly explain why they are disabled based on form validation states (e.g., "Enter an absolute directory path to install BitNet").
+
+### UX Updates
+
+- Added a `QMessageBox` confirmation dialog in the main window's `closeEvent` to prevent users from accidentally closing the application and losing their ongoing conversation history or abruptly terminating an active chat subprocess without warning.
+
+### UX Updates
+
+- Added a `QMessageBox` confirmation dialog in the main window's `closeEvent` to prevent users from accidentally closing the application and losing their ongoing conversation history or abruptly terminating an active chat subprocess without warning.
