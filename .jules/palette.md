@@ -175,3 +175,8 @@
 
 **Learning:** When action buttons (like "Install" or "Build") are disabled because form inputs fail validation (e.g., an invalid path), leaving the default "active" tooltip (e.g., "Compile the engine") is confusing. Users need to know *why* the action is disabled.
 **Action:** In form validation methods (like `_refresh_status`), always update the tooltips of dependent action buttons to explicitly explain the validation failure when they are disabled, and restore their descriptive tooltips when they become enabled.
+
+## 2026-08-23 - Confirming Destructive Application Closures
+
+**Learning:** Users can accidentally close the application window while a chat session is running, leading to abrupt termination and loss of conversation history without warning.
+**Action:** Always intercept `closeEvent` on main windows and present a confirmation dialog (`QMessageBox`) if there is an active, stateful process (like a running chat subprocess). Ensure `event.ignore()` is called if the user cancels the closure.

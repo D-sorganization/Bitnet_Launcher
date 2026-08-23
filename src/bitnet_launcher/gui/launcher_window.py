@@ -409,6 +409,20 @@ class BitNetLauncher(QMainWindow):
         if self._process and (
             self._process.state() != QProcess.ProcessState.NotRunning
         ):
+            msg = QMessageBox(self)
+            msg.setIcon(QMessageBox.Icon.Warning)
+            msg.setWindowTitle("Active Chat Session")
+            msg.setTextFormat(Qt.TextFormat.PlainText)
+            msg.setText(
+                "An active chat session is running.\nAre you sure you want to exit?"
+            )
+            msg.setStandardButtons(
+                QMessageBox.StandardButton.Yes | QMessageBox.StandardButton.No
+            )
+            reply = msg.exec()
+            if reply != QMessageBox.StandardButton.Yes.value:
+                event.ignore()
+                return
             self._process.kill()
             self._process.waitForFinished(2000)
         event.accept()
