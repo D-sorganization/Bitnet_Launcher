@@ -16,7 +16,7 @@ import os
 from pathlib import Path
 
 from PyQt6.QtCore import Qt, QThread, QTimer, pyqtSignal
-from PyQt6.QtGui import QColor, QFont, QTextCursor
+from PyQt6.QtGui import QColor, QFont
 from PyQt6.QtWidgets import (
     QAbstractItemView,
     QComboBox,
@@ -538,14 +538,11 @@ class HubDialog(QDialog):
 
     def _append_log(self, line: str) -> None:
         """Append *line* to the log text area."""
-        cursor = self._log.textCursor()
-        cursor.movePosition(QTextCursor.MoveOperation.End)
-
-        doc = self._log.document()
-        prefix = "\n" if doc is not None and not doc.isEmpty() else ""
-        cursor.insertText(f"{prefix}{line}")
-
-        self._log.setTextCursor(cursor)
+        # ⚡ Bolt Optimization: For high-frequency, whole-line appending to a QTextEdit,
+        # use .append(html.escape(line)) rather than QTextCursor manipulations.
+        # This handles paragraph creation and scrolling more efficiently without
+        # causing main-thread layout recalculation stuttering.
+        self._log.append(html.escape(line))
 
     def _on_progress(self, value: float) -> None:
         """Update the progress bar (0.0–1.0)."""

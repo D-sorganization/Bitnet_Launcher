@@ -77,3 +77,8 @@
 
 **Learning:** Calling `insertPlainText` directly on a `QTextEdit` instance, along with frequent `setTextCursor` calls for every line, causes layout recalculations and UI stuttering during high-frequency log updates (like streaming subprocess output).
 **Action:** For high-frequency plain text appending, use `QTextCursor.insertText(text)` instead, and only reapply the cursor via `setTextCursor` at the end. This triggers a single efficient update and reduces main-thread lag.
+
+## 2026-08-24 - Optimize QTextEdit plain text appending
+
+**Learning:** Calling `insertPlainText` directly on a `QTextEdit` instance, along with frequent `setTextCursor` calls for every line, causes layout recalculations and UI stuttering during high-frequency log updates (like streaming subprocess output). Using `QTextCursor` is better for rich text and complex formatting, but for whole-line appending, it is less efficient.
+**Action:** For high-frequency, whole-line appending to a `QTextEdit` (such as streaming log outputs), use `QTextEdit.append(html.escape(line))` rather than `QTextCursor` manipulations. `.append()` handles paragraph creation and scrolling more efficiently without causing main-thread layout recalculation stuttering, and `html.escape` prevents unintended rich text injection.
