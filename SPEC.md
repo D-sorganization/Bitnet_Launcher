@@ -115,6 +115,7 @@ out of their intended shell arguments.
 
 ### Performance Updates
 
+- Replaced `QTextCursor` with `QTextEdit.append(html.escape())` in `HubDialog` and `SetupDialog` log methods to prevent main-thread layout recalculation stuttering during high-frequency text appending.
 - Debounced search input to avoid stuttering during rapid typing
 - Removed synchronous disk I/O (`Path.exists()`) checks from `_refresh_table` in `HubDialog` since it is already cached during `__init__`, preventing UI freezing during model filtering
 - Cached `QFont` and `QColor` instantiations in `HubDialog` to prevent redundant object creation during frequent UI refreshes
