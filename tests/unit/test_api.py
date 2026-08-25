@@ -36,7 +36,7 @@ def test_list_models(mock_discover: Any, tmp_path: Any) -> None:
     data = response.json()
     assert len(data) == 1
     assert data[0]["name"] == "bitnet_b1_58-3B"
-    assert data[0]["path"] == str(model_path)
+    assert data[0]["path"] == "ggml-model-i2_s.gguf"
     assert data[0]["size_bytes"] == 1024
 
 
