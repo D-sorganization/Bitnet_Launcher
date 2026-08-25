@@ -108,7 +108,7 @@ async def list_models() -> list[ModelResponse]:
     return [
         ModelResponse(
             name=m.name,
-            path=str(m.path),
+            path=m.path.name,
             size_bytes=m.size_bytes,
         )
         for m in models

@@ -98,3 +98,8 @@
 **Vulnerability:** SSE endpoints that sanitize only `\n` can still be vulnerable to injection if payloads contain `\r\n` or `\r`, which can split events in some parsers.
 **Learning:** It is insufficient to only escape `\n` when streaming output in an SSE format; carriage returns must also be handled to fully prevent attackers from injecting arbitrary fields.
 **Prevention:** When sanitizing output for SSE, always remove or sanitize `\r` characters as well, e.g., `chunk.replace("\r", "").replace("\n", "\ndata: ")`.
+
+## 2026-08-25 - [Prevent Information Exposure of Absolute Paths in API Responses]
+**Vulnerability:** The `/models` API endpoint returned the absolute file system path of each discovered model. This exposed internal server directory structures (including potentially the server's username or environment) to any authenticated API client.
+**Learning:** APIs should never expose internal absolute paths unless strictly necessary. Clients typically only need identifiers (like the model name) or at most the file's basename.
+**Prevention:** When serializing internal file descriptors (like `ModelInfo`) for API responses, map internal paths to either relative paths or just the filename (e.g., `m.path.name` instead of `str(m.path)`).
