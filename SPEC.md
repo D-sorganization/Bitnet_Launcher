@@ -228,6 +228,10 @@ out of their intended shell arguments.
 
 - Added a `QMessageBox` confirmation dialog in the main window's `closeEvent` to prevent users from accidentally closing the application and losing their ongoing conversation history or abruptly terminating an active chat subprocess without warning.
 
+### UX Updates
+
+- Added a placeholder text ("Download logs will appear here...") to the log output `QTextEdit` in `hub_dialog.py` to provide a helpful empty state and ensure visual consistency with other log widgets across the application.
+
 ### Security Updates
 
 - Fixed an Information Exposure vulnerability in the `/models` API endpoint. The API now returns the filename (`m.path.name`) instead of the absolute file system path (`str(m.path)`) in the `ModelResponse` to prevent leaking the server's internal directory structure or host environment information to authenticated API clients.
