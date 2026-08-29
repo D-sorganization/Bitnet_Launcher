@@ -235,3 +235,5 @@ out of their intended shell arguments.
 ### Security Updates
 
 - Fixed an Information Exposure vulnerability in the `/models` API endpoint. The API now returns the filename (`m.path.name`) instead of the absolute file system path (`str(m.path)`) in the `ModelResponse` to prevent leaking the server's internal directory structure or host environment information to authenticated API clients.
+### Performance Updates
+- Optimized `QTableWidget` item creation in `HubDialog._refresh_table` by reusing existing `QTableWidgetItem` objects via `self._table.item(row, col)` instead of instantiating new ones, preventing excessive memory allocations and main-thread lag during search and filtering.
