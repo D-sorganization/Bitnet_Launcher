@@ -82,3 +82,7 @@
 
 **Learning:** Calling `insertPlainText` directly on a `QTextEdit` instance, along with frequent `setTextCursor` calls for every line, causes layout recalculations and UI stuttering during high-frequency log updates (like streaming subprocess output). Using `QTextCursor` is better for rich text and complex formatting, but for whole-line appending, it is less efficient.
 **Action:** For high-frequency, whole-line appending to a `QTextEdit` (such as streaming log outputs), use `QTextEdit.append(html.escape(line))` rather than `QTextCursor` manipulations. `.append()` handles paragraph creation and scrolling more efficiently without causing main-thread layout recalculation stuttering, and `html.escape` prevents unintended rich text injection.
+
+## 2024-05-30 - QTableWidget item reuse for better performance
+**Learning:** Repopulating a `QTableWidget` by continuously instantiating new `QTableWidgetItem` objects for each cell (and calling `setItem()`) creates significant memory allocation overhead and main thread lag, especially during frequent operations like search filtering.
+**Action:** When repopulating a `QTableWidget` that might frequently update (like a live search filter), check if an item already exists at that row/column (`self._table.item(row, col)`). If it does, reuse it by updating its text and properties (e.g., `setText()`) instead of instantiating and assigning a brand new item.

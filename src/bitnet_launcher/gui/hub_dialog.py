@@ -411,22 +411,40 @@ class HubDialog(QDialog):
                 for row, model in enumerate(self._visible_models):
                     installed = self._is_installed(model)
 
-                    name_item = QTableWidgetItem(model.name)
-                    name_item.setFont(self._font_consolas_9)
-                    self._table.setItem(row, 0, name_item)
+                    name_item = self._table.item(row, 0)
+                    if name_item is None:
+                        name_item = QTableWidgetItem()
+                        name_item.setFont(self._font_consolas_9)
+                        self._table.setItem(row, 0, name_item)
+                    name_item.setText(model.name)
 
-                    self._table.setItem(row, 1, QTableWidgetItem(model.params))
-                    self._table.setItem(
-                        row, 2, QTableWidgetItem(f"{model.size_gb:.1f}")
-                    )
-                    self._table.setItem(row, 3, QTableWidgetItem(", ".join(model.tags)))
+                    params_item = self._table.item(row, 1)
+                    if params_item is None:
+                        params_item = QTableWidgetItem()
+                        self._table.setItem(row, 1, params_item)
+                    params_item.setText(model.params)
 
-                    status_item = QTableWidgetItem("Installed" if installed else "—")
+                    size_item = self._table.item(row, 2)
+                    if size_item is None:
+                        size_item = QTableWidgetItem()
+                        self._table.setItem(row, 2, size_item)
+                    size_item.setText(f"{model.size_gb:.1f}")
+
+                    tags_item = self._table.item(row, 3)
+                    if tags_item is None:
+                        tags_item = QTableWidgetItem()
+                        self._table.setItem(row, 3, tags_item)
+                    tags_item.setText(", ".join(model.tags))
+
+                    status_item = self._table.item(row, 4)
+                    if status_item is None:
+                        status_item = QTableWidgetItem()
+                        self._table.setItem(row, 4, status_item)
+                    status_item.setText("Installed" if installed else "—")
                     if installed:
                         status_item.setForeground(self._color_green)
                     else:
                         status_item.setForeground(self._color_subtext)
-                    self._table.setItem(row, 4, status_item)
         finally:
             self._table.setUpdatesEnabled(True)
 
