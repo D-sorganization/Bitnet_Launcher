@@ -39,9 +39,10 @@ app = FastAPI(
 
 app.add_middleware(
     CORSMiddleware,
+    # Only the launcher's own origin (loopback, port 8000) may call this
+    # API. Loopback port-80 pages belong to unrelated local services and
+    # must not be trusted (see PR #245 review).
     allow_origins=[
-        "http://localhost",
-        "http://127.0.0.1",
         "http://localhost:8000",
         "http://127.0.0.1:8000",
     ],
