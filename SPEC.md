@@ -238,3 +238,7 @@ out of their intended shell arguments.
 
 ### Performance Updates
 - Modified `HubDialog._refresh_table` to check if a `QTableWidgetItem` already exists at `(row, column)` before creating a new one. If it does, we just update its text/properties. If it doesn't, we create one and use `setItem()`. This drastically reduces object creation and destruction overhead, improving UI responsiveness during search filtering.
+
+### API Security Updates (CORS)
+
+- Configured `CORSMiddleware` on the local FastAPI application to explicitly restrict `allow_origins` to strictly `http://localhost`, `http://127.0.0.1`, and their port 8000 variants. This mitigates potential cross-origin requests from malicious websites to the local API endpoint.
