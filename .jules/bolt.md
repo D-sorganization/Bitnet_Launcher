@@ -90,3 +90,9 @@
 ## 2026-09-06 - Python substring search optimization in large buffers
 **Learning:** Checking `if marker in buf` and then calling `buf.index(marker)` forces Python to traverse the large output buffer twice, creating unnecessary overhead in high-frequency stream parsers like `chat_session.py`.
 **Action:** Use `idx = buf.find(marker); if idx >= 0:` to traverse the string only once.
+
+## 2024-08-30 - Caching properties for repeated queries
+
+**Learning:** Calling `.lower()` or other expensive string operations repeatedly during frequent search filters or list rendering creates redundant overhead and allocations. For instance, recalculating `.lower()` on a model's name for every keystroke scales poorly with the number of models.
+**Action:** Pre-calculate and cache such fields on the dataclasses/models during initialization (e.g. `self.name_lower = self.name.lower()` in `__post_init__`), ensuring that these cached fields are properly excluded from dataclass representation using `repr=False, compare=False`.
+
