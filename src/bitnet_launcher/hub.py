@@ -50,6 +50,7 @@ class HubModel:
     size_gb: float
     tags: list[str] = field(default_factory=list)
     gguf_file: str | None = None
+    name_lower: str = field(init=False, repr=False, compare=False)
 
     def __post_init__(self) -> None:
         """Validate all fields."""
@@ -57,6 +58,9 @@ class HubModel:
             raise ValueError("repo_id must be a non-blank str")
         if not isinstance(self.name, str) or not self.name.strip():
             raise ValueError("name must be a non-blank str")
+        # ⚡ Bolt Optimization: Cache lowercase name to prevent redundant allocations
+        # and method calls in tight search filter loops (e.g. `_filtered_models`).
+        object.__setattr__(self, "name_lower", self.name.lower())
         if not isinstance(self.description, str):
             raise TypeError(
                 f"description must be str, got {type(self.description).__name__}"
