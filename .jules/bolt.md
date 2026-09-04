@@ -86,3 +86,8 @@
 ## 2024-05-30 - QTableWidget item reuse for better performance
 **Learning:** Repopulating a `QTableWidget` by continuously instantiating new `QTableWidgetItem` objects for each cell (and calling `setItem()`) creates significant memory allocation overhead and main thread lag, especially during frequent operations like search filtering.
 **Action:** When repopulating a `QTableWidget` that might frequently update (like a live search filter), check if an item already exists at that row/column (`self._table.item(row, col)`). If it does, reuse it by updating its text and properties (e.g., `setText()`) instead of instantiating and assigning a brand new item.
+
+## 2024-08-30 - Caching properties for repeated queries
+
+**Learning:** Calling `.lower()` or other expensive string operations repeatedly during frequent search filters or list rendering creates redundant overhead and allocations. For instance, recalculating `.lower()` on a model's name for every keystroke scales poorly with the number of models.
+**Action:** Pre-calculate and cache such fields on the dataclasses/models during initialization (e.g. `self.name_lower = self.name.lower()` in `__post_init__`), ensuring that these cached fields are properly excluded from dataclass representation using `repr=False, compare=False`.
