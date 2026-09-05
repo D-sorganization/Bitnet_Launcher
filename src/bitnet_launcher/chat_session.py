@@ -172,8 +172,10 @@ class ChatSession:
             self._echo_done = True
 
         # Phase 2: stream response until the trailing "\n> " prompt
-        if LLAMA_PROMPT in self._stdout_buf:
-            end = self._stdout_buf.index(LLAMA_PROMPT)
+        # ⚡ Bolt Optimization: Use .find() instead of `in` + `.index()` to avoid
+        # traversing the potentially large stdout buffer twice for the same substring.
+        end = self._stdout_buf.find(LLAMA_PROMPT)
+        if end >= 0:
             response = self._stdout_buf[:end].rstrip()
             if response.endswith(IM_END_MARKER):
                 response = response[: -len(IM_END_MARKER)].rstrip()

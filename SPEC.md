@@ -247,3 +247,8 @@ out of their intended shell arguments.
 ### Security Updates
 
 - Added a comprehensive suite of regression tests (`test_api_auth.py`) for the FastAPI server's API key authentication mechanism. The new tests verify that sensitive endpoints correctly require, validate, and reject authentication attempts (using `X-API-Key` headers) based on the presence of the `BITNET_API_KEY` environment variable, ensuring defense-in-depth protections remain intact.
+
+### Performance Updates
+
+- Optimized substring search and index retrieval in `chat_session.py` by replacing a redundant `in` check and `.index()` call with a single `.find()` call. This avoids traversing large stdout buffers twice for the same substring, improving performance during active chat streams.
+
