@@ -243,3 +243,7 @@ out of their intended shell arguments.
 ### API Security Updates (CORS)
 
 - Configured `CORSMiddleware` on the local FastAPI application to explicitly restrict `allow_origins` to the launcher's own loopback origins (`http://localhost:8000`, `http://127.0.0.1:8000`) only. Loopback port-80 origins are deliberately excluded because they belong to unrelated local HTTP services, not the launcher. This mitigates potential cross-origin requests from malicious websites or untrusted local services to the local API endpoint. Regression tests cover allowed preflights and rejected (external or port-80) origins.
+
+### Security Updates
+
+- Added a comprehensive suite of regression tests (`test_api_auth.py`) for the FastAPI server's API key authentication mechanism. The new tests verify that sensitive endpoints correctly require, validate, and reject authentication attempts (using `X-API-Key` headers) based on the presence of the `BITNET_API_KEY` environment variable, ensuring defense-in-depth protections remain intact.
