@@ -86,3 +86,7 @@
 ## 2024-05-30 - QTableWidget item reuse for better performance
 **Learning:** Repopulating a `QTableWidget` by continuously instantiating new `QTableWidgetItem` objects for each cell (and calling `setItem()`) creates significant memory allocation overhead and main thread lag, especially during frequent operations like search filtering.
 **Action:** When repopulating a `QTableWidget` that might frequently update (like a live search filter), check if an item already exists at that row/column (`self._table.item(row, col)`). If it does, reuse it by updating its text and properties (e.g., `setText()`) instead of instantiating and assigning a brand new item.
+
+## 2026-09-06 - Python substring search optimization in large buffers
+**Learning:** Checking `if marker in buf` and then calling `buf.index(marker)` forces Python to traverse the large output buffer twice, creating unnecessary overhead in high-frequency stream parsers like `chat_session.py`.
+**Action:** Use `idx = buf.find(marker); if idx >= 0:` to traverse the string only once.
