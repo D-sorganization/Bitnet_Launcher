@@ -348,7 +348,7 @@ class HubDialog(QDialog):
         for model in CATALOG:
             if tag != _ALL_TAGS_LABEL and tag not in model.tags:
                 continue
-            if query and query not in model.name.lower():
+            if query and query not in model.name_lower:
                 continue
             result.append(model)
         return result
