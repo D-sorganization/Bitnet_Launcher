@@ -96,3 +96,8 @@
 **Learning:** Calling `.lower()` or other expensive string operations repeatedly during frequent search filters or list rendering creates redundant overhead and allocations. For instance, recalculating `.lower()` on a model's name for every keystroke scales poorly with the number of models.
 **Action:** Pre-calculate and cache such fields on the dataclasses/models during initialization (e.g. `self.name_lower = self.name.lower()` in `__post_init__`), ensuring that these cached fields are properly excluded from dataclass representation using `repr=False, compare=False`.
 
+
+## 2026-09-07 - Optimize file extension checks in OS directory loops
+
+**Learning:** Calling `.lower()` on `DirEntry.name` inside a hot `os.scandir` loop purely to check case-insensitive file extensions creates unnecessary string allocations and method call overheads for every scanned file.
+**Action:** Use `.endswith()` with a tuple of valid strings (e.g., `file_entry.name.endswith((".gguf", ".GGUF"))`) to avoid string allocation overhead in file discovery tight loops.
