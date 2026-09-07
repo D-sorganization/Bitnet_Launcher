@@ -254,3 +254,7 @@ out of their intended shell arguments.
 - Pre-calculated and cached the lowercase model name (`name_lower`) in `HubModel.__post_init__` to avoid redundant string allocations and `.lower()` calls for every model during frequent search filter keystrokes in `HubDialog._filtered_models`.
 
 
+
+### Performance Updates
+
+- Optimized file extension checks in OS directory scanning loops (`src/bitnet_launcher/models.py`) by replacing `.lower().endswith()` with `.endswith()` and a tuple of valid suffixes. This avoids unnecessary string allocations for every file scanned.
