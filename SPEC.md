@@ -258,3 +258,5 @@ out of their intended shell arguments.
 ### Performance Updates
 
 - Optimized file extension checks in OS directory scanning loops (`src/bitnet_launcher/models.py`) by replacing `.lower().endswith()` with `.endswith()` and a tuple of valid suffixes. This avoids unnecessary string allocations for every file scanned.
+## Performance Updates
+* Avoided redundant string allocations for OS directory tight loop file extension checks by checking against an extension tuple using `.endswith(('.gguf', '.GGUF'))` before calling `.lower()`.
