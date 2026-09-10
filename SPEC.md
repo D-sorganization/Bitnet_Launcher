@@ -258,3 +258,8 @@ out of their intended shell arguments.
 ### Performance Updates
 
 - Optimized file extension checks in OS directory scanning loops (`src/bitnet_launcher/models.py`) by replacing `.lower().endswith()` with `.endswith()` and a tuple of valid suffixes. This avoids unnecessary string allocations for every file scanned.
+
+### Architecture Updates
+
+- Adopted maintainable Mermaid C4 architecture-map contract (`docs/architecture/C4.md`), validator (`scripts/architecture_map_contract.py`), contract tests (`tests/test_architecture_map_contract.py`), and CI workflow (`.github/workflows/architecture-map-contract.yml`) per Repository_Management #1596.
+

@@ -18,6 +18,19 @@ reachable from any live state and `abandoned` from `parked`.
 
 ## Active
 
+### DL-#1596 · Maintainable Mermaid C4 Architecture Maps
+
+- **State:** in_progress
+- **Owner:** local
+- **Issue:** #1596
+- **Branch:** docs/1596-c4-architecture-map
+- **PR:** not created
+- **Paths:** docs/architecture/C4.md, scripts/architecture_map_contract.py, tests/test_architecture_map_contract.py, .github/workflows/architecture-map-contract.yml, AGENTS.md, README.md, SPEC.md
+- **Started:** 2026-09-10
+- **Last verified:** 2026-09-10 (C4.md validated, contract tests 4/4 pass)
+- **Summary:** Baseline adoption of maintainable Mermaid C4 architecture maps in Bitnet_Launcher.
+- **Next step:** Open PR, enable auto-merge, verify CI passes green.
+
 ### DL-0001 · Automation Bitnet Pr114 115
 
 - **State:** parked
