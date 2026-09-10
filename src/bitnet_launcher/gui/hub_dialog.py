@@ -261,6 +261,7 @@ class HubDialog(QDialog):
         self._detail_label.setWordWrap(True)
         self._detail_label.setTextInteractionFlags(
             Qt.TextInteractionFlag.TextSelectableByMouse
+            | Qt.TextInteractionFlag.TextSelectableByKeyboard
             | Qt.TextInteractionFlag.LinksAccessibleByMouse
         )
         self._detail_label.setStyleSheet(

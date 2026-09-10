@@ -180,3 +180,8 @@
 
 **Learning:** Users can accidentally close the application window while a chat session is running, leading to abrupt termination and loss of conversation history without warning.
 **Action:** Always intercept `closeEvent` on main windows and present a confirmation dialog (`QMessageBox`) if there is an active, stateful process (like a running chat subprocess). Ensure `event.ignore()` is called if the user cancels the closure.
+
+## 2026-09-10 - Keyboard Accessible Label Text Selection
+
+**Learning:** When enabling text selection on a `QLabel` using `setTextInteractionFlags`, relying solely on `Qt.TextInteractionFlag.TextSelectableByMouse` makes the text completely inaccessible for users navigating via keyboard. They will be unable to focus on or select the label's text.
+**Action:** In PyQt6 applications, when making a `QLabel` selectable, always include `Qt.TextInteractionFlag.TextSelectableByKeyboard` (or use `Qt.TextBrowserInteraction`) alongside `TextSelectableByMouse` to ensure full accessibility.
