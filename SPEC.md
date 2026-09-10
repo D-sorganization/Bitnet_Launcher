@@ -258,3 +258,7 @@ out of their intended shell arguments.
 ### Performance Updates
 
 - Optimized file extension checks in OS directory scanning loops (`src/bitnet_launcher/models.py`) by replacing `.lower().endswith()` with `.endswith()` and a tuple of valid suffixes. This avoids unnecessary string allocations for every file scanned.
+
+### UX Updates
+
+- Added `Qt.TextInteractionFlag.TextSelectableByKeyboard` alongside `TextSelectableByMouse` to the `setTextInteractionFlags` calls for the detail `QLabel` widgets in both `ModelPanel` and `HubDialog`. This allows keyboard-only users to focus on and select the model detail text, resolving a significant accessibility gap.
