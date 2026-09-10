@@ -84,6 +84,12 @@ Use **Conventional Commits** format:
 
 Refer to `SPEC.md` for the detailed module breakdown and responsibility matrix.
 
+### Maintainable Architecture Maps
+
+- The canonical architecture map lives at `docs/architecture/C4.md`.
+- It contains non-placeholder Mermaid `C4Context` and `C4Container` views, a Feature Map tied to components and test evidence, and an Architecture Change Log.
+- Run `python scripts/architecture_map_contract.py` to validate contract conformance before opening architectural PRs.
+
 ---
 
 <!-- BEGIN FLEET-MANAGED: reasoning-engagement -->

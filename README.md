@@ -119,6 +119,8 @@ run **Install** (git clone) followed by **Build** (cmake).
 
 ## Architecture
 
+See [C4 Architecture Map](docs/architecture/C4.md) for the maintainable Mermaid C4 diagrams, container boundaries, and capability mappings.
+
 | Module                   | Responsibility                                                                |
 | ------------------------ | ----------------------------------------------------------------------------- |
 | `config.py`              | `BitnetConfig` and `InferenceConfig` dataclasses with DbC                     |
