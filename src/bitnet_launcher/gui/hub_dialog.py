@@ -370,9 +370,12 @@ class HubDialog(QDialog):
                     # ⚡ Bolt Optimization: os.scandir is ~4-5x faster than
                     # Path.iterdir() + glob
                     with os.scandir(model_dir) as it:
+                        # ⚡ Bolt Optimization: Avoid redundant string allocations
+                        # per file by checking common extensions first before calling
+                        # .lower()
                         installed = any(
-                            (lname := f.name.lower()).endswith(".gguf")
-                            and "tq2_0" in lname
+                            f.name.endswith((".gguf", ".GGUF"))
+                            and "tq2_0" in f.name.lower()
                             for f in it
                         )
 
