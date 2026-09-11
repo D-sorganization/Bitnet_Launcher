@@ -222,10 +222,7 @@ out of their intended shell arguments.
 
 ### UX Updates
 
-- Added a `QMessageBox` confirmation dialog in the main window's `closeEvent` to prevent users from accidentally closing the application and losing their ongoing conversation history or abruptly terminating an active chat subprocess without warning.
-
-### UX Updates
-
+- Added `Qt.TextInteractionFlag.TextSelectableByKeyboard` to selectable labels in `HubDialog` and `ModelPanel` to ensure text selection accessibility for keyboard users.
 - Added a `QMessageBox` confirmation dialog in the main window's `closeEvent` to prevent users from accidentally closing the application and losing their ongoing conversation history or abruptly terminating an active chat subprocess without warning.
 
 ### UX Updates
