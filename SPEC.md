@@ -253,10 +253,11 @@ out of their intended shell arguments.
 - Optimized string traversal in `chat_session.py` by replacing `in` + `index()` with a single `find()` call.
 - Pre-calculated and cached the lowercase model name (`name_lower`) in `HubModel.__post_init__` to avoid redundant string allocations and `.lower()` calls for every model during frequent search filter keystrokes in `HubDialog._filtered_models`.
 
-
-
 ### Performance Updates
 
 - Optimized file extension checks in OS directory scanning loops (`src/bitnet_launcher/models.py`) by replacing `.lower().endswith()` with `.endswith()` and a tuple of valid suffixes. This avoids unnecessary string allocations for every file scanned.
-## Performance Updates
-* Avoided redundant string allocations for OS directory tight loop file extension checks by checking against an extension tuple using `.endswith(('.gguf', '.GGUF'))` before calling `.lower()`.
+- Avoided redundant string allocations for OS directory tight loop file extension checks by checking against an extension tuple using `.endswith(('.gguf', '.GGUF'))` before calling `.lower()`.
+
+### Architecture Updates
+
+- Adopted maintainable Mermaid C4 architecture-map contract (`docs/architecture/C4.md`), validator (`scripts/architecture_map_contract.py`), contract tests (`tests/test_architecture_map_contract.py`), and CI workflow (`.github/workflows/architecture-map-contract.yml`) per Repository_Management #1596.
