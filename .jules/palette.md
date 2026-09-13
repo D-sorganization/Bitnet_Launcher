@@ -144,6 +144,7 @@
 **Action:** When conditionally disabling an input field (e.g. `QLineEdit`) during an operation, update its tooltip to explain the disabled state (e.g. "Wait for the current response to finish"), and clear or restore it when the field is re-enabled.
 
 ## 2026-08-01 - Item Activation Tooltips
+
 **Learning:** Using `itemActivated` for primary actions needs a descriptive tooltip to improve discoverability.
 **Action:** Always add a descriptive tooltip (`setToolTip`) to widgets utilizing `itemActivated`.
 
@@ -156,6 +157,7 @@
 
 **Learning:** In PyQt6 applications, `QTextEdit` widgets accept rich text (HTML) by default. This means that if a user pastes text from a webpage or a formatted document into a `QTextEdit` (like a system prompt input or a chat display), the text will retain unwanted fonts, sizes, background colors, and styling, ruining the application's clean aesthetic.
 **Action:** Always apply `.setAcceptRichText(False)` to `QTextEdit` instances where only plain text is intended, to prevent HTML injection via user-initiated insertions (e.g., pasting or drag-and-drop) and ensure a consistent UX.
+
 ## 2026-12-05 - Action Button State Synchronization
 
 **Learning:** When primary action buttons (like "Chat Here" or "Launch in Terminal") depend on the currently selected item in a list or table, they can easily become desynchronized if their enabled state is only evaluated upon user interaction or initialization. This leads to a confusing UX where users might attempt actions on an invalid or unselected state, resulting in unexpected errors.
@@ -173,7 +175,7 @@
 
 ## 2024-12-14 - Dynamic Tooltips for Form Validation States
 
-**Learning:** When action buttons (like "Install" or "Build") are disabled because form inputs fail validation (e.g., an invalid path), leaving the default "active" tooltip (e.g., "Compile the engine") is confusing. Users need to know *why* the action is disabled.
+**Learning:** When action buttons (like "Install" or "Build") are disabled because form inputs fail validation (e.g., an invalid path), leaving the default "active" tooltip (e.g., "Compile the engine") is confusing. Users need to know _why_ the action is disabled.
 **Action:** In form validation methods (like `_refresh_status`), always update the tooltips of dependent action buttons to explicitly explain the validation failure when they are disabled, and restore their descriptive tooltips when they become enabled.
 
 ## 2026-08-23 - Confirming Destructive Application Closures
@@ -185,3 +187,8 @@
 
 **Learning:** When enabling text selection on a `QLabel` using `setTextInteractionFlags` (e.g. `Qt.TextInteractionFlag.TextSelectableByMouse`), users relying on keyboard navigation cannot select or interact with the text.
 **Action:** Always include `Qt.TextInteractionFlag.TextSelectableByKeyboard` (or use `Qt.TextBrowserInteraction`) alongside mouse selection flags on `QLabel` to ensure keyboard accessibility.
+
+## 2026-09-12 - Item Activation Tooltips
+
+**Learning:** Using `itemActivated` for primary actions needs a descriptive tooltip to improve discoverability.
+**Action:** Always add a descriptive tooltip (`setToolTip`) to widgets utilizing `itemActivated`.
