@@ -109,6 +109,7 @@ out of their intended shell arguments.
 - Inference hyperparameter inputs (QSpinBox) are configured with contextual unit suffixes (e.g. "tokens") to improve clarity.
 - Hub Dialog table includes a spanning empty state row with selection disabled when search/filter yields no results.
 - Hub Dialog table items can be double-clicked to start a download.
+- Hub Dialog available models table includes a descriptive tooltip ("Double-click or press Enter to download") to improve action discoverability.
 - QLineEdit inputs (such as search inputs) are configured with clear buttons.
 - Hub Dialog includes accessible names for its model table and download progress bar to improve screen reader context.
 - All `QTextEdit` widgets (Settings Panel, Chat Panel, Setup Dialog log, Hub Dialog log) apply `setTabChangesFocus(True)` to prevent keyboard focus trapping and ensure accessibility.

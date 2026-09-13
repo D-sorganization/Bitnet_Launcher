@@ -95,21 +95,25 @@
 **Prevention:** Always apply `.setAcceptRichText(False)` to `QTextEdit` instances to enforce plain text input and display, unless rich text editing is explicitly required by the feature.
 
 ## 2024-05-24 - [Server-Sent Events (SSE) injection risk from carriage returns]
+
 **Vulnerability:** SSE endpoints that sanitize only `\n` can still be vulnerable to injection if payloads contain `\r\n` or `\r`, which can split events in some parsers.
 **Learning:** It is insufficient to only escape `\n` when streaming output in an SSE format; carriage returns must also be handled to fully prevent attackers from injecting arbitrary fields.
 **Prevention:** When sanitizing output for SSE, always remove or sanitize `\r` characters as well, e.g., `chunk.replace("\r", "").replace("\n", "\ndata: ")`.
 
 ## 2026-08-25 - [Prevent Information Exposure of Absolute Paths in API Responses]
+
 **Vulnerability:** The `/models` API endpoint returned the absolute file system path of each discovered model. This exposed internal server directory structures (including potentially the server's username or environment) to any authenticated API client.
 **Learning:** APIs should never expose internal absolute paths unless strictly necessary. Clients typically only need identifiers (like the model name) or at most the file's basename.
 **Prevention:** When serializing internal file descriptors (like `ModelInfo`) for API responses, map internal paths to either relative paths or just the filename (e.g., `m.path.name` instead of `str(m.path)`).
 
 ## 2026-08-30 - [MEDIUM] Missing CORS Restrictions on Local Desktop API
+
 **Vulnerability:** The local FastAPI server (`/chat/start`, `/chat/send`, `/models`) did not have CORS restrictions configured, leaving the API entirely open or relying on the default framework behavior. While it's a local API intended only for the desktop app, an overly permissive (or default allow-all) CORS policy on localhost means that malicious external websites visited in a web browser can make cross-origin requests to the local API.
 **Learning:** Even local APIs (running on `127.0.0.1` or `localhost`) require strict CORS configuration. Otherwise, any web page running in the user's browser can potentially interact with the API via XMLHttpRequest or Fetch, potentially executing models or sending data locally.
 **Prevention:** Always explicitly configure `CORSMiddleware` on local APIs with `allow_origins` strictly limited to `http://localhost`, `http://127.0.0.1`, and their exact expected ports. Never use `allow_origins=["*"]` or leave it unconfigured.
 
 ## 2026-09-13 - [Prevent Information Exposure of Internal Hardcoded Paths]
+
 **Vulnerability:** The configuration defaults in `config.py` contained hardcoded absolute paths to a specific developer's local home directory (e.g., `/home/dieterolson/BitNet`). This leaked internal usernames and path structures.
 **Learning:** Hardcoding local paths tied to specific environments not only breaks portability across different environments, but it can be classified as a minor Information Exposure risk as it leaks development structure or usernames into version control or artifacts.
 **Prevention:** Always use dynamic, portable resolvers like `Path.home()` for default configuration paths instead of static literal paths with usernames.
