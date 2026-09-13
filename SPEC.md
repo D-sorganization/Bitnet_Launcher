@@ -258,3 +258,7 @@ out of their intended shell arguments.
 ### Architecture Updates
 
 - Adopted maintainable Mermaid C4 architecture-map contract (`docs/architecture/C4.md`), validator (`scripts/architecture_map_contract.py`), contract tests (`tests/test_architecture_map_contract.py`), and CI workflow (`.github/workflows/architecture-map-contract.yml`) per Repository_Management #1596.
+
+### Security Updates
+
+- Replaced hardcoded literal strings for `_DEFAULT_BITNET_ROOT` and `_DEFAULT_WT_EXE` in `config.py` with portable path resolutions using `Path.home() / "BitNet"` and `"wt.exe"`. This prevents Information Exposure of developer usernames and fixes a critical portability bug for end users.
