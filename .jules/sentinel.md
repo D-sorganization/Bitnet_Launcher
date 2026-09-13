@@ -108,3 +108,8 @@
 **Vulnerability:** The local FastAPI server (`/chat/start`, `/chat/send`, `/models`) did not have CORS restrictions configured, leaving the API entirely open or relying on the default framework behavior. While it's a local API intended only for the desktop app, an overly permissive (or default allow-all) CORS policy on localhost means that malicious external websites visited in a web browser can make cross-origin requests to the local API.
 **Learning:** Even local APIs (running on `127.0.0.1` or `localhost`) require strict CORS configuration. Otherwise, any web page running in the user's browser can potentially interact with the API via XMLHttpRequest or Fetch, potentially executing models or sending data locally.
 **Prevention:** Always explicitly configure `CORSMiddleware` on local APIs with `allow_origins` strictly limited to `http://localhost`, `http://127.0.0.1`, and their exact expected ports. Never use `allow_origins=["*"]` or leave it unconfigured.
+
+## 2026-09-13 - [Prevent Information Exposure of Internal Hardcoded Paths]
+**Vulnerability:** The configuration defaults in `config.py` contained hardcoded absolute paths to a specific developer's local home directory (e.g., `/home/dieterolson/BitNet`). This leaked internal usernames and path structures.
+**Learning:** Hardcoding local paths tied to specific environments not only breaks portability across different environments, but it can be classified as a minor Information Exposure risk as it leaks development structure or usernames into version control or artifacts.
+**Prevention:** Always use dynamic, portable resolvers like `Path.home()` for default configuration paths instead of static literal paths with usernames.

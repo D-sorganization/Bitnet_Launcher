@@ -13,8 +13,8 @@ from pathlib import Path
 
 logger = logging.getLogger(__name__)
 
-_DEFAULT_BITNET_ROOT = Path("/home/dieterolson/BitNet")
-_DEFAULT_WT_EXE = "/mnt/c/Users/diete/AppData/Local/Microsoft/WindowsApps/wt.exe"
+_DEFAULT_BITNET_ROOT = Path.home() / "BitNet"
+_DEFAULT_WT_EXE = "wt.exe"
 
 
 @dataclass
