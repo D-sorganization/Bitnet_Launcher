@@ -263,3 +263,7 @@ out of their intended shell arguments.
 ### Security Updates
 
 - Replaced hardcoded literal strings for `_DEFAULT_BITNET_ROOT` and `_DEFAULT_WT_EXE` in `config.py` with portable path resolutions using `Path.home() / "BitNet"` and `"wt.exe"`. This prevents Information Exposure of developer usernames and fixes a critical portability bug for end users.
+
+### CI/CD Updates
+
+- Downgraded `actions/checkout` from non-existent `@v7` to `@v4` in `.github/workflows/local-only-runner-guard.yml` to restore clean pipeline execution (#263).
