@@ -267,3 +267,7 @@ out of their intended shell arguments.
 ### CI/CD Updates
 
 - Downgraded `actions/checkout` from non-existent `@v7` to `@v4` in `.github/workflows/local-only-runner-guard.yml` to restore clean pipeline execution (#263).
+
+### UX Updates
+
+- Added `Qt.TextInteractionFlag.TextSelectableByMouse | Qt.TextInteractionFlag.TextSelectableByKeyboard` to the installation status labels in `src/bitnet_launcher/gui/setup_dialog.py` so users can easily select and copy paths, dependency statuses, or error messages.
