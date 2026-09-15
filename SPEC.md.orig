@@ -147,7 +147,6 @@ out of their intended shell arguments.
 - API key verification now uses a constant-time comparison (`secrets.compare_digest`) with UTF-8 encoded strings to prevent timing attacks against the authentication mechanism.
 
 - The FastAPI endpoints `POST /chat/start` and `POST /chat/send` were updated to use Pydantic models in the request body (`ChatStartRequest` and `ChatSendRequest`) rather than accepting URL query parameters. This enforces a `Content-Type: application/json` payload requirement on clients, ensuring that modern browsers send a CORS preflight request (OPTIONS) and protecting the local endpoints from Cross-Site Request Forgery (CSRF) via simple requests.
-- Added `Referrer-Policy: no-referrer` header to the API response security headers to prevent information exposure.
 
 ### Settings Security Updates
 
