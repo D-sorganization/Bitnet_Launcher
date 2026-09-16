@@ -267,3 +267,6 @@ out of their intended shell arguments.
 ### CI/CD Updates
 
 - Downgraded `actions/checkout` from non-existent `@v7` to `@v4` in `.github/workflows/local-only-runner-guard.yml` to restore clean pipeline execution (#263).
+
+### Sentinel Security Enhancements
+- Added `Referrer-Policy: no-referrer` header to the API response to prevent local API URLs from leaking to external domains.
