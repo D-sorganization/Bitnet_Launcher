@@ -267,3 +267,7 @@ out of their intended shell arguments.
 ### CI/CD Updates
 
 - Downgraded `actions/checkout` from non-existent `@v7` to `@v4` in `.github/workflows/local-only-runner-guard.yml` to restore clean pipeline execution (#263).
+
+### API Security Updates
+
+- The FastAPI server (`src/bitnet_launcher/api.py`) was updated to include the `Referrer-Policy: no-referrer` header in the `add_security_headers` middleware. This prevents the `Referer` header from inadvertently leaking sensitive local application URLs or state to external domains.
