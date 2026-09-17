@@ -270,3 +270,6 @@ out of their intended shell arguments.
 
 ### Sentinel Security Enhancements
 - Added `Referrer-Policy: no-referrer` header to the API response to prevent local API URLs from leaking to external domains.
+
+### UI Enhancements
+- Added text-selectability to SetupDialog status labels (#123).
