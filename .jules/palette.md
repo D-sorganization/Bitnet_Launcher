@@ -192,3 +192,8 @@
 
 **Learning:** Using `itemActivated` for primary actions needs a descriptive tooltip to improve discoverability.
 **Action:** Always add a descriptive tooltip (`setToolTip`) to widgets utilizing `itemActivated`.
+
+## 2026-09-17 - Selectable Status Labels
+
+**Learning:** When displaying informational status labels (e.g., paths, dependency statuses, or error messages in setup dialogs), making them text-selectable allows users to easily copy the text for troubleshooting or sharing, which greatly improves the support experience.
+**Action:** In PyQt applications, make informational status labels text-selectable by applying `setTextInteractionFlags` with both mouse and keyboard flags (e.g., `Qt.TextInteractionFlag.TextSelectableByMouse | Qt.TextInteractionFlag.TextSelectableByKeyboard`).
