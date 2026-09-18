@@ -117,3 +117,8 @@
 **Vulnerability:** The configuration defaults in `config.py` contained hardcoded absolute paths to a specific developer's local home directory (e.g., `/home/dieterolson/BitNet`). This leaked internal usernames and path structures.
 **Learning:** Hardcoding local paths tied to specific environments not only breaks portability across different environments, but it can be classified as a minor Information Exposure risk as it leaks development structure or usernames into version control or artifacts.
 **Prevention:** Always use dynamic, portable resolvers like `Path.home()` for default configuration paths instead of static literal paths with usernames.
+
+## 2026-09-18 - Add Referrer-Policy Header to Local FastAPI Server
+**Vulnerability:** The local FastAPI server lacked a `Referrer-Policy` header, potentially allowing sensitive local application URLs or state to leak to external domains via the `Referer` header when making outbound requests.
+**Learning:** Local desktop application APIs need strict referrer policies to prevent internal state leakage, even if they only serve local traffic.
+**Prevention:** Always explicitly set `Referrer-Policy: no-referrer` in security middleware for local FastAPI servers.
