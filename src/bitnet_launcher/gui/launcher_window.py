@@ -191,6 +191,10 @@ class BitNetLauncher(QMainWindow):
 
         self._status = QLabel("Ready.")
         self._status.setTextFormat(Qt.TextFormat.PlainText)
+        self._status.setTextInteractionFlags(
+            Qt.TextInteractionFlag.TextSelectableByMouse
+            | Qt.TextInteractionFlag.TextSelectableByKeyboard
+        )
         self._status.setStyleSheet(
             f"color: {CatppuccinTheme.SUBTEXT}; font-size: 10px;"
         )

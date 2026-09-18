@@ -170,6 +170,10 @@ class SetupDialog(QDialog):
             self._lbl_setup_env,
         ):
             lbl.setWordWrap(True)
+            lbl.setTextInteractionFlags(
+                Qt.TextInteractionFlag.TextSelectableByMouse
+                | Qt.TextInteractionFlag.TextSelectableByKeyboard
+            )
             status_layout.addWidget(lbl)
 
         root.addWidget(status_group)

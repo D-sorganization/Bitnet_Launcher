@@ -267,3 +267,7 @@ out of their intended shell arguments.
 ### CI/CD Updates
 
 - Downgraded `actions/checkout` from non-existent `@v7` to `@v4` in `.github/workflows/local-only-runner-guard.yml` to restore clean pipeline execution (#263).
+
+### UX Updates
+
+- Added `Qt.TextInteractionFlag.TextSelectableByMouse` and `Qt.TextInteractionFlag.TextSelectableByKeyboard` to informational status labels in `SetupDialog` and `LauncherWindow` to allow users to easily copy dependency details, error messages, and state for troubleshooting.
