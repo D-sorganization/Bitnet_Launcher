@@ -275,3 +275,4 @@ out of their intended shell arguments.
 ### UI Enhancements
 
 - Added text-selectability to SetupDialog status labels (#123).
+| 2026-09-20 | #1 | Made status label selectable |
