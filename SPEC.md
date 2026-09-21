@@ -276,3 +276,7 @@ out of their intended shell arguments.
 
 - Added text-selectability to SetupDialog status labels (#123).
 | 2026-09-20 | #1 | Made status label selectable |
+
+### Security Updates
+
+- Added an audit logging statement to the API key verification function in the FastAPI server (`src/bitnet_launcher/api.py`). Failed authentication attempts now output a `WARNING` level log containing the client's IP address (`request.client.host`), improving visibility into potential unauthorized access attempts.
