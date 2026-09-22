@@ -212,6 +212,7 @@ class BitNetLauncher(QMainWindow):
         dialog.exec()
         # Refresh model list in case new models were downloaded
         self._models = discover_models(self._cfg.models_dir)
+        self._model_panel.set_models(self._models)
         logger.debug("Hub dialog closed; model list refreshed")
 
     def _open_setup_dialog(self) -> None:

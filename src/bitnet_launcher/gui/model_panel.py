@@ -10,7 +10,7 @@ from __future__ import annotations
 import logging
 
 from PyQt6.QtCore import Qt, pyqtSignal
-from PyQt6.QtGui import QFont
+from PyQt6.QtGui import QColor, QFont
 from PyQt6.QtWidgets import (
     QGroupBox,
     QLabel,
@@ -24,6 +24,14 @@ from bitnet_launcher.models import ModelInfo, _fmt_bytes
 from bitnet_launcher.theme import CatppuccinTheme
 
 logger = logging.getLogger(__name__)
+
+_LOAD_TOOLTIP = "Double-click or press Enter to load model"
+
+
+def _require_model_list(models: object) -> None:
+    """Precondition: *models* must be a ``list`` (of :class:`ModelInfo`)."""
+    if not isinstance(models, list):
+        raise TypeError(f"models must be a list, got {type(models).__name__}")
 
 
 class ModelPanel(QWidget):
@@ -52,8 +60,7 @@ class ModelPanel(QWidget):
         parent:
             Optional Qt parent widget.
         """
-        if not isinstance(models, list):
-            raise TypeError(f"models must be a list, got {type(models).__name__}")
+        _require_model_list(models)
         super().__init__(parent)
 
         self._models = models
@@ -69,6 +76,24 @@ class ModelPanel(QWidget):
             return None
         return self._models[row]
 
+    def set_models(self, models: list[ModelInfo]) -> None:
+        """Replace the displayed models, e.g. after new downloads.
+
+        Preconditions: ``models`` is a list of :class:`ModelInfo`.
+        Postconditions: the list shows one row per model (or the empty-state
+        placeholder), the first model is selected and detailed when present,
+        otherwise the detail label and tooltip are cleared.
+        """
+        _require_model_list(models)
+        self._models = models
+        self._list.clear()
+        self._populate_list()
+        if self._models:
+            self._update_detail(self._models[0])
+        else:
+            self._detail.setText("")
+        self._list.setToolTip(_LOAD_TOOLTIP if self._models else "")
+
     # ── UI construction ─────────────────────────────────────────────────────
 
     def _build_ui(self) -> None:
@@ -81,31 +106,7 @@ class ModelPanel(QWidget):
         self._list.setAccessibleName("Model list")
         self._list.setFont(QFont("Consolas", 10))
 
-        # ⚡ Bolt Optimization: Suspend list updates during batch insertions
-        # Why: Prevents expensive synchronous layout recalculations and repaints
-        # for every single cell inserted, drastically improving rendering speed
-        # when dealing with a large number of models.
-        self._list.setUpdatesEnabled(False)
-        try:
-            if self._models:
-                for info in self._models:
-                    item = QListWidgetItem(info.display_name)
-                    item.setData(256, info)  # Qt.ItemDataRole.UserRole == 256
-                    item.setToolTip("Double-click or press Enter to load model")
-                    self._list.addItem(item)
-                self._list.setCurrentRow(0)
-            else:
-                from PyQt6.QtGui import QColor
-
-                empty_item = QListWidgetItem(
-                    "No models found.\nUse 'Download Models' to get started."
-                )
-                empty_item.setFlags(Qt.ItemFlag.NoItemFlags)
-                empty_item.setTextAlignment(Qt.AlignmentFlag.AlignCenter)
-                empty_item.setForeground(QColor(t.SUBTEXT))
-                self._list.addItem(empty_item)
-        finally:
-            self._list.setUpdatesEnabled(True)
+        self._populate_list()
 
         group_layout.addWidget(self._list)
 
@@ -131,9 +132,33 @@ class ModelPanel(QWidget):
         # _update_detail before self._detail is created (AttributeError).
         self._list.currentRowChanged.connect(self._on_row_changed)
         self._list.itemActivated.connect(self._on_item_activated)
-        self._list.setToolTip(
-            "Double-click or press Enter to load model" if self._models else ""
-        )
+        self._list.setToolTip(_LOAD_TOOLTIP if self._models else "")
+
+    def _populate_list(self) -> None:
+        """Fill ``self._list`` from ``self._models`` (or the empty state)."""
+        # ⚡ Bolt Optimization: Suspend list updates during batch insertions
+        # Why: Prevents expensive synchronous layout recalculations and repaints
+        # for every single cell inserted, drastically improving rendering speed
+        # when dealing with a large number of models.
+        self._list.setUpdatesEnabled(False)
+        try:
+            if self._models:
+                for info in self._models:
+                    item = QListWidgetItem(info.display_name)
+                    item.setData(256, info)  # Qt.ItemDataRole.UserRole == 256
+                    item.setToolTip(_LOAD_TOOLTIP)
+                    self._list.addItem(item)
+                self._list.setCurrentRow(0)
+            else:
+                empty_item = QListWidgetItem(
+                    "No models found.\nUse 'Download Models' to get started."
+                )
+                empty_item.setFlags(Qt.ItemFlag.NoItemFlags)
+                empty_item.setTextAlignment(Qt.AlignmentFlag.AlignCenter)
+                empty_item.setForeground(QColor(CatppuccinTheme.SUBTEXT))
+                self._list.addItem(empty_item)
+        finally:
+            self._list.setUpdatesEnabled(True)
 
     def _on_item_activated(self, item: QListWidgetItem) -> None:
         row = self._list.row(item)
