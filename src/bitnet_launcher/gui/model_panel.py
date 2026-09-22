@@ -69,6 +69,41 @@ class ModelPanel(QWidget):
             return None
         return self._models[row]
 
+    def set_models(self, models: list[ModelInfo]) -> None:
+        """Update the list of models."""
+        self._models = models
+        self._list.clear()
+
+        self._list.setUpdatesEnabled(False)
+        try:
+            if self._models:
+                for info in self._models:
+                    item = QListWidgetItem(info.display_name)
+                    item.setData(256, info)
+                    item.setToolTip("Double-click or press Enter to load model")
+                    self._list.addItem(item)
+                self._list.setCurrentRow(0)
+            else:
+                from PyQt6.QtGui import QColor
+
+                t = CatppuccinTheme
+                empty_item = QListWidgetItem(
+                    "No models found.\nUse 'Download Models' to get started."
+                )
+                empty_item.setFlags(Qt.ItemFlag.NoItemFlags)
+                empty_item.setTextAlignment(Qt.AlignmentFlag.AlignCenter)
+                empty_item.setForeground(QColor(t.SUBTEXT))
+                self._list.addItem(empty_item)
+        finally:
+            self._list.setUpdatesEnabled(True)
+
+        if self._models:
+            self._update_detail(self._models[0])
+            self._list.setToolTip("Double-click or press Enter to load model")
+        else:
+            self._detail.setText("")
+            self._list.setToolTip("")
+
     # ── UI construction ─────────────────────────────────────────────────────
 
     def _build_ui(self) -> None:

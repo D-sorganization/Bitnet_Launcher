@@ -4,3 +4,9 @@
 ### Performance Updates
 - Optimized string traversal in `chat_session.py` by replacing `in` + `index()` with a single `find()` call.
 >>>>>>> REPLACE
+<<<<<<< SEARCH
+| 2024-05-12 | #96 | Enforce offscreen Qt platform in tests to prevent CI initialization failures |
+=======
+| 2024-05-12 | #96 | Enforce offscreen Qt platform in tests to prevent CI initialization failures |
+| 2026-09-22 | SELF | Synchronize ModelPanel list state after HubDialog closure |
+>>>>>>> REPLACE

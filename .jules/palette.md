@@ -202,3 +202,8 @@
 
 **Learning:** When displaying informational status labels (e.g., application status in the main window), making them text-selectable allows users to easily copy the text for troubleshooting or sharing, which greatly improves the support experience.
 **Action:** In PyQt applications, make informational status labels text-selectable by applying `setTextInteractionFlags` with both mouse and keyboard flags (e.g., `Qt.TextInteractionFlag.TextSelectableByMouse | Qt.TextInteractionFlag.TextSelectableByKeyboard`).
+
+## 2026-09-22 - Modal Dialog State Desynchronization
+
+**Learning:** When a modal dialog modifies underlying application state (like downloading new models), the persistent UI panels that depend on that state (like `ModelPanel`) can easily become desynchronized if their data is only fetched during application initialization. This results in users not seeing the newly downloaded models until they restart the application.
+**Action:** Always explicitly update persistent UI panels with refreshed data immediately after a state-mutating dialog's `.exec()` call returns (e.g., calling `self._model_panel.set_models(self._models)` after refreshing the model list).
