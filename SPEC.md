@@ -275,11 +275,12 @@ out of their intended shell arguments.
 ### UI Enhancements
 
 - Added text-selectability to SetupDialog status labels (#123).
-| 2026-09-20 | #1 | Made status label selectable |
+  | 2026-09-20 | #1 | Made status label selectable |
 
 ### Security Updates
 
 - Added an audit logging statement to the API key verification function in the FastAPI server (`src/bitnet_launcher/api.py`). Failed authentication attempts now output a `WARNING` level log containing the client's IP address (`request.client.host`), improving visibility into potential unauthorized access attempts.
+
 ### UX Updates
 
-- Synchronized `ModelPanel` list state with `HubDialog` downloads by calling `self._model_panel.set_models(self._models)` in `BitNetLauncher._open_hub_dialog` and adding a `set_models` method to `ModelPanel`. This ensures newly downloaded models appear in the launcher immediately after the hub dialog is closed, without requiring an application restart.
+- Synchronized `ModelPanel` list state with `HubDialog` downloads by calling `self._model_panel.set_models(self._models)` in `BitNetLauncher._open_hub_dialog` and adding a `set_models` method to `ModelPanel`. This ensures newly downloaded models appear in the launcher immediately after the hub dialog is closed, without requiring an application restart. List population is shared with construction via `ModelPanel._populate_list`, and `set_models` enforces the same list precondition as `__init__` (#279).
