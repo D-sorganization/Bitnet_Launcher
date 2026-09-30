@@ -285,6 +285,8 @@ out of their intended shell arguments.
 
 - Synchronized `ModelPanel` list state with `HubDialog` downloads by calling `self._model_panel.set_models(self._models)` in `BitNetLauncher._open_hub_dialog` and adding a `set_models` method to `ModelPanel`. This ensures newly downloaded models appear in the launcher immediately after the hub dialog is closed, without requiring an application restart. List population is shared with construction via `ModelPanel._populate_list`, and `set_models` enforces the same list precondition as `__init__` (#279).
 
-### UX Updates
+## Change Log
 
-- Synchronized form label tooltips with their associated input fields when conditionally disabled during async operations in `HubDialog` and `SetupDialog`. Converted label elements to instance variables and explicitly mirrored tooltip state changes to prevent users from seeing stale "active" tooltips when hovering over the label of a disabled field.
+| Date       | PR   | Changes                                                                            |
+| ---------- | ---- | ---------------------------------------------------------------------------------- |
+| 2026-09-30 | #288 | Synchronized form label tooltips with disabled inputs in HubDialog and SetupDialog |
