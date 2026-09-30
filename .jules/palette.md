@@ -207,3 +207,7 @@
 
 **Learning:** When a modal dialog modifies underlying application state (like downloading new models), the persistent UI panels that depend on that state (like `ModelPanel`) can easily become desynchronized if their data is only fetched during application initialization. This results in users not seeing the newly downloaded models until they restart the application.
 **Action:** Always explicitly update persistent UI panels with refreshed data immediately after a state-mutating dialog's `.exec()` call returns (e.g., calling `self._model_panel.set_models(self._models)` after refreshing the model list).
+
+## 2026-09-30 - Synchronized Form Label Tooltips
+**Learning:** When conditionally disabling standard input fields (e.g., `QLineEdit`, `QComboBox`) and updating their tooltips to explain the disabled state (e.g., "An operation is currently in progress"), failing to also update the tooltip of their associated buddy `QLabel` causes a state inconsistency. Users hovering over the label will still see the original, stale active-state tooltip.
+**Action:** When creating form elements, store both the input field and its buddy `QLabel` as instance variables (e.g., `self._lbl_path = QLabel(...)`). When dynamically modifying the input field's tooltip to explain a state change (like being disabled), explicitly synchronize the label's tooltip as well (e.g., `self._lbl_path.setToolTip(...)`).

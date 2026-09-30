@@ -182,16 +182,16 @@ class SetupDialog(QDialog):
         path_group = QGroupBox("BitNet Root")
         path_layout = QHBoxLayout(path_group)
 
-        lbl_path = QLabel("&Directory:")
-        path_layout.addWidget(lbl_path)
+        self._lbl_path = QLabel("&Directory:")
+        path_layout.addWidget(self._lbl_path)
 
         self._path_edit = QLineEdit(str(self._bitnet_root))
-        lbl_path.setBuddy(self._path_edit)
+        self._lbl_path.setBuddy(self._path_edit)
         self._path_edit.setPlaceholderText("/home/user/BitNet")
         self._path_edit.setAccessibleName("BitNet Root Path")
         self._path_edit.setToolTip("Absolute path to the BitNet installation directory")
         if self._path_edit.toolTip():
-            lbl_path.setToolTip(self._path_edit.toolTip())
+            self._lbl_path.setToolTip(self._path_edit.toolTip())
         self._path_edit.setClearButtonEnabled(True)
         self._path_edit.editingFinished.connect(self._on_path_edited)
         path_layout.addWidget(self._path_edit)
@@ -383,6 +383,7 @@ class SetupDialog(QDialog):
         self._log.clear()
         self._path_edit.setEnabled(False)
         self._path_edit.setToolTip("An operation is currently in progress")
+        self._lbl_path.setToolTip("An operation is currently in progress")
         self._btn_browse.setEnabled(False)
         self._btn_browse.setToolTip("An operation is currently in progress")
         self._btn_install.setEnabled(False)
@@ -418,6 +419,7 @@ class SetupDialog(QDialog):
         self._worker = None
         self._path_edit.setEnabled(True)
         self._path_edit.setToolTip("Absolute path to the BitNet installation directory")
+        self._lbl_path.setToolTip("Absolute path to the BitNet installation directory")
         self._btn_browse.setEnabled(True)
         self._btn_browse.setToolTip("Choose BitNet root directory")
         self._btn_install.setText("&Install BitNet (git clone + pip)")
@@ -439,6 +441,7 @@ class SetupDialog(QDialog):
         self._worker = None
         self._path_edit.setEnabled(True)
         self._path_edit.setToolTip("Absolute path to the BitNet installation directory")
+        self._lbl_path.setToolTip("Absolute path to the BitNet installation directory")
         self._btn_browse.setEnabled(True)
         self._btn_browse.setToolTip("Choose BitNet root directory")
         self._btn_install.setText("&Install BitNet (git clone + pip)")
