@@ -27,8 +27,7 @@ on:
       - main
       - master
   pull_request:
-    paths:
-      - ".github/workflows/**"
+    types: [opened, synchronize, reopened, ready_for_review]
   workflow_dispatch:
 
 concurrency:
@@ -134,7 +133,7 @@ jobs:
 
               A toggle such as
 
-                  ${{ vars.RUNNER_TARGET == 'local' && 'd-sorg-fleet' || 'ubuntu-latest' }}
+                  "$" + "{{ vars.RUNNER_TARGET == 'local' && 'd-sorg-fleet' || 'ubuntu-latest' }}"
 
               can produce either label depending on a repository variable, so both
               are candidates and both must be judged. Treating the expression as a
@@ -142,7 +141,7 @@ jobs:
               through the guard: the text contains "d-sorg-fleet", so a substring
               test concluded it routed to the fleet.
               """
-              if "${{" not in value:
+              if "$" + "{{" not in value:
                   return []
               return [lit for lit in QUOTED_LITERAL.findall(value) if lit.strip()]
 

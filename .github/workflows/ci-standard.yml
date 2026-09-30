@@ -59,16 +59,6 @@ jobs:
         run: uv run pytest tests/ -v --tb=short
         env:
           QT_QPA_PLATFORM: offscreen
-  # Triggering runner guard
-
-  local-only-workflows:
-    timeout-minutes: 30
-    name: Reject hosted runner routing
-    runs-on: ubuntu-latest
-    steps:
-      - name: Dummy
-        run: echo "passed"
-
   # Required branch-protection context for `main` (org ruleset
   # Repository_Protections requires exactly this name). It aggregates lint AND
   # the test suite so a red test run blocks merge - before the 2026-09-15 fleet

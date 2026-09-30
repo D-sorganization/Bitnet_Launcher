@@ -287,6 +287,6 @@ out of their intended shell arguments.
 
 ## Change Log
 
-| Date       | PR   | Changes                                                                            |
-| ---------- | ---- | ---------------------------------------------------------------------------------- |
-| 2026-09-30 | #288 | Synchronized form label tooltips with disabled inputs in HubDialog and SetupDialog |
+| Date       | PR   | Changes                                                          |
+| ---------- | ---- | ---------------------------------------------------------------- |
+| 2026-09-30 | #288 | Synced form tooltips and repaired runner-guard CI trigger/parser |
