@@ -177,17 +177,17 @@ class HubDialog(QDialog):
 
         # Filter row
         filter_row = QHBoxLayout()
-        lbl_filter = QLabel("&Filter:")
-        filter_row.addWidget(lbl_filter)
+        self._lbl_filter = QLabel("&Filter:")
+        filter_row.addWidget(self._lbl_filter)
 
         self._tag_combo = QComboBox()
         self._tag_combo.setAccessibleName("Filter by tag")
-        lbl_filter.setBuddy(self._tag_combo)
+        self._lbl_filter.setBuddy(self._tag_combo)
         self._tag_combo.setToolTip(
             "Filter the model list by specific capabilities or sizes"
         )
         if self._tag_combo.toolTip():
-            lbl_filter.setToolTip(self._tag_combo.toolTip())
+            self._lbl_filter.setToolTip(self._tag_combo.toolTip())
         self._tag_combo.setFixedWidth(140)
         self._tag_combo.currentIndexChanged.connect(self._refresh_table)
         filter_row.addWidget(self._tag_combo)
@@ -204,16 +204,16 @@ class HubDialog(QDialog):
         self._search_timer.setInterval(300)
         self._search_timer.timeout.connect(self._refresh_table)
 
-        lbl_search = QLabel("&Search:")
-        filter_row.addWidget(lbl_search)
+        self._lbl_search = QLabel("&Search:")
+        filter_row.addWidget(self._lbl_search)
 
         self._search = QLineEdit()
-        lbl_search.setBuddy(self._search)
+        self._lbl_search.setBuddy(self._search)
         self._search.setAccessibleName("Search models")
         self._search.setPlaceholderText("Search by name…")
         self._search.setToolTip("Filter models by name")
         if self._search.toolTip():
-            lbl_search.setToolTip(self._search.toolTip())
+            self._lbl_search.setToolTip(self._search.toolTip())
         self._search.setClearButtonEnabled(True)
         self._search.textChanged.connect(self._search_timer.start)
         filter_row.addWidget(self._search)
@@ -543,8 +543,10 @@ class HubDialog(QDialog):
 
         self._search.setEnabled(False)
         self._search.setToolTip("An operation is currently in progress")
+        self._lbl_search.setToolTip("An operation is currently in progress")
         self._tag_combo.setEnabled(False)
         self._tag_combo.setToolTip("An operation is currently in progress")
+        self._lbl_filter.setToolTip("An operation is currently in progress")
         self._table.setEnabled(False)
         self._table.setToolTip("An operation is currently in progress")
         self._append_log(f"Starting download: {model.name} …")
@@ -583,8 +585,12 @@ class HubDialog(QDialog):
 
         self._search.setEnabled(True)
         self._search.setToolTip("Filter models by name")
+        self._lbl_search.setToolTip("Filter models by name")
         self._tag_combo.setEnabled(True)
         self._tag_combo.setToolTip(
+            "Filter the model list by specific capabilities or sizes"
+        )
+        self._lbl_filter.setToolTip(
             "Filter the model list by specific capabilities or sizes"
         )
         self._table.setEnabled(True)
@@ -607,8 +613,12 @@ class HubDialog(QDialog):
 
         self._search.setEnabled(True)
         self._search.setToolTip("Filter models by name")
+        self._lbl_search.setToolTip("Filter models by name")
         self._tag_combo.setEnabled(True)
         self._tag_combo.setToolTip(
+            "Filter the model list by specific capabilities or sizes"
+        )
+        self._lbl_filter.setToolTip(
             "Filter the model list by specific capabilities or sizes"
         )
         self._table.setEnabled(True)

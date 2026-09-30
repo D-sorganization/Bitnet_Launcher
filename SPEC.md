@@ -284,3 +284,9 @@ out of their intended shell arguments.
 ### UX Updates
 
 - Synchronized `ModelPanel` list state with `HubDialog` downloads by calling `self._model_panel.set_models(self._models)` in `BitNetLauncher._open_hub_dialog` and adding a `set_models` method to `ModelPanel`. This ensures newly downloaded models appear in the launcher immediately after the hub dialog is closed, without requiring an application restart. List population is shared with construction via `ModelPanel._populate_list`, and `set_models` enforces the same list precondition as `__init__` (#279).
+
+## Change Log
+
+| Date       | PR   | Changes                                                          |
+| ---------- | ---- | ---------------------------------------------------------------- |
+| 2026-09-30 | #288 | Synced form tooltips and repaired runner-guard CI trigger/parser |
