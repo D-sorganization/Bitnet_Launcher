@@ -426,13 +426,14 @@ def _download_prebuilt_gguf(
 
     # Xet stalls on large GGUF blobs in some environments — force classic CDN.
     os.environ["HF_HUB_DISABLE_XET"] = "1"
+    os.environ["HF_HUB_DOWNLOAD_TIMEOUT"] = "10.0"
 
     dest_dir = models_dir / hub_model.name
     dest_dir.mkdir(parents=True, exist_ok=True)
 
     on_log(f"Resolving GGUF in {hub_model.repo_id} …")
     try:
-        repo_files = list_repo_files(hub_model.repo_id, timeout=10.0)
+        repo_files = list_repo_files(hub_model.repo_id)
     except Exception as exc:  # noqa: BLE001
         raise RuntimeError(
             f"Failed to list files in {hub_model.repo_id}: {exc}"

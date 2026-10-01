@@ -157,7 +157,7 @@ def _install_fake_hf(
     """Inject a fake ``huggingface_hub`` module and record call args."""
     calls: dict = {}
 
-    def fake_list_repo_files(repo_id: str, **kwargs):
+    def fake_list_repo_files(repo_id: str):
         calls["list_repo_id"] = repo_id
         if list_raises is not None:
             raise list_raises
