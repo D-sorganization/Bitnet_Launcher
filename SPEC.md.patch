@@ -1,6 +1,0 @@
-<<<<<<< SEARCH
-### Performance Updates
-=======
-### Performance Updates
-- Optimized string traversal in `chat_session.py` by replacing `in` + `index()` with a single `find()` call.
->>>>>>> REPLACE

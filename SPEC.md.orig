@@ -270,8 +270,6 @@ out of their intended shell arguments.
 
 ### Sentinel Security Enhancements
 
-- Added an explicit `timeout=10.0` to the Hugging Face API network call (`list_repo_files`) in `src/bitnet_launcher/hub.py` to prevent the application from hanging indefinitely and to mitigate potential Denial of Service (DoS) vectors on unresponsive endpoints.
-
 - Added `Referrer-Policy: no-referrer` header to the API response to prevent local API URLs from leaking to external domains.
 
 ### UI Enhancements

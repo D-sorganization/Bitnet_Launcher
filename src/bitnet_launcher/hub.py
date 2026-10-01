@@ -432,7 +432,7 @@ def _download_prebuilt_gguf(
 
     on_log(f"Resolving GGUF in {hub_model.repo_id} …")
     try:
-        repo_files = list_repo_files(hub_model.repo_id)
+        repo_files = list_repo_files(hub_model.repo_id, timeout=10.0)
     except Exception as exc:  # noqa: BLE001
         raise RuntimeError(
             f"Failed to list files in {hub_model.repo_id}: {exc}"
