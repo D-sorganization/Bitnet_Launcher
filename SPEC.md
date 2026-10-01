@@ -290,3 +290,7 @@ out of their intended shell arguments.
 | Date       | PR   | Changes                                                          |
 | ---------- | ---- | ---------------------------------------------------------------- |
 | 2026-09-30 | #288 | Synced form tooltips and repaired runner-guard CI trigger/parser |
+
+### UX Updates
+
+- Added tooltips to explain disabled configurations in `SettingsPanel` during active chat sessions, reducing UX ambiguity around unmodifiable inputs.

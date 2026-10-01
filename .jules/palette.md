@@ -211,3 +211,7 @@
 ## 2026-09-30 - Synchronized Form Label Tooltips
 **Learning:** When conditionally disabling standard input fields (e.g., `QLineEdit`, `QComboBox`) and updating their tooltips to explain the disabled state (e.g., "An operation is currently in progress"), failing to also update the tooltip of their associated buddy `QLabel` causes a state inconsistency. Users hovering over the label will still see the original, stale active-state tooltip.
 **Action:** When creating form elements, store both the input field and its buddy `QLabel` as instance variables (e.g., `self._lbl_path = QLabel(...)`). When dynamically modifying the input field's tooltip to explain a state change (like being disabled), explicitly synchronize the label's tooltip as well (e.g., `self._lbl_path.setToolTip(...)`).
+
+## 2023-11-20 - Disabled Form Explanations
+**Learning:** We proactively disable settings while chat is running, but previously did not explain *why* to the user, leading to a confusing disabled state.
+**Action:** Overrode `setEnabled` in `SettingsPanel` to update tooltips on all inputs and their buddy labels to clearly communicate "Stop the active chat session to modify inference settings", and restored them when enabled.
