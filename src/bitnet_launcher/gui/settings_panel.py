@@ -27,7 +27,7 @@ from bitnet_launcher.config import InferenceConfig
 logger = logging.getLogger(__name__)
 
 
-def _labeled_row(label: str, widget: QWidget) -> QHBoxLayout:
+def _labeled_row(label: str, widget: QWidget) -> tuple[QHBoxLayout, QLabel]:
     """Return a horizontal layout with a fixed-width label and *widget*."""
     row = QHBoxLayout()
     lbl = QLabel(label)
@@ -37,7 +37,7 @@ def _labeled_row(label: str, widget: QWidget) -> QHBoxLayout:
         lbl.setToolTip(widget.toolTip())
     row.addWidget(lbl)
     row.addWidget(widget)
-    return row
+    return row, lbl
 
 
 class SettingsPanel(QWidget):
@@ -69,6 +69,40 @@ class SettingsPanel(QWidget):
             system_prompt=system,
         )
 
+    def setEnabled(self, enabled: bool) -> None:
+        """Update tooltips for inputs and labels when disabled/enabled."""
+        super().setEnabled(enabled)
+        if enabled:
+            self._threads.setToolTip("CPU threads for inference")
+            self._lbl_threads.setToolTip("CPU threads for inference")
+            self._ctx_size.setToolTip("Context window size (tokens)")
+            self._lbl_ctx_size.setToolTip("Context window size (tokens)")
+            self._temperature.setToolTip("Sampling temperature (0 = deterministic)")
+            self._lbl_temperature.setToolTip("Sampling temperature (0 = deterministic)")
+            self._n_predict.setToolTip(
+                "Max tokens to generate per response (-1 = unlimited)"
+            )
+            self._lbl_n_predict.setToolTip(
+                "Max tokens to generate per response (-1 = unlimited)"
+            )
+            sys_tooltip = (
+                "Base instructions that define the AI's persona and overall behavior"
+            )
+            self._system_prompt.setToolTip(sys_tooltip)
+            self._lbl_system_prompt.setToolTip(sys_tooltip)
+        else:
+            msg = "Stop the active chat session to modify inference settings"
+            self._threads.setToolTip(msg)
+            self._lbl_threads.setToolTip(msg)
+            self._ctx_size.setToolTip(msg)
+            self._lbl_ctx_size.setToolTip(msg)
+            self._temperature.setToolTip(msg)
+            self._lbl_temperature.setToolTip(msg)
+            self._n_predict.setToolTip(msg)
+            self._lbl_n_predict.setToolTip(msg)
+            self._system_prompt.setToolTip(msg)
+            self._lbl_system_prompt.setToolTip(msg)
+
     # ── UI construction ─────────────────────────────────────────────────────
 
     def _build_ui(self) -> None:
@@ -81,7 +115,8 @@ class SettingsPanel(QWidget):
         self._threads.setValue(min(4, os.cpu_count() or 4))
         self._threads.setSuffix(" threads")
         self._threads.setToolTip("CPU threads for inference")
-        layout.addLayout(_labeled_row("&Threads:", self._threads))
+        row, self._lbl_threads = _labeled_row("&Threads:", self._threads)
+        layout.addLayout(row)
 
         self._ctx_size = QSpinBox()
         self._ctx_size.setAccessibleName("Context size")
@@ -90,7 +125,8 @@ class SettingsPanel(QWidget):
         self._ctx_size.setValue(2048)
         self._ctx_size.setSuffix(" tokens")
         self._ctx_size.setToolTip("Context window size (tokens)")
-        layout.addLayout(_labeled_row("&Context size:", self._ctx_size))
+        row, self._lbl_ctx_size = _labeled_row("&Context size:", self._ctx_size)
+        layout.addLayout(row)
 
         self._temperature = QDoubleSpinBox()
         self._temperature.setAccessibleName("Temperature")
@@ -99,7 +135,8 @@ class SettingsPanel(QWidget):
         self._temperature.setValue(0.8)
         self._temperature.setDecimals(2)
         self._temperature.setToolTip("Sampling temperature (0 = deterministic)")
-        layout.addLayout(_labeled_row("T&emperature:", self._temperature))
+        row, self._lbl_temperature = _labeled_row("T&emperature:", self._temperature)
+        layout.addLayout(row)
 
         self._n_predict = QSpinBox()
         self._n_predict.setAccessibleName("Max tokens")
@@ -110,7 +147,8 @@ class SettingsPanel(QWidget):
         self._n_predict.setToolTip(
             "Max tokens to generate per response (-1 = unlimited)"
         )
-        layout.addLayout(_labeled_row("&Max tokens:", self._n_predict))
+        row, self._lbl_n_predict = _labeled_row("&Max tokens:", self._n_predict)
+        layout.addLayout(row)
 
         from bitnet_launcher.gui.wheel_event_filter import suppress_wheel_on_widgets
 
@@ -119,17 +157,17 @@ class SettingsPanel(QWidget):
         )
 
         layout.addSpacing(6)
-        lbl_system_prompt = QLabel("&System prompt:")
+        self._lbl_system_prompt = QLabel("&System prompt:")
         tooltip_text = (
             "Base instructions that define the AI's persona and overall behavior"
         )
-        lbl_system_prompt.setToolTip(tooltip_text)
-        layout.addWidget(lbl_system_prompt)
+        self._lbl_system_prompt.setToolTip(tooltip_text)
+        layout.addWidget(self._lbl_system_prompt)
 
         self._system_prompt = QTextEdit()
         # Security: Prevent HTML injection/UI redressing from pasted prompts
         self._system_prompt.setAcceptRichText(False)
-        lbl_system_prompt.setBuddy(self._system_prompt)
+        self._lbl_system_prompt.setBuddy(self._system_prompt)
         self._system_prompt.setAccessibleName("System prompt")
         self._system_prompt.setAcceptRichText(False)
         self._system_prompt.setPlaceholderText("You are a helpful assistant.")
