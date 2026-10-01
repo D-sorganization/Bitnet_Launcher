@@ -1,0 +1,10 @@
+--- SPEC.md
++++ SPEC.md
+@@ -104,6 +104,7 @@
+ - **API Model Restrictions**: String fields in API request models (`ChatStartRequest`, `ChatSendRequest`) enforce `max_length` bounds (e.g., 128 for model names, 4096 for chat messages) to mitigate algorithmic complexity attacks or resource exhaustion.
+ - **SSE Injection Prevention**: The chat streaming endpoint sanitizes both `\n` and `\r` characters from untrusted generated text to prevent arbitrary Server-Sent Events fields from being injected.
+ - **Information Exposure Prevention**: The `/models` endpoint maps internal absolute file paths to basenames (`Path.name`) when serializing `ModelInfo`, avoiding leakage of server internal directories or usernames to API clients.
++- **External API Timeouts**: Network calls to the Hugging Face API (`list_repo_files`) are configured with explicit timeouts (e.g., `timeout=10.0`) to prevent infinite hanging on unresponsive endpoints.
+
+
+ ## 9. Deployment & Packaging
