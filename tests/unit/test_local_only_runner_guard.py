@@ -113,6 +113,12 @@ def test_ci_standard_keeps_real_quality_gate_without_duplicate_guard_job() -> No
     assert jobs["quality-gate"]["if"] == "always()"
 
 
+def test_required_check_producers_run_in_merge_queue() -> None:
+    """Required checks must report on merge_group (Repository_Management#1890)."""
+    for workflow in (GUARD_WORKFLOW, CI_WORKFLOW):
+        assert "merge_group" in _workflow(workflow)["on"]
+
+
 def test_embedded_python_has_no_unmatched_actions_expression_opener() -> None:
     assert "${{" not in _guard_script()
 

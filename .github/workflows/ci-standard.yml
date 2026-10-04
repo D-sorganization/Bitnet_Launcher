@@ -5,6 +5,8 @@ on:
     branches: [main, staging]
   pull_request:
     types: [opened, synchronize, reopened, ready_for_review]
+  # Merge queue (Repository_Management#1890): required checks must report on the queue's merge commit.
+  merge_group:
 
 env:
   UV_HTTP_TIMEOUT: "300"
