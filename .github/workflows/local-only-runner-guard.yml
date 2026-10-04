@@ -29,6 +29,8 @@ on:
   pull_request:
     types: [opened, synchronize, reopened, ready_for_review]
   workflow_dispatch:
+  # Merge queue (Repository_Management#1890): required checks must report on the queue's merge commit.
+  merge_group:
 
 concurrency:
   group: local-only-runner-guard-${{ github.ref }}
