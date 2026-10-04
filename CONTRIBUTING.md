@@ -9,6 +9,7 @@ Thank you for your interest in contributing to the Bitnet Launcher project! This
 - [Development Setup](#development-setup)
 - [How to Contribute](#how-to-contribute)
 - [Pull Request Process](#pull-request-process)
+- [Merging](#merging)
 - [Coding Standards](#coding-standards)
 - [Testing](#testing)
 - [Documentation](#documentation)
@@ -101,6 +102,12 @@ Enhancement suggestions are tracked as GitHub issues. When creating an enhanceme
 4. Your pull request will be reviewed by maintainers
 5. Address any feedback from reviewers
 6. Once approved, a maintainer will merge your pull request
+
+## Merging
+
+Pull requests merge through the GitHub merge queue. Arm auto-merge (squash) and the
+queue rebuilds the PR on the latest `main`, runs the required checks once more, and
+merges it. There is no need to update a PR branch by hand before merging.
 
 ## Coding Standards
 
