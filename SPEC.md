@@ -293,6 +293,7 @@ out of their intended shell arguments.
 | ---------- | ---- | ------------------------------------------------------------------------------- |
 | 2026-09-30 | #288 | Synced form tooltips and repaired runner-guard CI trigger/parser                |
 | 2026-10-04 | #291 | Required-check workflows also run on `merge_group` (Repository_Management#1890) |
+| 2026-10-07 | #298 | Fork PR code kept off the self-hosted fleet; vendored `fork_pr_runner_guard` wired into CI (RM#1989) |
 
 ### UX Updates
 
