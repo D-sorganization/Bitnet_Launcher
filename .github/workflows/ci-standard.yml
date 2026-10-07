@@ -18,7 +18,11 @@ concurrency:
 jobs:
   lint:
     timeout-minutes: 30
-    runs-on: ${{ vars.RUNNER_TARGET == 'local' && 'd-sorg-fleet' || 'ubuntu-latest' }}
+    runs-on: >-
+      ${{ github.event.pull_request &&
+      github.event.pull_request.head.repo.full_name != github.repository &&
+      'ubuntu-latest' ||
+      vars.RUNNER_TARGET == 'local' && 'd-sorg-fleet' || 'ubuntu-latest' }}
     steps:
       - uses: actions/checkout@v4
       - name: Install uv
@@ -37,7 +41,11 @@ jobs:
 
   tests:
     timeout-minutes: 30
-    runs-on: ${{ vars.RUNNER_TARGET == 'local' && 'd-sorg-fleet' || 'ubuntu-latest' }}
+    runs-on: >-
+      ${{ github.event.pull_request &&
+      github.event.pull_request.head.repo.full_name != github.repository &&
+      'ubuntu-latest' ||
+      vars.RUNNER_TARGET == 'local' && 'd-sorg-fleet' || 'ubuntu-latest' }}
     steps:
       - uses: actions/checkout@v4
       - name: Install uv
@@ -71,7 +79,11 @@ jobs:
   quality-gate:
     needs: [lint, tests]
     if: always()
-    runs-on: ${{ vars.RUNNER_TARGET == 'local' && 'd-sorg-fleet' || 'ubuntu-latest' }}
+    runs-on: >-
+      ${{ github.event.pull_request &&
+      github.event.pull_request.head.repo.full_name != github.repository &&
+      'ubuntu-latest' ||
+      vars.RUNNER_TARGET == 'local' && 'd-sorg-fleet' || 'ubuntu-latest' }}
     timeout-minutes: 5
     steps:
       - name: Require every gated job to succeed
