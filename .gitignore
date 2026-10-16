@@ -11,3 +11,9 @@ build/
 .ruff_cache/
 .coverage
 htmlcov/
+
+# Stray merge/patch/temp artifacts (clutter cleanup)
+*.orig
+*.rej
+*.tmp
+*.bak

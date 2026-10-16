@@ -1,8 +1,0 @@
-⚡ Bolt: Use QTextEdit.append() for efficient log streaming
-
-💡 What: Replace `QTextCursor.insertText()` with `QTextEdit.append(html.escape())` for log appending in `hub_dialog.py` and `setup_dialog.py`.
-🎯 Why: Calling `QTextCursor` manipulations frequently for every line causes main-thread layout recalculation stuttering during streaming log outputs. `QTextEdit.append()` handles paragraph creation and scrolling more efficiently.
-📊 Impact: Reduces UI micro-stutters during heavy log streaming (e.g. downloads and builds).
-🔬 Measurement: Run the BitNet setup and build operations, observing the UI responsiveness.
-
-Tested by running tests and ensuring no regressions.
