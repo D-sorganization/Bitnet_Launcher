@@ -8,6 +8,7 @@ live pointers to it from returning.
 from __future__ import annotations
 
 import re
+import subprocess
 from pathlib import Path
 
 import pytest
@@ -32,14 +33,23 @@ def test_vendored_tree_is_removed() -> None:
     assert not (REPO_ROOT / ".gaai").exists()
 
 
+def _tracked_files() -> list[str]:
+    """Paths git tracks; build output such as ``__pycache__`` never counts."""
+    return subprocess.run(
+        ["git", "ls-files"],
+        cwd=REPO_ROOT,
+        capture_output=True,
+        text=True,
+        check=True,
+    ).stdout.splitlines()
+
+
 def test_no_gaai_launcher_script_exists() -> None:
-    skipped = {".git", ".venv", "node_modules"}
+    this_file = Path(__file__).resolve().relative_to(REPO_ROOT).as_posix()
     found = [
-        str(path.relative_to(REPO_ROOT))
-        for path in REPO_ROOT.rglob("*")
-        if _GAAI.search(path.name)
-        and not skipped & set(path.parts)
-        and path.resolve() != Path(__file__).resolve()
+        path
+        for path in _tracked_files()
+        if _GAAI.search(Path(path).name) and path != this_file
     ]
     assert found == []
 
